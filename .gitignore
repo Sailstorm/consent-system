@@ -1,0 +1,10 @@
+.env
+backend/.env
+backend/node_modules/
+*.log
+.DS_Store
+data/*.csv
+data/*.tsv
+data/*.xlsx
+data/*.zip
+

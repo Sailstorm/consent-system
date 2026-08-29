@@ -1,0 +1,23 @@
+{
+  "name": "consent-assistant-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-concurrency=1",
+    "check:db": "node src/scripts/check-db.js",
+    "quality:report": "node src/scripts/data-quality-report.js",
+    "import:asic": "node src/importers/asic.js",
+    "import:oaic": "node src/importers/oaic.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parse": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "read-excel-file": "^9.3.10"
+  }
+}
