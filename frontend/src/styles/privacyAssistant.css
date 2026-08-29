@@ -1,0 +1,168 @@
+.assistant-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f8f7;
+  color: #243436;
+}
+
+.assistant-content {
+  flex: 1;
+  padding: 36px 48px;
+}
+
+.assistant-heading h1 {
+  margin: 0 0 7px;
+  font-size: 28px;
+}
+
+.assistant-heading p {
+  margin: 0;
+  color: #7b8888;
+  font-size: 13px;
+}
+
+.assistant-steps {
+  display: flex;
+  gap: 10px;
+  margin: 24px 0 18px;
+}
+
+.step {
+  padding: 7px 13px;
+  border: 1px solid #d9e2e0;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #7d8b8a;
+  font-size: 11px;
+}
+
+.step.active {
+  border-color: #4a8988;
+  background: #e5f1ef;
+  color: #286765;
+}
+
+.input-card {
+  max-width: 900px;
+  padding: 24px;
+  border: 1px solid #dfe7e5;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.input-heading h2 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.input-heading p {
+  margin: 0 0 20px;
+  color: #899493;
+  font-size: 11px;
+}
+
+.policy-input {
+  width: 100%;
+  min-height: 280px;
+  padding: 18px;
+  resize: vertical;
+  border: 1px solid #dce5e3;
+  border-radius: 7px;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #344546;
+}
+
+.policy-input:focus {
+  border-color: #4d8b89;
+}
+
+.policy-input::placeholder {
+  color: #a4afae;
+}
+
+.policy-input.input-error {
+  border-color: #c8665d;
+}
+
+.input-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 8px;
+  color: #929d9c;
+  font-size: 10px;
+}
+
+.error-message {
+  margin: 10px 0 0;
+  color: #b64d45;
+  font-size: 11px;
+}
+
+.input-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.clear-button,
+.analyse-button {
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.clear-button {
+  border: 1px solid #d8e1df;
+  background: #ffffff;
+  color: #556463;
+}
+
+.analyse-button {
+  border: 0;
+  background: #397d7b;
+  color: #ffffff;
+}
+
+.analyse-button:hover {
+  background: #2f6d6b;
+}
+
+.before-card {
+  max-width: 900px;
+  margin-top: 20px;
+  padding: 18px 22px;
+  border-radius: 7px;
+  background: #eaf5f3;
+}
+
+.before-card h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+.before-card p {
+  margin: 0;
+  color: #6f807e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .assistant-content {
+    padding: 24px;
+  }
+
+  .assistant-steps {
+    flex-wrap: wrap;
+  }
+
+  .input-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

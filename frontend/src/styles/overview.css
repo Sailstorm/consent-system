@@ -1,0 +1,287 @@
+.overview-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f8f7;
+  color: #243436;
+}
+
+.overview-content {
+  flex: 1;
+  padding: 34px 44px 40px;
+}
+
+.overview-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 32px;
+}
+
+.overview-top h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.overview-top p {
+  margin: 0;
+  font-size: 13px;
+  color: #778486;
+}
+
+.top-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.search-box {
+  width: 190px;
+  padding: 10px 14px;
+  border: 1px solid #dce5e3;
+  border-radius: 20px;
+  background: #ffffff;
+  outline: none;
+}
+
+.user-chip {
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 20px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.user-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d99c35;
+}
+
+.feature-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.feature-card,
+.panel,
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #e0e7e5;
+  border-radius: 8px;
+}
+
+.feature-card {
+  padding: 20px;
+  min-height: 120px;
+}
+
+.feature-card:nth-child(1) {
+  border-left: 4px solid #2c7775;
+}
+
+.feature-card:nth-child(2) {
+  border-left: 4px solid #6e997c;
+}
+
+.feature-card:nth-child(3) {
+  border-left: 4px solid #d2a248;
+}
+
+.feature-label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  color: #7e8e8d;
+}
+
+.feature-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.feature-card p:last-child {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #84908f;
+}
+
+.today-section h2,
+.dashboard-section h2 {
+  margin: 0 0 14px;
+  font-size: 17px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.panel {
+  padding: 20px;
+}
+
+.panel h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.panel p {
+  margin: 0;
+  font-size: 11px;
+  color: #869291;
+}
+
+.panel-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.small-button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #2f7271;
+  color: white;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.summary-list,
+.progress-list {
+  margin-top: 18px;
+}
+
+.summary-list div,
+.progress-list div {
+  padding: 7px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #edf1f0;
+  font-size: 11px;
+}
+
+.summary-list strong,
+.progress-list strong {
+  font-weight: 500;
+  color: #5f6f70;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 7px;
+  margin: 22px 0 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e4ebea;
+}
+
+.progress-fill {
+  width: 55%;
+  height: 100%;
+  background: #3c7f7d;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.dashboard-card {
+  padding: 18px;
+  min-height: 90px;
+}
+
+.dashboard-card span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+  color: #899594;
+}
+
+.dashboard-card strong {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+
+.dashboard-card p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #8b9695;
+}
+
+.mini-chart {
+  height: 55px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.bar {
+  width: 12px;
+  background: #3b7e7c;
+  border-radius: 2px 2px 0 0;
+}
+
+.bar-1 {
+  height: 25px;
+}
+
+.bar-2 {
+  height: 36px;
+}
+
+.bar-3 {
+  height: 29px;
+}
+
+.bar-4 {
+  height: 48px;
+}
+
+.bar-5 {
+  height: 42px;
+}
+
+.overview-footer {
+  margin: 26px 0 0;
+  font-size: 10px;
+  color: #93a09f;
+}
+
+@media (max-width: 1000px) {
+  .feature-row,
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .overview-content {
+    padding: 24px;
+  }
+
+  .overview-top {
+    flex-direction: column;
+  }
+
+  .feature-row,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

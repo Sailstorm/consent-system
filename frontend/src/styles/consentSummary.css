@@ -1,0 +1,155 @@
+.summary-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f8f7;
+  color: #243436;
+}
+
+.summary-content {
+  flex: 1;
+  padding: 36px 48px 44px;
+}
+
+.summary-heading h1 {
+  margin: 0 0 7px;
+  font-size: 28px;
+}
+
+.summary-heading p {
+  margin: 0;
+  color: #7b8888;
+  font-size: 13px;
+}
+
+.summary-steps {
+  display: flex;
+  gap: 10px;
+  margin: 24px 0 18px;
+}
+
+.summary-card {
+  max-width: 950px;
+  padding: 24px;
+  border: 1px solid #dfe7e5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.summary-card-heading {
+  margin-bottom: 18px;
+}
+
+.summary-card-heading h2 {
+  margin: 0 0 5px;
+  font-size: 17px;
+}
+
+.summary-card-heading p {
+  margin: 0;
+  color: #83908f;
+  font-size: 11px;
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #edf1f0;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+.summary-item p {
+  margin: 0;
+  color: #6f7f7e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.summary-message {
+  max-width: 950px;
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: 7px;
+  background: #fff7dc;
+}
+
+.summary-message h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+.summary-message p {
+  margin: 0;
+  color: #756d55;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.summary-actions {
+  max-width: 950px;
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.summary-back-button,
+.edit-input-button,
+.new-analysis-button {
+  padding: 9px 16px;
+  border-radius: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.summary-back-button {
+  border: 1px solid #397d7b;
+  background: #eaf5f3;
+  color: #286765;
+}
+
+.edit-input-button {
+  border: 1px solid #d6dfdd;
+  background: #ffffff;
+  color: #566665;
+}
+
+.new-analysis-button {
+  border: 1px solid #397d7b;
+  background: #397d7b;
+  color: #ffffff;
+}
+
+.summary-back-button:hover {
+  background: #dcefed;
+}
+
+.edit-input-button:hover {
+  background: #f2f5f4;
+}
+
+.new-analysis-button:hover {
+  background: #2f6d6b;
+}
+
+@media (max-width: 720px) {
+  .summary-content {
+    padding: 24px;
+  }
+
+  .summary-steps {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,106 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Sidebar from '../components/Sidebar'
+import '../styles/privacyAssistant.css'
+
+function PrivacyAssistant() {
+  const [policyText, setPolicyText] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+
+  const handleClear = () => {
+    setPolicyText('')
+    setError('')
+  }
+
+  const handleAnalyse = () => {
+    const text = policyText.trim()
+
+    if (!text) {
+      setError('Please enter privacy policy content before continuing.')
+      return
+    }
+
+    if (text.length < 50) {
+      setError('')
+      navigate('/invalid-input')
+      return
+    }
+
+    setError('')
+    navigate('/processing')
+  }
+
+  return (
+    <div className="assistant-page">
+      <Sidebar activePage="assistant" />
+
+      <main className="assistant-content">
+        <div className="assistant-heading">
+          <h1>Privacy Assistant</h1>
+          <p>
+            Paste a privacy policy or notice and get a clearer explanation
+            before you decide.
+          </p>
+        </div>
+
+        <div className="assistant-steps">
+          <div className="step active">1 Input</div>
+          <div className="step">2 Explanation</div>
+          <div className="step">3 Consent Summary</div>
+        </div>
+
+        <section className="input-card">
+          <div className="input-heading">
+            <h2>Enter privacy information</h2>
+            <p>
+              Only the text you paste here will be analysed. The tool does not
+              make your final decision for you.
+            </p>
+          </div>
+
+          <textarea
+            className={error ? 'policy-input input-error' : 'policy-input'}
+            value={policyText}
+            onChange={(event) => {
+              setPolicyText(event.target.value)
+
+              if (error) {
+                setError('')
+              }
+            }}
+            placeholder="Paste a Privacy Policy, Privacy Notice, or terms about personal data here..."
+          />
+
+          <div className="input-footer">
+            <span>{policyText.length} characters</span>
+            <span>Your text is used only for this analysis.</span>
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <div className="input-actions">
+            <button className="clear-button" onClick={handleClear}>
+              Clear
+            </button>
+
+            <button className="analyse-button" onClick={handleAnalyse}>
+              Analyse
+            </button>
+          </div>
+        </section>
+
+        <section className="before-card">
+          <h3>Before you continue</h3>
+          <p>
+            The explanation is for understanding only. It highlights what the
+            policy says and what may not be clearly stated, so you can make
+            your own privacy decision.
+          </p>
+        </section>
+      </main>
+    </div>
+  )
+}
+
+export default PrivacyAssistant
