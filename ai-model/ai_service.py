@@ -7,6 +7,13 @@ from prompt import build_prompt
 
 
 # -------------------------
+# Environment Configuration
+# -------------------------
+
+load_dotenv()
+
+
+# -------------------------
 # Groq API Configuration
 # -------------------------
 

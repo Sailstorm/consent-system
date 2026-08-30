@@ -1,39 +1,68 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import '../styles/explanation.css'
 
 function Explanation() {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const policyText = location.state?.policyText
+  const summaries = location.state?.summaries || {}
 
   const categories = [
     {
       title: 'Data Collection',
-      text: 'What personal information the policy says may be collected.',
-      status: 'Some information found',
+      text:
+        summaries.data_collection ||
+        'No information is available for this category.',
+      status:
+        summaries.data_collection === 'Not specified in the policy.'
+          ? 'Not clearly stated'
+          : 'Information found',
       path: '/data-collection',
     },
     {
       title: 'Purpose of Use',
-      text: 'How the policy says your personal information may be used.',
-      status: 'Some purposes identified',
+      text:
+        summaries.purpose_of_use ||
+        'No information is available for this category.',
+      status:
+        summaries.purpose_of_use === 'Not specified in the policy.'
+          ? 'Not clearly stated'
+          : 'Information found',
       path: '/purpose-of-use',
     },
     {
       title: 'Data Sharing',
-      text: 'Whether the policy mentions sharing information with other parties.',
-      status: 'Some details found',
+      text:
+        summaries.data_sharing ||
+        'No information is available for this category.',
+      status:
+        summaries.data_sharing === 'Not specified in the policy.'
+          ? 'Not clearly stated'
+          : 'Information found',
       path: '/data-sharing',
     },
     {
       title: 'Data Retention',
-      text: 'How long the policy says your personal information may be kept.',
-      status: 'Not clearly stated',
+      text:
+        summaries.data_retention ||
+        'No information is available for this category.',
+      status:
+        summaries.data_retention === 'Not specified in the policy.'
+          ? 'Not clearly stated'
+          : 'Information found',
       path: '/data-retention',
     },
     {
       title: 'User Control',
-      text: 'What choices or controls the policy gives you over your data.',
-      status: 'Some controls found',
+      text:
+        summaries.user_control ||
+        'No information is available for this category.',
+      status:
+        summaries.user_control === 'Not specified in the policy.'
+          ? 'Not clearly stated'
+          : 'Information found',
       path: '/user-control',
     },
     {
@@ -43,6 +72,15 @@ function Explanation() {
       path: '/source-decision',
     },
   ]
+
+  const openCategory = (path) => {
+    navigate(path, {
+      state: {
+        policyText: policyText,
+        summaries: summaries,
+      },
+    })
+  }
 
   return (
     <div className="explanation-page">
@@ -68,7 +106,7 @@ function Explanation() {
             <button
               key={category.title}
               className="category-card"
-              onClick={() => navigate(category.path)}
+              onClick={() => openCategory(category.path)}
             >
               <div>
                 <h2>{category.title}</h2>
@@ -90,7 +128,14 @@ function Explanation() {
 
         <button
           className="summary-button"
-          onClick={() => navigate('/consent-summary')}
+          onClick={() =>
+            navigate('/consent-summary', {
+              state: {
+                policyText: policyText,
+                summaries: summaries,
+              },
+            })
+          }
         >
           View consent summary
         </button>
