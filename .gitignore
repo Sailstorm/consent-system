@@ -8,3 +8,4 @@ data/*.tsv
 data/*.xlsx
 data/*.zip
 
+ai-model/.venv/

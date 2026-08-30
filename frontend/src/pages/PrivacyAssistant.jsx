@@ -28,7 +28,12 @@ function PrivacyAssistant() {
     }
 
     setError('')
-    navigate('/processing')
+
+    navigate('/processing', {
+      state: {
+        policyText: text,
+      },
+    })
   }
 
   return (

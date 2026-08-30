@@ -1,9 +1,60 @@
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import '../styles/processing.css'
 
 function Processing() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const started = useRef(false)
+
+  const policyText = location.state?.policyText
+
+  useEffect(() => {
+    if (started.current) {
+      return
+    }
+
+    started.current = true
+
+    if (!policyText) {
+      navigate('/privacy-assistant')
+      return
+    }
+
+    async function analysePolicy() {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/summarize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            policy_text: policyText,
+          }),
+        })
+
+        if (!response.ok) {
+          navigate('/analysis-failed')
+          return
+        }
+
+        const data = await response.json()
+
+        navigate('/explanation', {
+          state: {
+            policyText: policyText,
+            summaries: data.summaries,
+          },
+        })
+      } catch (error) {
+        console.log(error)
+        navigate('/analysis-failed')
+      }
+    }
+
+    analysePolicy()
+  }, [navigate, policyText])
 
   return (
     <div className="processing-page">
@@ -47,22 +98,6 @@ function Processing() {
             Your original text remains available for comparison.
           </div>
         </section>
-
-        <div className="processing-actions">
-          <button
-            className="processing-button"
-            onClick={() => navigate('/explanation')}
-          >
-            View explanation
-          </button>
-
-          <button
-            className="failure-button"
-            onClick={() => navigate('/analysis-failed')}
-          >
-            If processing fails
-          </button>
-        </div>
       </main>
     </div>
   )
