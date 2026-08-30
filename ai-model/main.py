@@ -22,13 +22,13 @@ class PolicyRequest(BaseModel):
     policy_text: str
 
 
-@app.post("/summarize")
-def summarize(request: PolicyRequest):
+@app.post("/analyze")
+def analyze(request: PolicyRequest):
 
-    summaries = generate_summary(
+    output = analyze_policy(
         request.policy_text
     )
 
     return {
-        "summaries": summaries
+        "output": output
     }
