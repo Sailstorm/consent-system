@@ -54,8 +54,4 @@ def analyze_policy(policy_text):
     return result
 
 
-def generate_summary(policy_text):
-
-    result = analyze_policy(policy_text)
-
     return result["summaries"]
