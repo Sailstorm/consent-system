@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from ai_service import generate_summary
+from ai_service import analyze_policy
 
 app = FastAPI()
 

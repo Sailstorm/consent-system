@@ -24,7 +24,7 @@ function Processing() {
 
     async function analysePolicy() {
       try {
-        const response = await fetch('http://127.0.0.1:8000/summarize', {
+        const response = await fetch('http://127.0.0.1:8000/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ function Processing() {
         navigate('/explanation', {
           state: {
             policyText: policyText,
-            summaries: data.summaries,
+            analysisResult: data.output,
           },
         })
       } catch (error) {

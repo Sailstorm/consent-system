@@ -1,30 +1,49 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import '../styles/consentSummary.css'
 
 function ConsentSummary() {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const policyText = location.state?.policyText
+  const analysisResult = location.state?.analysisResult || {}
+
+  const dataCollection =
+    analysisResult.data_collection?.data_collection ||
+    analysisResult.data_collection ||
+    {}
 
   const summaryItems = [
     {
       title: 'Data Collection',
-      value: 'Basic personal and device information may be collected.',
+      value:
+        dataCollection.summary ||
+        'No information is available for this category.',
     },
     {
       title: 'Purpose of Use',
-      value: 'Information may be used for service delivery and improvement.',
+      value:
+        analysisResult.purpose_of_use?.summary ||
+        'No information is available for this category.',
     },
     {
       title: 'Data Sharing',
-      value: 'Some information may be shared with service providers or partners.',
+      value:
+        analysisResult.data_sharing?.summary ||
+        'No information is available for this category.',
     },
     {
       title: 'Data Retention',
-      value: 'Not clearly stated',
+      value:
+        analysisResult.data_retention?.summary ||
+        'No information is available for this category.',
     },
     {
       title: 'User Control',
-      value: 'Some access, update and permission controls are available.',
+      value:
+        analysisResult.user_control?.summary ||
+        'No information is available for this category.',
     },
   ]
 
@@ -77,14 +96,27 @@ function ConsentSummary() {
         <div className="summary-actions">
           <button
             className="summary-back-button"
-            onClick={() => navigate('/explanation')}
+            onClick={() =>
+              navigate('/explanation', {
+                state: {
+                  policyText: policyText,
+                  analysisResult: analysisResult,
+                },
+              })
+            }
           >
             Back to Explanation
           </button>
 
           <button
             className="edit-input-button"
-            onClick={() => navigate('/privacy-assistant')}
+            onClick={() =>
+              navigate('/privacy-assistant', {
+                state: {
+                  policyText: policyText,
+                },
+              })
+            }
           >
             Edit Input
           </button>

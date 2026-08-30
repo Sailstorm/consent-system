@@ -1,12 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import '../styles/privacyAssistant.css'
 
 function PrivacyAssistant() {
-  const [policyText, setPolicyText] = useState('')
-  const [error, setError] = useState('')
+  const location = useLocation()
   const navigate = useNavigate()
+
+  const [policyText, setPolicyText] = useState(
+    location.state?.policyText || ''
+  )
+  const [error, setError] = useState('')
 
   const handleClear = () => {
     setPolicyText('')

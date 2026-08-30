@@ -1,38 +1,70 @@
+import { useLocation } from 'react-router-dom'
 import PrivacyDetail from '../components/PrivacyDetail'
 
 function DataRetention() {
+  const location = useLocation()
+
+  const analysisResult = location.state?.analysisResult || {}
+  const dataRetention = analysisResult.data_retention || {}
+  const explanation = dataRetention.explanation || {}
+
   const sections = [
     {
+      heading: 'What is retained',
+      text:
+        explanation.what_is_retained ||
+        'No information is available for this section.',
+    },
+    {
       heading: 'How long data is kept',
-      text: 'The policy does not provide one clear retention period for all personal information.',
+      text:
+        explanation.retention_period ||
+        'No information is available for this section.',
     },
     {
-      heading: 'Retention conditions',
-      text: 'Some information may be kept while it is needed to provide the service or meet other requirements.',
+      heading: 'Why data is retained',
+      text:
+        explanation.retention_reason ||
+        'No information is available for this section.',
     },
     {
-      heading: 'What the assistant found',
-      text: 'The available wording does not give a specific period for every type of personal data.',
-    },
-    {
-      heading: 'What you may want to check',
-      text: 'Users may want to look for specific time periods or conditions describing when information is deleted.',
+      heading: 'Deletion condition',
+      text:
+        explanation.deletion_condition ||
+        'No information is available for this section.',
     },
     {
       heading: 'Why this matters',
-      text: 'Retention information helps users understand how long their personal information may remain stored.',
+      text:
+        dataRetention.why_this_matters ||
+        'No information is available for this section.',
     },
   ]
+
+  const sourceText =
+    dataRetention.extraction?.[0]?.evidence?.[0]?.text ||
+    'No relevant source text was found.'
 
   return (
     <PrivacyDetail
       title="Data Retention"
       subtitle="A closer look at how long the policy says your personal information may be kept."
-      statusLabel="Retention period not clearly stated"
-      statusText="No specific timeframe found"
+      statusLabel={
+        dataRetention.status === 'not_mentioned'
+          ? 'Retention period not clearly stated'
+          : 'Data retention mentioned'
+      }
+      statusText={
+        dataRetention.clarity === 'clear'
+          ? 'Information is clearly stated'
+          : 'Some retention details may still be unclear'
+      }
       sections={sections}
-      sourceText="We keep information while necessary to provide our services and meet applicable requirements."
-      interpretation="The policy provides a general reason for keeping information but does not give a clear retention period."
+      sourceText={sourceText}
+      interpretation={
+        dataRetention.why_this_matters ||
+        'No additional interpretation is available.'
+      }
     />
   )
 }

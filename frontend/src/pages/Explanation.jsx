@@ -7,16 +7,21 @@ function Explanation() {
   const location = useLocation()
 
   const policyText = location.state?.policyText
-  const summaries = location.state?.summaries || {}
+  const analysisResult = location.state?.analysisResult || {}
+
+  const dataCollection =
+    analysisResult.data_collection?.data_collection ||
+    analysisResult.data_collection ||
+    {}
 
   const categories = [
     {
       title: 'Data Collection',
       text:
-        summaries.data_collection ||
+        dataCollection.summary ||
         'No information is available for this category.',
       status:
-        summaries.data_collection === 'Not specified in the policy.'
+        dataCollection.status === 'not_mentioned'
           ? 'Not clearly stated'
           : 'Information found',
       path: '/data-collection',
@@ -24,10 +29,10 @@ function Explanation() {
     {
       title: 'Purpose of Use',
       text:
-        summaries.purpose_of_use ||
+        analysisResult.purpose_of_use?.summary ||
         'No information is available for this category.',
       status:
-        summaries.purpose_of_use === 'Not specified in the policy.'
+        analysisResult.purpose_of_use?.status === 'not_mentioned'
           ? 'Not clearly stated'
           : 'Information found',
       path: '/purpose-of-use',
@@ -35,10 +40,10 @@ function Explanation() {
     {
       title: 'Data Sharing',
       text:
-        summaries.data_sharing ||
+        analysisResult.data_sharing?.summary ||
         'No information is available for this category.',
       status:
-        summaries.data_sharing === 'Not specified in the policy.'
+        analysisResult.data_sharing?.status === 'not_mentioned'
           ? 'Not clearly stated'
           : 'Information found',
       path: '/data-sharing',
@@ -46,10 +51,10 @@ function Explanation() {
     {
       title: 'Data Retention',
       text:
-        summaries.data_retention ||
+        analysisResult.data_retention?.summary ||
         'No information is available for this category.',
       status:
-        summaries.data_retention === 'Not specified in the policy.'
+        analysisResult.data_retention?.status === 'not_mentioned'
           ? 'Not clearly stated'
           : 'Information found',
       path: '/data-retention',
@@ -57,10 +62,10 @@ function Explanation() {
     {
       title: 'User Control',
       text:
-        summaries.user_control ||
+        analysisResult.user_control?.summary ||
         'No information is available for this category.',
       status:
-        summaries.user_control === 'Not specified in the policy.'
+        analysisResult.user_control?.status === 'not_mentioned'
           ? 'Not clearly stated'
           : 'Information found',
       path: '/user-control',
@@ -77,7 +82,7 @@ function Explanation() {
     navigate(path, {
       state: {
         policyText: policyText,
-        summaries: summaries,
+        analysisResult: analysisResult,
       },
     })
   }
@@ -132,7 +137,7 @@ function Explanation() {
             navigate('/consent-summary', {
               state: {
                 policyText: policyText,
-                summaries: summaries,
+                analysisResult: analysisResult,
               },
             })
           }
