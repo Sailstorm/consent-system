@@ -1,38 +1,70 @@
+import { useLocation } from 'react-router-dom'
 import PrivacyDetail from '../components/PrivacyDetail'
 
 function PurposeOfUse() {
+  const location = useLocation()
+
+  const analysisResult = location.state?.analysisResult || {}
+  const purposeOfUse = analysisResult.purpose_of_use || {}
+  const explanation = purposeOfUse.explanation || {}
+
   const sections = [
     {
       heading: 'Why data is used',
-      text: 'The policy says personal information may be used to operate and improve the service.',
+      text:
+        explanation.stated_purposes ||
+        'No information is available for this section.',
     },
     {
-      heading: 'Service delivery',
-      text: 'Some information may be used to provide requested features and account services.',
+      heading: 'Data and purpose',
+      text:
+        explanation.data_purpose_links ||
+        'No information is available for this section.',
     },
     {
-      heading: 'Product improvement',
-      text: 'The policy may allow information to be used for analytics and service improvement.',
+      heading: 'Unspecified purposes',
+      text:
+        explanation.unspecified_purposes ||
+        'No information is available for this section.',
     },
     {
-      heading: 'What is not confirmed',
-      text: 'Some secondary uses may not be described in enough detail.',
+      heading: 'Additional uses',
+      text:
+        explanation.additional_uses ||
+        'No information is available for this section.',
     },
     {
       heading: 'Why this matters',
-      text: 'Understanding the purpose helps users know why their personal information is being requested.',
+      text:
+        purposeOfUse.why_this_matters ||
+        'No information is available for this section.',
     },
   ]
+
+  const sourceText =
+    purposeOfUse.extraction?.[0]?.evidence?.[0]?.text ||
+    'No relevant source text was found.'
 
   return (
     <PrivacyDetail
       title="Purpose of Use"
       subtitle="A closer look at why the policy says your personal information may be used."
-      statusLabel="Purpose of use mentioned"
-      statusText="Some purposes may not be fully detailed"
+      statusLabel={
+        purposeOfUse.status === 'not_mentioned'
+          ? 'Not clearly stated'
+          : 'Purpose of use mentioned'
+      }
+      statusText={
+        purposeOfUse.clarity === 'clear'
+          ? 'Information is clearly stated'
+          : 'Some purposes may not be fully detailed'
+      }
       sections={sections}
-      sourceText="We may use information to provide services, improve products and understand how users interact with our platform."
-      interpretation="The policy gives several reasons for using personal information, although some purposes may remain broad."
+      sourceText={sourceText}
+      interpretation={
+        purposeOfUse.why_this_matters ||
+        'No additional interpretation is available.'
+      }
     />
   )
 }

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import '../styles/privacyDetail.css'
 
@@ -12,6 +12,10 @@ function PrivacyDetail({
   interpretation,
 }) {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const policyText = location.state?.policyText
+  const analysisResult = location.state?.analysisResult
 
   return (
     <div className="detail-page">
@@ -20,7 +24,14 @@ function PrivacyDetail({
       <main className="detail-content">
         <button
           className="back-explanation"
-          onClick={() => navigate('/explanation')}
+          onClick={() =>
+            navigate('/explanation', {
+              state: {
+                policyText: policyText,
+                analysisResult: analysisResult,
+              },
+            })
+          }
         >
           ← Back to Explanation
         </button>

@@ -1,38 +1,76 @@
+import { useLocation } from 'react-router-dom'
 import PrivacyDetail from '../components/PrivacyDetail'
 
 function DataSharing() {
+  const location = useLocation()
+
+  const analysisResult = location.state?.analysisResult || {}
+  const dataSharing = analysisResult.data_sharing || {}
+  const explanation = dataSharing.explanation || {}
+
   const sections = [
     {
       heading: 'Who data may be shared with',
-      text: 'The policy mentions that information may be shared with service providers or other partners.',
+      text:
+        explanation.who_receives_data ||
+        'No information is available for this section.',
     },
     {
       heading: 'Why sharing may happen',
-      text: 'Sharing may be used to support service delivery, analytics or other business functions.',
+      text:
+        explanation.why_data_is_shared ||
+        'No information is available for this section.',
     },
     {
-      heading: 'Third-party services',
-      text: 'Some external organisations may process information on behalf of the service.',
+      heading: 'Named organisations',
+      text:
+        explanation.named_organisations ||
+        'No information is available for this section.',
     },
     {
-      heading: 'What is not confirmed',
-      text: 'The policy may not clearly identify every organisation that receives personal information.',
+      heading: 'What data is shared',
+      text:
+        explanation.what_data_is_shared ||
+        'No information is available for this section.',
+    },
+    {
+      heading: 'User control',
+      text:
+        explanation.user_control ||
+        'No information is available for this section.',
     },
     {
       heading: 'Why this matters',
-      text: 'Knowing who may receive information helps users understand where their data could go.',
+      text:
+        dataSharing.why_this_matters ||
+        'No information is available for this section.',
     },
   ]
+
+  const sourceText =
+    dataSharing.extraction?.[0]?.evidence?.[0]?.text ||
+    'No relevant source text was found.'
 
   return (
     <PrivacyDetail
       title="Data Sharing"
       subtitle="A closer look at whether the policy says your information may be shared."
-      statusLabel="Data sharing mentioned"
-      statusText="Some third parties may not be clearly identified"
+      statusLabel={
+        dataSharing.status === 'not_mentioned'
+          ? 'Not clearly stated'
+          : 'Data sharing mentioned'
+      }
+      statusText={
+        dataSharing.clarity === 'clear'
+          ? 'Information is clearly stated'
+          : 'Some third parties may not be clearly identified'
+      }
       sections={sections}
-      sourceText="We may share information with service providers and selected partners who help us operate our services."
-      interpretation="The policy confirms that some sharing may occur, but it may not identify every third party in detail."
+      sourceText={sourceText}
+      interpretation={
+        dataSharing.why_this_matters ||
+        'No additional interpretation is available.'
+      }
     />
   )
 }

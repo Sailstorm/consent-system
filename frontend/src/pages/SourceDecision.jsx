@@ -1,6 +1,13 @@
+import { useLocation } from 'react-router-dom'
 import PrivacyDetail from '../components/PrivacyDetail'
 
 function SourceDecision() {
+  const location = useLocation()
+
+  const policyText =
+    location.state?.policyText ||
+    'No submitted privacy text is available.'
+
   const sections = [
     {
       heading: 'Where the explanation comes from',
@@ -31,7 +38,7 @@ function SourceDecision() {
       statusLabel="Source available"
       statusText="Final decision remains with the user"
       sections={sections}
-      sourceText="This explanation is based only on the privacy policy content submitted for analysis."
+      sourceText={policyText}
       interpretation="The tool supports understanding by showing relevant information and source text, but it does not decide whether the user should accept or reject the policy."
     />
   )
