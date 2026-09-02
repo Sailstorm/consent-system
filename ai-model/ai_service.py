@@ -75,6 +75,3 @@ def analyze_policy(policy_text):
         )
 
     return output
-
-
-    return result["summaries"]
