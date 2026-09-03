@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
 import '../styles/consentSummary.css'
 
 function ConsentSummary() {
@@ -59,11 +60,7 @@ function ConsentSummary() {
           </p>
         </div>
 
-        <div className="summary-steps">
-          <div className="step">1 Input</div>
-          <div className="step">2 Explanation</div>
-          <div className="step active">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={3} />
 
         <section className="summary-card">
           <div className="summary-card-heading">

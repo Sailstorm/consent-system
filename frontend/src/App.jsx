@@ -14,6 +14,8 @@ import DataSharing from './pages/DataSharing'
 import DataRetention from './pages/DataRetention'
 import UserControl from './pages/UserControl'
 import SourceDecision from './pages/SourceDecision'
+import Settings from './pages/Settings'
+import HelpPrivacy from './pages/HelpPrivacy'
 
 function App() {
   return (
@@ -80,6 +82,10 @@ function App() {
           path="/source-decision"
           element={<SourceDecision />}
         />
+
+        <Route path="/settings" element={<Settings />} />
+
+        <Route path="/help-privacy" element={<HelpPrivacy />} />
       </Routes>
     </BrowserRouter>
   )

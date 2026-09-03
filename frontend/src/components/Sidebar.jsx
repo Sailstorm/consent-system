@@ -32,8 +32,20 @@ function Sidebar({ activePage = 'overview' }) {
       </div>
 
       <div className="sidebar-bottom">
-        <button className="bottom-link">Settings</button>
-        <button className="bottom-link">Help & Privacy</button>
+        <button
+          className={
+            activePage === 'settings' ? 'bottom-link active' : 'bottom-link'
+          }
+          onClick={() => navigate('/settings')}
+        >
+          Settings
+        </button>
+        <button
+          className={activePage === 'help' ? 'bottom-link active' : 'bottom-link'}
+          onClick={() => navigate('/help-privacy')}
+        >
+          Help & Privacy
+        </button>
       </div>
     </aside>
   )

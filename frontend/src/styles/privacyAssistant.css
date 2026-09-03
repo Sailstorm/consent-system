@@ -21,27 +21,6 @@
   font-size: 13px;
 }
 
-.assistant-steps {
-  display: flex;
-  gap: 10px;
-  margin: 24px 0 18px;
-}
-
-.step {
-  padding: 7px 13px;
-  border: 1px solid #d9e2e0;
-  border-radius: 18px;
-  background: #ffffff;
-  color: #7d8b8a;
-  font-size: 11px;
-}
-
-.step.active {
-  border-color: #4a8988;
-  background: #e5f1ef;
-  color: #286765;
-}
-
 .input-card {
   max-width: 900px;
   padding: 24px;
@@ -155,10 +134,6 @@
 @media (max-width: 720px) {
   .assistant-content {
     padding: 24px;
-  }
-
-  .assistant-steps {
-    flex-wrap: wrap;
   }
 
   .input-footer {

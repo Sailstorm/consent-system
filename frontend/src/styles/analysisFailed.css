@@ -21,12 +21,6 @@
   font-size: 13px;
 }
 
-.failed-steps {
-  display: flex;
-  gap: 10px;
-  margin: 24px 0 18px;
-}
-
 .failed-card {
   max-width: 900px;
   min-height: 390px;
@@ -134,10 +128,6 @@
 @media (max-width: 720px) {
   .failed-content {
     padding: 24px;
-  }
-
-  .failed-steps {
-    flex-wrap: wrap;
   }
 
   .failed-actions {

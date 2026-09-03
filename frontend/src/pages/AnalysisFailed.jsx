@@ -1,9 +1,12 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
 import '../styles/analysisFailed.css'
 
 function AnalysisFailed() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const policyText = location.state?.policyText
 
   return (
     <div className="failed-page">
@@ -17,11 +20,7 @@ function AnalysisFailed() {
           </p>
         </div>
 
-        <div className="failed-steps">
-          <div className="step">1 Input</div>
-          <div className="step active">2 Explanation</div>
-          <div className="step">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={2} />
 
         <section className="failed-card">
           <div className="failed-icon">!</div>
@@ -45,14 +44,22 @@ function AnalysisFailed() {
         <div className="failed-actions">
           <button
             className="retry-button"
-            onClick={() => navigate('/processing')}
+            onClick={() =>
+              navigate('/processing', {
+                state: { policyText: policyText },
+              })
+            }
           >
             Retry analysis
           </button>
 
           <button
             className="back-input-button"
-            onClick={() => navigate('/privacy-assistant')}
+            onClick={() =>
+              navigate('/privacy-assistant', {
+                state: { policyText: policyText },
+              })
+            }
           >
             Back to input
           </button>

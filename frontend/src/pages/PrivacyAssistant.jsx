@@ -1,20 +1,38 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
+import {
+  loadDraftPolicy,
+  loadSettings,
+  saveDraftPolicy,
+} from '../utils/settings'
 import '../styles/privacyAssistant.css'
 
 function PrivacyAssistant() {
   const location = useLocation()
   const navigate = useNavigate()
+  const settings = loadSettings()
 
   const [policyText, setPolicyText] = useState(
-    location.state?.policyText || ''
+    location.state?.policyText ||
+      (settings.keepSession ? loadDraftPolicy() : '') ||
+      ''
   )
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!loadSettings().keepSession) {
+      return
+    }
+
+    saveDraftPolicy(policyText)
+  }, [policyText])
 
   const handleClear = () => {
     setPolicyText('')
     setError('')
+    saveDraftPolicy('')
   }
 
   const handleAnalyse = () => {
@@ -53,18 +71,15 @@ function PrivacyAssistant() {
           </p>
         </div>
 
-        <div className="assistant-steps">
-          <div className="step active">1 Input</div>
-          <div className="step">2 Explanation</div>
-          <div className="step">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={1} />
 
         <section className="input-card">
           <div className="input-heading">
             <h2>Enter privacy information</h2>
             <p>
               Only the text you paste here will be analysed. The tool does not
-              make your final decision for you.
+              make your final decision for you. Please enter no more than 8,000
+              characters.
             </p>
           </div>
 

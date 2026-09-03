@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
 import '../styles/invalidInput.css'
 
 function InvalidInput() {
@@ -18,11 +19,7 @@ function InvalidInput() {
           </p>
         </div>
 
-        <div className="invalid-steps">
-          <div className="step active">1 Input</div>
-          <div className="step">2 Explanation</div>
-          <div className="step">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={1} />
 
         <section className="invalid-card">
           <div className="invalid-icon">!</div>

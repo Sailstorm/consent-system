@@ -111,6 +111,11 @@
   color: white;
 }
 
+.bottom-link.active {
+  color: white;
+  font-weight: 600;
+}
+
 @media (max-width: 720px) {
   .sidebar {
     width: 180px;

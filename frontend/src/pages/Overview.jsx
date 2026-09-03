@@ -140,12 +140,6 @@ function Overview() {
           </div>
 
           <div className="top-actions">
-            <input
-              type="text"
-              className="search-box"
-              placeholder="Search here"
-            />
-
             <div className="user-chip">
               <span className="user-dot"></span>
               <span>Margaret</span>

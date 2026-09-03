@@ -1,0 +1,472 @@
+.static-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f8f7;
+  color: #243436;
+}
+
+.static-content {
+  flex: 1;
+  padding: 36px 48px 48px;
+  max-width: 920px;
+}
+
+.static-heading h1 {
+  margin: 0 0 7px;
+  font-size: 28px;
+}
+
+.static-heading p {
+  margin: 0;
+  color: #7b8888;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings-section,
+.help-section {
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid #dfe7e5;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.settings-section h2,
+.help-section h2 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.settings-section > p,
+.help-section > p,
+.help-section li {
+  margin: 0;
+  color: #6f7c7c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.settings-section > p {
+  margin-bottom: 18px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 0;
+  border-top: 1px solid #edf2f1;
+}
+
+.setting-row:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.setting-copy {
+  flex: 1;
+}
+
+.setting-copy strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #243436;
+}
+
+.setting-copy span {
+  font-size: 12px;
+  color: #7b8888;
+  line-height: 1.5;
+}
+
+.setting-control {
+  flex-shrink: 0;
+}
+
+.setting-control select {
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 1px solid #dce5e3;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #243436;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border: none;
+  border-radius: 999px;
+  background: #c8d5d3;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggle.on {
+  background: #4d9194;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.toggle.on .toggle-thumb {
+  transform: translateX(20px);
+}
+
+.action-button {
+  padding: 10px 16px;
+  border: 1px solid #d5e0dd;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #2d4f52;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background: #f3f8f7;
+}
+
+.action-button.danger {
+  border-color: #e4c8c8;
+  color: #8f4444;
+}
+
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.source-item {
+  padding: 14px 16px;
+  border: 1px solid #edf2f1;
+  border-radius: 8px;
+  background: #fafcfc;
+}
+
+.source-item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.source-item span,
+.source-item a {
+  display: block;
+  font-size: 12px;
+  color: #6f7c7c;
+  line-height: 1.5;
+}
+
+.source-item a {
+  color: #2f6d70;
+  text-decoration: none;
+}
+
+.source-item a:hover {
+  text-decoration: underline;
+}
+
+.status-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e8f2f1;
+  color: #2f6d70;
+  font-size: 11px;
+}
+
+.settings-note,
+.help-callout {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #eef5f4;
+  color: #4d6668;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.help-section ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.help-section li + li {
+  margin-top: 8px;
+}
+
+.help-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.help-links a {
+  padding: 8px 12px;
+  border: 1px solid #d9e5e2;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #2f6d70;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.help-links a:hover {
+  background: #f3f8f7;
+}
+
+@media (max-width: 720px) {
+  .static-content {
+    padding: 28px 20px 36px;
+  }
+
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .setting-control,
+  .setting-control select {
+    width: 100%;
+  }
+}
+
+html.text-size-small {
+  font-size: 14px;
+}
+
+html.text-size-medium {
+  font-size: 16px;
+}
+
+html.text-size-large {
+  font-size: 18px;
+}
+
+html.night-theme {
+  color-scheme: dark;
+}
+
+html.night-theme,
+html.night-theme body,
+html.night-theme #root {
+  background: #10181a;
+  color: #e4eeed;
+}
+
+html.night-theme .overview-page,
+html.night-theme .assistant-page,
+html.night-theme .explanation-page,
+html.night-theme .summary-page,
+html.night-theme .static-page,
+html.night-theme .processing-page,
+html.night-theme .failed-page,
+html.night-theme .invalid-page,
+html.night-theme .detail-page {
+  background: #10181a;
+  color: #e4eeed;
+}
+
+html.night-theme h1,
+html.night-theme h2,
+html.night-theme h3,
+html.night-theme strong {
+  color: #eef5f4;
+}
+
+html.night-theme p,
+html.night-theme span,
+html.night-theme li,
+html.night-theme .overview-top p,
+html.night-theme .assistant-heading p,
+html.night-theme .explanation-heading p,
+html.night-theme .summary-heading p,
+html.night-theme .static-heading p,
+html.night-theme .setting-copy span,
+html.night-theme .settings-section > p,
+html.night-theme .help-section > p,
+html.night-theme .help-section li {
+  color: #a8b8b7;
+}
+
+html.night-theme .sidebar {
+  background: #0d2428;
+}
+
+html.night-theme .feature-card,
+html.night-theme .panel,
+html.night-theme .dashboard-card,
+html.night-theme .settings-section,
+html.night-theme .help-section,
+html.night-theme .input-card,
+html.night-theme .category-card,
+html.night-theme .summary-card,
+html.night-theme .processing-card,
+html.night-theme .failed-card,
+html.night-theme .invalid-card,
+html.night-theme .source-item,
+html.night-theme .user-chip {
+  background: #1a2628;
+  border-color: #334547;
+  color: #e4eeed;
+}
+
+html.night-theme .category-card h2,
+html.night-theme .setting-copy strong,
+html.night-theme .source-item strong {
+  color: #eef5f4;
+}
+
+html.night-theme .category-card p,
+html.night-theme .source-item span,
+html.night-theme .source-item a {
+  color: #a8b8b7;
+}
+
+html.night-theme input,
+html.night-theme textarea,
+html.night-theme select,
+html.night-theme .policy-input,
+html.night-theme .setting-control select {
+  background: #152022;
+  border-color: #3a4e50;
+  color: #e4eeed;
+}
+
+html.night-theme .clear-button,
+html.night-theme .action-button,
+html.night-theme .edit-input-button,
+html.night-theme .help-links a {
+  background: #1a2628;
+  border-color: #3a4e50;
+  color: #d5e3e2;
+}
+
+html.night-theme .clear-button:hover,
+html.night-theme .action-button:hover,
+html.night-theme .edit-input-button:hover,
+html.night-theme .help-links a:hover {
+  background: #223133;
+}
+
+html.night-theme .before-card,
+html.night-theme .settings-note,
+html.night-theme .help-callout,
+html.night-theme .processing-note,
+html.night-theme .failed-note {
+  background: #1d3334;
+  color: #c5d6d4;
+}
+
+html.night-theme .explanation-note,
+html.night-theme .summary-message,
+html.night-theme .invalid-note {
+  background: #3a3420;
+  color: #e4d9b3;
+}
+
+html.night-theme .progress-step.upcoming,
+html.night-theme .progress-step.upcoming .progress-marker {
+  color: #8aa0a0;
+}
+
+html.night-theme .progress-step.upcoming .progress-marker {
+  background: #1a2628;
+  border-color: #3a4e50;
+}
+
+html.night-theme .progress-step:not(:last-child)::after {
+  background: #334547;
+}
+
+html.night-theme .progress-step.complete::after {
+  background: #4d9194;
+}
+
+html.night-theme .progress-step.current .progress-marker {
+  background: #1d3334;
+  border-color: #4d9194;
+  color: #cfe7e5;
+}
+
+html.night-theme .setting-row {
+  border-top-color: #2d3f41;
+}
+
+html.night-theme .summary-item {
+  border-bottom-color: #2d3f41;
+}
+
+html.night-theme .toggle {
+  background: #3a4e50;
+}
+
+html.night-theme .toggle.on {
+  background: #4d9194;
+}
+
+html.night-theme .dashboard-message,
+html.night-theme .dashboard-disclaimer,
+html.night-theme .asic-box,
+html.night-theme .asic-source,
+html.night-theme .detail-main-card,
+html.night-theme .source-card {
+  background: #1a2628;
+  border-color: #334547;
+  color: #e4eeed;
+}
+
+html.night-theme .trend-message,
+html.night-theme .asic-disclaimer,
+html.night-theme .asic-table th {
+  background: #152022;
+  color: #c5d6d4;
+}
+
+html.night-theme .asic-table td,
+html.night-theme .sector-name span,
+html.night-theme .sector-name strong,
+html.night-theme .source-list strong {
+  color: #c5d6d4;
+}
+
+html.night-theme .asic-table td,
+html.night-theme .source-list div,
+html.night-theme .data-note {
+  border-color: #2d3f41;
+}
+
+html.night-theme .sector-bar {
+  background: #2d3f41;
+}
+
+html.night-theme .detail-status,
+html.night-theme .back-explanation {
+  background: #1d3334;
+  color: #c5d6d4;
+  border-color: #4d9194;
+}
+
+html.night-theme .back-explanation:hover {
+  background: #223133;
+}

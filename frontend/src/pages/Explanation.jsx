@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
+import { loadSettings, truncateForDetailLevel } from '../utils/settings'
 import '../styles/explanation.css'
 
 function Explanation() {
@@ -8,6 +10,7 @@ function Explanation() {
 
   const policyText = location.state?.policyText
   const analysisResult = location.state?.analysisResult || {}
+  const detailLevel = loadSettings().detailLevel
 
   const dataCollection =
     analysisResult.data_collection?.data_collection ||
@@ -17,9 +20,11 @@ function Explanation() {
   const categories = [
     {
       title: 'Data Collection',
-      text:
+      text: truncateForDetailLevel(
         dataCollection.summary ||
-        'No information is available for this category.',
+          'No information is available for this category.',
+        detailLevel,
+      ),
       status:
         dataCollection.status === 'not_mentioned'
           ? 'Not clearly stated'
@@ -28,9 +33,11 @@ function Explanation() {
     },
     {
       title: 'Purpose of Use',
-      text:
+      text: truncateForDetailLevel(
         analysisResult.purpose_of_use?.summary ||
-        'No information is available for this category.',
+          'No information is available for this category.',
+        detailLevel,
+      ),
       status:
         analysisResult.purpose_of_use?.status === 'not_mentioned'
           ? 'Not clearly stated'
@@ -39,9 +46,11 @@ function Explanation() {
     },
     {
       title: 'Data Sharing',
-      text:
+      text: truncateForDetailLevel(
         analysisResult.data_sharing?.summary ||
-        'No information is available for this category.',
+          'No information is available for this category.',
+        detailLevel,
+      ),
       status:
         analysisResult.data_sharing?.status === 'not_mentioned'
           ? 'Not clearly stated'
@@ -50,9 +59,11 @@ function Explanation() {
     },
     {
       title: 'Data Retention',
-      text:
+      text: truncateForDetailLevel(
         analysisResult.data_retention?.summary ||
-        'No information is available for this category.',
+          'No information is available for this category.',
+        detailLevel,
+      ),
       status:
         analysisResult.data_retention?.status === 'not_mentioned'
           ? 'Not clearly stated'
@@ -61,9 +72,11 @@ function Explanation() {
     },
     {
       title: 'User Control',
-      text:
+      text: truncateForDetailLevel(
         analysisResult.user_control?.summary ||
-        'No information is available for this category.',
+          'No information is available for this category.',
+        detailLevel,
+      ),
       status:
         analysisResult.user_control?.status === 'not_mentioned'
           ? 'Not clearly stated'
@@ -100,11 +113,7 @@ function Explanation() {
           </p>
         </div>
 
-        <div className="explanation-steps">
-          <div className="step">1 Input</div>
-          <div className="step active">2 Explanation</div>
-          <div className="step">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={2} />
 
         <section className="category-grid">
           {categories.map((category) => (
@@ -131,19 +140,34 @@ function Explanation() {
           </p>
         </section>
 
-        <button
-          className="summary-button"
-          onClick={() =>
-            navigate('/consent-summary', {
-              state: {
-                policyText: policyText,
-                analysisResult: analysisResult,
-              },
-            })
-          }
-        >
-          View consent summary
-        </button>
+        <div className="explanation-actions">
+          <button
+            className="summary-button"
+            onClick={() =>
+              navigate('/consent-summary', {
+                state: {
+                  policyText: policyText,
+                  analysisResult: analysisResult,
+                },
+              })
+            }
+          >
+            View consent summary
+          </button>
+
+          <button
+            className="edit-input-button"
+            onClick={() =>
+              navigate('/privacy-assistant', {
+                state: {
+                  policyText: policyText,
+                },
+              })
+            }
+          >
+            Edit Input
+          </button>
+        </div>
       </main>
     </div>
   )

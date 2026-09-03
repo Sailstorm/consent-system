@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import ProgressSteps from '../components/ProgressSteps'
 import '../styles/processing.css'
 
 const AI_URL = import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'
@@ -37,7 +38,9 @@ function Processing() {
         })
 
         if (!response.ok) {
-          navigate('/analysis-failed')
+          navigate('/analysis-failed', {
+            state: { policyText: policyText },
+          })
           return
         }
 
@@ -51,7 +54,9 @@ function Processing() {
         })
       } catch (error) {
         console.log(error)
-        navigate('/analysis-failed')
+        navigate('/analysis-failed', {
+          state: { policyText: policyText },
+        })
       }
     }
 
@@ -71,11 +76,7 @@ function Processing() {
           </p>
         </div>
 
-        <div className="processing-steps">
-          <div className="step">1 Input</div>
-          <div className="step active">2 Explanation</div>
-          <div className="step">3 Consent Summary</div>
-        </div>
+        <ProgressSteps current={2} />
 
         <section className="processing-card">
           <div className="loading-circle"></div>
