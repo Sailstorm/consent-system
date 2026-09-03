@@ -17,3 +17,6 @@ data/*.csv
 data/*.tsv
 data/*.xlsx
 data/*.zip
+
+docs/
+.claude/
