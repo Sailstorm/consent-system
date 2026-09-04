@@ -2,6 +2,8 @@
 
 A full-stack application for exploring and reasoning about consent/privacy data, combining a Postgres-backed API, an AI policy-analysis service, and a React frontend.
 
+The product can be tested here: http://52.64.225.116/privacy-assistant
+
 ## Architecture
 
 - **`backend/`** — Node.js/Express API (`consent-assistant-backend`) serving data from Postgres, with importers for ASIC/OAIC datasets.
