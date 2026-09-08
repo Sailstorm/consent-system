@@ -13,13 +13,13 @@
 
 .static-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .static-heading p {
   margin: 0;
   color: #7b8888;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -35,7 +35,7 @@
 .settings-section h2,
 .help-section h2 {
   margin: 0 0 6px;
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .settings-section > p,
@@ -43,7 +43,7 @@
 .help-section li {
   margin: 0;
   color: #6f7c7c;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
@@ -72,13 +72,13 @@
 .setting-copy strong {
   display: block;
   margin-bottom: 4px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: #243436;
 }
 
 .setting-copy span {
-  font-size: 12px;
+  font-size: 14px;
   color: #7b8888;
   line-height: 1.5;
 }
@@ -94,7 +94,7 @@
   border-radius: 7px;
   background: #ffffff;
   color: #243436;
-  font-size: 12px;
+  font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -134,7 +134,7 @@
   border-radius: 7px;
   background: #ffffff;
   color: #2d4f52;
-  font-size: 12px;
+  font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
 }
@@ -164,13 +164,13 @@
 .source-item strong {
   display: block;
   margin-bottom: 4px;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .source-item span,
 .source-item a {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   color: #6f7c7c;
   line-height: 1.5;
 }
@@ -191,7 +191,7 @@
   border-radius: 999px;
   background: #e8f2f1;
   color: #2f6d70;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .settings-note,
@@ -201,7 +201,7 @@
   border-radius: 8px;
   background: #eef5f4;
   color: #4d6668;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -227,7 +227,7 @@
   border-radius: 7px;
   background: #ffffff;
   color: #2f6d70;
-  font-size: 12px;
+  font-size: 14px;
   text-decoration: none;
 }
 
@@ -252,15 +252,15 @@
 }
 
 html.text-size-small {
-  font-size: 14px;
-}
-
-html.text-size-medium {
   font-size: 16px;
 }
 
-html.text-size-large {
+html.text-size-medium {
   font-size: 18px;
+}
+
+html.text-size-large {
+  font-size: 20px;
 }
 
 html.night-theme {

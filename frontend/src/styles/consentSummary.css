@@ -12,13 +12,13 @@
 
 .summary-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .summary-heading p {
   margin: 0;
   color: #7b8888;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .summary-card {
@@ -35,13 +35,13 @@
 
 .summary-card-heading h2 {
   margin: 0 0 5px;
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .summary-card-heading p {
   margin: 0;
   color: #83908f;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .summary-items {
@@ -60,13 +60,13 @@
 
 .summary-item h3 {
   margin: 0 0 6px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .summary-item p {
   margin: 0;
   color: #6f7f7e;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -80,13 +80,13 @@
 
 .summary-message h3 {
   margin: 0 0 6px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .summary-message p {
   margin: 0;
   color: #756d55;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -104,7 +104,7 @@
   padding: 9px 16px;
   border-radius: 18px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   cursor: pointer;
 }
 

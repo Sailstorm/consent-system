@@ -27,7 +27,7 @@
 .sidebar-brand h2 {
   margin: 0 0 5px;
 
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -35,7 +35,7 @@
 .sidebar-brand p {
   margin: 0;
 
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.4;
 
   color: #b8cbce;
@@ -61,7 +61,7 @@
 
   text-align: left;
 
-  font-size: 13px;
+  font-size: 15px;
   font-family: Arial, Helvetica, sans-serif;
 
   cursor: pointer;
@@ -99,7 +99,7 @@
 
   text-align: left;
 
-  font-size: 11px;
+  font-size: 13px;
   font-family: Arial, Helvetica, sans-serif;
 
   cursor: pointer;
@@ -127,19 +127,19 @@
   }
 
   .sidebar-brand h2 {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .sidebar-brand p {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .nav-item {
     padding: 10px 12px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .bottom-link {
-    font-size: 10px;
+    font-size: 12px;
   }
 }

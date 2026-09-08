@@ -12,13 +12,13 @@
 
 .failed-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .failed-heading p {
   margin: 0;
   color: #7b8888;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .failed-card {
@@ -45,27 +45,27 @@
 
   color: #b45e58;
 
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
 }
 
 .failed-card h2 {
   margin: 0 0 12px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .failed-message {
   max-width: 520px;
   margin: 0 auto;
   color: #697978;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
 .failed-subtext {
   margin: 12px 0 0;
   color: #879392;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .failed-note {
@@ -80,7 +80,7 @@
   background: #eaf5f3;
   color: #71817f;
 
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -100,7 +100,7 @@
   border-radius: 18px;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
 
   cursor: pointer;
 }

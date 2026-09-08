@@ -22,7 +22,7 @@
   color: #286765;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
 
   cursor: pointer;
@@ -34,13 +34,13 @@
 
 .detail-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .detail-heading p {
   margin: 0;
   color: #7a8887;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .detail-status {
@@ -55,7 +55,7 @@
   border-radius: 6px;
   background: #e8f4f1;
 
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .detail-status span {
@@ -89,7 +89,7 @@
 .detail-main-card h2,
 .source-card h2 {
   margin: 0 0 20px;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .detail-sections {
@@ -109,7 +109,7 @@
 
 .detail-section h3 {
   margin: 0 0 5px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .detail-section p {
@@ -117,7 +117,7 @@
 
   color: #758483;
 
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -135,7 +135,7 @@
 
   color: #697978;
 
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
 }
 
@@ -145,7 +145,7 @@
 
 .interpretation-box h3 {
   margin: 0 0 7px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .interpretation-box p {
@@ -153,7 +153,7 @@
 
   color: #778584;
 
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -166,7 +166,7 @@
   background: transparent;
   color: #3c7e7c;
 
-  font-size: 10px;
+  font-size: 12px;
 
   cursor: pointer;
 }

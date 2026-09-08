@@ -12,13 +12,13 @@
 
 .processing-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .processing-heading p {
   margin: 0;
   color: #7b8888;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .processing-card {
@@ -43,13 +43,13 @@
 
 .processing-card h2 {
   margin: 0 0 12px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .processing-main-text {
   margin: 0;
   color: #697978;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .processing-list {
@@ -59,7 +59,7 @@
 .processing-list p {
   margin: 7px 0;
   color: #879392;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .processing-note {
@@ -70,7 +70,7 @@
   border-radius: 6px;
   background: #eaf5f3;
   color: #71817f;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -87,7 +87,7 @@
 .failure-button {
   padding: 9px 16px;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 13px;
   cursor: pointer;
 }
 

@@ -12,13 +12,13 @@
 
 .invalid-heading h1 {
   margin: 0 0 7px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .invalid-heading p {
   margin: 0;
   color: #7b8888;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .invalid-card {
@@ -49,13 +49,13 @@
 
   color: #b45e58;
 
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
 }
 
 .invalid-card h2 {
   margin: 0 0 12px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .invalid-message {
@@ -65,7 +65,7 @@
 
   color: #697978;
 
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -80,7 +80,7 @@
   background: #fff7dc;
   color: #756d55;
 
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -95,7 +95,7 @@
   color: #ffffff;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
 
   cursor: pointer;
 }
