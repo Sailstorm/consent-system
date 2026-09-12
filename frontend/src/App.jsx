@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import PasswordGate from './components/PasswordGate'
-import Overview from './pages/Overview'
+import Home from './pages/Home'
 import PrivacyAssistant from './pages/PrivacyAssistant'
 import InvalidInput from './pages/InvalidInput'
 import Processing from './pages/Processing'
@@ -23,7 +23,7 @@ function App() {
     <PasswordGate>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Overview />} />
+          <Route path="/" element={<Home />} />
 
           <Route
             path="/privacy-assistant"
