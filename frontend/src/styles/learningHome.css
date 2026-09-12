@@ -1,0 +1,174 @@
+.learning-home-heading {
+  max-width: 720px;
+  margin-bottom: 30px;
+}
+
+.learning-home-label {
+  margin: 0 0 10px;
+
+  color: #087c74;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.learning-home-heading h1 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.learning-home-heading > p:last-child {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.learning-home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.learning-home-card {
+  min-height: 230px;
+  padding: 22px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  border: 1px solid #acd9e9;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.learning-home-card:hover {
+  border-color: #8ecbc8;
+}
+
+.learning-card-number {
+  margin-bottom: 28px;
+
+  color: #087c74;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.learning-home-card h2 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 18px;
+}
+
+.learning-home-card p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.learning-card-button {
+  min-height: 38px;
+  margin-top: auto;
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 5px;
+
+  background: #087c74;
+  color: #ffffff;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.learning-card-button:hover {
+  background: #066b65;
+}
+
+.learning-home-info {
+  padding: 22px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  border-radius: 10px;
+
+  background: #e5f4f1;
+}
+
+.learning-home-info h2 {
+  margin: 0 0 6px;
+
+  color: #15324a;
+
+  font-size: 18px;
+}
+
+.learning-home-info p {
+  margin: 0;
+
+  color: #627b87;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.learning-about-link {
+  padding: 0;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  background: transparent;
+  color: #087c74;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.learning-about-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .learning-home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .learning-home-heading h1 {
+    font-size: 28px;
+  }
+
+  .learning-home-info {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

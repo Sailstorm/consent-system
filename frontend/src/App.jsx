@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import PasswordGate from './components/PasswordGate'
+
 import Home from './pages/Home'
 import PolicyExample from './pages/PolicyExample'
 import PrivacyAssistant from './pages/PrivacyAssistant'
@@ -16,11 +17,18 @@ import DataSharing from './pages/DataSharing'
 import DataRetention from './pages/DataRetention'
 import UserControl from './pages/UserControl'
 import SourceDecision from './pages/SourceDecision'
+
 import Settings from './pages/Settings'
 import HelpPrivacy from './pages/HelpPrivacy'
 import Accessibility from './pages/Accessibility'
 import Privacy from './pages/Privacy'
 import DataSources from './pages/DataSources'
+
+import LearningHome from './pages/LearningHome'
+import Learn from './pages/Learn'
+import Practice from './pages/Practice'
+import Progress from './pages/Progress'
+import LearningAbout from './pages/LearningAbout'
 
 function App() {
   return (
@@ -109,9 +117,53 @@ function App() {
             element={<DataSources />}
           />
 
-          <Route path="/settings" element={<Settings />} />
+          {/* Iteration 2 */}
+          <Route
+            path="/privacy-learning"
+            element={<LearningHome />}
+          />
 
-          <Route path="/help-privacy" element={<HelpPrivacy />} />
+          {/* Learning */}
+          <Route
+            path="/privacy-learning/learn"
+            element={<Learn />}
+          />
+
+          <Route
+            path="/privacy-learning/learn/:topicId"
+            element={<Learn />}
+          />
+
+          <Route
+            path="/privacy-learning/learn/:topicId/activity"
+            element={<Learn />}
+          />
+
+          {/* Practice */}
+          <Route
+            path="/privacy-learning/practice"
+            element={<Practice />}
+          />
+
+          <Route
+            path="/privacy-learning/progress"
+            element={<Progress />}
+          />
+
+          <Route
+            path="/privacy-learning/about"
+            element={<LearningAbout />}
+          />
+
+          <Route
+            path="/settings"
+            element={<Settings />}
+          />
+
+          <Route
+            path="/help-privacy"
+            element={<HelpPrivacy />}
+          />
         </Routes>
       </BrowserRouter>
     </PasswordGate>
