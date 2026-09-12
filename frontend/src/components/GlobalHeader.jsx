@@ -18,7 +18,11 @@ function GlobalHeader({ activePage = '' }) {
 
         <nav className="global-nav">
           <button
-            className={activePage === 'home' ? 'global-nav-link active' : 'global-nav-link'}
+            className={
+              activePage === 'home'
+                ? 'global-nav-link active'
+                : 'global-nav-link'
+            }
             type="button"
             onClick={() => navigate('/')}
           >
@@ -59,18 +63,6 @@ function GlobalHeader({ activePage = '' }) {
             onClick={() => navigate('/risk-dashboard')}
           >
             Risk Dashboard
-          </button>
-
-          <button
-            className={
-              activePage === 'help'
-                ? 'global-nav-link active'
-                : 'global-nav-link'
-            }
-            type="button"
-            onClick={() => navigate('/help-privacy')}
-          >
-            Help
           </button>
         </nav>
       </div>

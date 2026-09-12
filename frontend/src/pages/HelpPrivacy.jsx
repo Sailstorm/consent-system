@@ -1,118 +1,106 @@
-import Sidebar from '../components/Sidebar'
-import '../styles/settings.css'
+import { useNavigate } from 'react-router-dom'
+import GlobalHeader from '../components/GlobalHeader'
+import GlobalFooter from '../components/GlobalFooter'
+import '../styles/helpPrivacy.css'
 
 function HelpPrivacy() {
+  const navigate = useNavigate()
+
   return (
-    <div className="static-page">
-      <Sidebar activePage="help" />
+    <div className="help-page">
+      <GlobalHeader />
 
-      <main className="static-content">
-        <div className="static-heading">
-          <h1>Help & Privacy</h1>
-          <p>
-            Learn how Consent Assistant works and how your information is
-            handled when you use it.
-          </p>
-        </div>
+      <main className="help-content">
+        <section className="help-heading">
+          <p className="help-label">HELP</p>
 
-        <section className="help-section">
-          <h2>How the app works</h2>
+          <h1>Help</h1>
+
           <p>
-            Consent Assistant has two main parts: an Overview dashboard with
-            Australian privacy-related data, and a Privacy Assistant that turns
-            pasted policy text into a clearer explanation.
+            Find simple guidance for using Consent Assistant and understanding
+            the information shown across the website.
           </p>
-          <ul>
-            <li>
-              <strong>Overview</strong> shows breach notification statistics and
-              organisation search results from public Australian datasets.
-            </li>
-            <li>
-              <strong>Privacy Assistant</strong> analyses the text you paste and
-              organises it into consent categories such as data collection,
-              sharing, retention and user control.
-            </li>
-            <li>
-              The tool explains what the policy says. It does not recommend
-              whether you should agree or disagree.
-            </li>
-          </ul>
         </section>
 
-        <section className="help-section">
-          <h2>What happens to your policy text</h2>
-          <p>When you use Privacy Assistant:</p>
-          <ul>
-            <li>
-              The text you paste is sent to the analysis service to generate an
-              explanation and consent summary.
-            </li>
-            <li>
-              If you enable <strong>Keep draft text in this session</strong> in
-              Settings, your draft may be stored in this browser&apos;s
-              session storage until you clear it.
-            </li>
-            <li>
-              Consent Assistant does not create a user account and does not
-              permanently store your pasted policies in the frontend by default.
-            </li>
-          </ul>
+        <section className="help-grid">
+          <div className="help-card">
+            <h2>Using Consent Assistant</h2>
 
-          <div className="help-callout">
-            Only paste policy text you are comfortable submitting for analysis.
-            Avoid including unrelated personal information in the input box.
+            <p>
+              Use Policy Assistant to review privacy policy text and see a
+              clearer explanation of important privacy information.
+            </p>
+
+            <ul>
+              <li>Paste a privacy policy or privacy notice.</li>
+              <li>Select Analyse to start the review.</li>
+              <li>Open each section to read more detail.</li>
+              <li>Use the Consent Summary for a quick overview.</li>
+            </ul>
+          </div>
+
+          <div className="help-card">
+            <h2>Understanding your results</h2>
+
+            <p>
+              Analysis results are organised into privacy categories such as
+              data collection, purpose, sharing, retention and user control.
+            </p>
+
+            <ul>
+              <li>Information found means relevant policy text was identified.</li>
+              <li>Not clearly stated means the policy may not explain that area.</li>
+              <li>You can compare explanations with the original source text.</li>
+              <li>The final privacy decision always stays with you.</li>
+            </ul>
+          </div>
+
+          <div className="help-card">
+            <h2>Your privacy comes first</h2>
+
+            <p>
+              Consent Assistant is designed to support understanding without
+              requiring a user account for the main privacy functions.
+            </p>
+
+            <ul>
+              <li>Only submit text you are comfortable analysing.</li>
+              <li>Avoid adding unrelated personal information.</li>
+              <li>Draft text can be cleared from your browser session.</li>
+              <li>The tool does not provide legal advice.</li>
+            </ul>
           </div>
         </section>
 
-        <section className="help-section">
-          <h2>Your device preferences</h2>
-          <p>
-            Settings such as text size and night theme are saved in
-            your browser&apos;s local storage on this device only. They are not
-            sent to a server.
-          </p>
-          <p>
-            You can clear saved draft text at any time from{' '}
-            <strong>Settings → Clear session</strong>.
-          </p>
+        <section className="help-start">
+          <div>
+            <h2>Need somewhere to start?</h2>
+
+            <p>
+              View a simple example before analysing a privacy policy of your
+              own.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate('/policy-assistant/example')}
+          >
+            Try an Example →
+          </button>
         </section>
 
-        <section className="help-section">
-          <h2>External data sources</h2>
-          <p>
-            Overview statistics come from public Australian sources, including:
-          </p>
-          <div className="help-links">
-            <a
-              href="https://www.oaic.gov.au/privacy/notifiable-data-breaches"
-              target="_blank"
-              rel="noreferrer"
-            >
-              OAIC Notifiable Data Breaches
-            </a>
-            <a
-              href="https://asic.gov.au/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              ASIC business names register
-            </a>
-          </div>
-        </section>
+        <section className="help-no-account">
+          <strong>No personal contact information required</strong>
 
-        <section className="help-section">
-          <h2>Important disclaimer</h2>
           <p>
-            Consent Assistant is designed to support understanding, not to
-            replace legal advice. Policy explanations may miss nuance or fail if
-            the source text is incomplete.
+            You can use the main privacy features without creating a personal
+            account or providing an email address.
           </p>
-          <div className="help-callout">
-            Always make your own privacy decision. If you need legal guidance,
-            speak with a qualified professional.
-          </div>
         </section>
       </main>
+
+      <GlobalFooter />
     </div>
   )
 }

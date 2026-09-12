@@ -18,6 +18,9 @@ import UserControl from './pages/UserControl'
 import SourceDecision from './pages/SourceDecision'
 import Settings from './pages/Settings'
 import HelpPrivacy from './pages/HelpPrivacy'
+import Accessibility from './pages/Accessibility'
+import Privacy from './pages/Privacy'
+import DataSources from './pages/DataSources'
 
 function App() {
   return (
@@ -89,6 +92,21 @@ function App() {
           <Route
             path="/source-decision"
             element={<SourceDecision />}
+          />
+
+          <Route
+            path="/accessibility"
+            element={<Accessibility />}
+          />
+
+          <Route
+            path="/privacy"
+            element={<Privacy />}
+          />
+
+          <Route
+            path="/data-sources"
+            element={<DataSources />}
           />
 
           <Route path="/settings" element={<Settings />} />

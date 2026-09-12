@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
+import PolicyLayout from '../components/PolicyLayout'
 import ProgressSteps from '../components/ProgressSteps'
 import { loadSettings, truncateForDetailLevel } from '../utils/settings'
 import '../styles/explanation.css'
@@ -101,75 +101,89 @@ function Explanation() {
   }
 
   return (
-    <div className="explanation-page">
-      <Sidebar activePage="assistant" />
+    <PolicyLayout activePage="analysis">
+      <section className="explanation-heading">
+        <p className="explanation-label">POLICY ASSISTANT</p>
 
-      <main className="explanation-content">
-        <div className="explanation-heading">
-          <h1>Explanation</h1>
+        <h1>Privacy Policy Analysis</h1>
+
+        <p>
+          Review the main privacy points identified from your submitted text.
+        </p>
+      </section>
+
+      <ProgressSteps current={2} />
+
+      <section className="explanation-intro">
+        <div>
+          <h2>Your privacy explanation</h2>
           <p>
-            The key privacy points from your submitted text, organised into
-            clear consent categories.
+            The information is organised into key privacy categories so you
+            can review each part more easily.
           </p>
         </div>
 
-        <ProgressSteps current={2} />
+        <span>6 sections</span>
+      </section>
 
-        <section className="category-grid">
-          {categories.map((category) => (
-            <button
-              key={category.title}
-              className="category-card"
-              onClick={() => openCategory(category.path)}
-            >
-              <div>
-                <h2>{category.title}</h2>
-                <p>{category.text}</p>
-              </div>
+      <section className="category-grid">
+        {categories.map((category) => (
+          <button
+            key={category.title}
+            className="category-card"
+            onClick={() => openCategory(category.path)}
+          >
+            <div>
+              <h2>{category.title}</h2>
+              <p>{category.text}</p>
+            </div>
 
+            <div className="category-card-footer">
               <span>{category.status}</span>
-            </button>
-          ))}
-        </section>
 
-        <section className="explanation-note">
-          <strong>No recommendation is made for you.</strong>
-          <p>
-            The summary helps you understand what the policy says. If something
-            is unclear, it will be shown as not clearly stated.
-          </p>
-        </section>
-
-        <div className="explanation-actions">
-          <button
-            className="summary-button"
-            onClick={() =>
-              navigate('/consent-summary', {
-                state: {
-                  policyText: policyText,
-                  analysisResult: analysisResult,
-                },
-              })
-            }
-          >
-            View consent summary
+              <span className="category-card-arrow">→</span>
+            </div>
           </button>
+        ))}
+      </section>
 
-          <button
-            className="edit-input-button"
-            onClick={() =>
-              navigate('/privacy-assistant', {
-                state: {
-                  policyText: policyText,
-                },
-              })
-            }
-          >
-            Edit Input
-          </button>
-        </div>
-      </main>
-    </div>
+      <section className="explanation-note">
+        <strong>No recommendation is made for you.</strong>
+        <p>
+          The summary helps you understand what the policy says. If something
+          is unclear, it will be shown as not clearly stated.
+        </p>
+      </section>
+
+      <div className="explanation-actions">
+        <button
+          className="summary-button"
+          onClick={() =>
+            navigate('/consent-summary', {
+              state: {
+                policyText: policyText,
+                analysisResult: analysisResult,
+              },
+            })
+          }
+        >
+          View consent summary
+        </button>
+
+        <button
+          className="edit-input-button"
+          onClick={() =>
+            navigate('/privacy-assistant', {
+              state: {
+                policyText: policyText,
+              },
+            })
+          }
+        >
+          Edit Input
+        </button>
+      </div>
+    </PolicyLayout>
   )
 }
 

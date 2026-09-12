@@ -1,0 +1,294 @@
+.privacy-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background: #f9fbfb;
+  color: #15324a;
+}
+
+.privacy-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 38px 48px 48px;
+
+  flex: 1;
+}
+
+.privacy-heading {
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+
+.privacy-label {
+  margin: 0 0 10px;
+
+  color: #087c74;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.privacy-heading h1 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.privacy-heading > p:last-child {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.privacy-card {
+  min-height: 130px;
+  padding: 22px;
+
+  border: 1px solid #acd9e9;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.privacy-card h2 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 17px;
+}
+
+.privacy-card p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.privacy-settings {
+  margin-bottom: 24px;
+
+  border: 1px solid #acd9e9;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.privacy-settings-heading {
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #edf1f0;
+}
+
+.privacy-settings-heading h2 {
+  margin: 0 0 6px;
+
+  color: #15324a;
+
+  font-size: 19px;
+}
+
+.privacy-settings-heading p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 13px;
+}
+
+.privacy-setting-row {
+  min-height: 82px;
+  padding: 18px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  border-bottom: 1px solid #edf1f0;
+}
+
+.privacy-setting-row h3 {
+  margin: 0 0 5px;
+
+  color: #15324a;
+
+  font-size: 14px;
+}
+
+.privacy-setting-row p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.privacy-setting-row select {
+  min-width: 130px;
+  height: 38px;
+  padding: 0 10px;
+
+  border: 1px solid #cfdde1;
+  border-radius: 5px;
+
+  background: #ffffff;
+  color: #15324a;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.privacy-toggle {
+  width: 46px;
+  height: 25px;
+  padding: 3px;
+
+  border: none;
+  border-radius: 20px;
+
+  background: #cdd9dc;
+
+  cursor: pointer;
+}
+
+.privacy-toggle-thumb {
+  width: 19px;
+  height: 19px;
+
+  display: block;
+
+  border-radius: 50%;
+  background: #ffffff;
+
+  transition: transform 0.2s ease;
+}
+
+.privacy-toggle.on {
+  background: #087c74;
+}
+
+.privacy-toggle.on .privacy-toggle-thumb {
+  transform: translateX(21px);
+}
+
+.clear-session-button {
+  min-height: 38px;
+  padding: 0 14px;
+
+  border: 1px solid #cfdde1;
+  border-radius: 5px;
+
+  background: #ffffff;
+  color: #526b7c;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.clear-session-button:hover {
+  background: #f5f8f8;
+}
+
+.privacy-cleared {
+  margin: 16px 24px 20px;
+  padding: 12px 14px;
+
+  border-radius: 6px;
+
+  background: #e5f4f1;
+  color: #087c74;
+
+  font-size: 12px;
+}
+
+.privacy-principles {
+  padding: 22px 24px;
+
+  border-radius: 10px;
+
+  background: #e5f4f1;
+}
+
+.privacy-principles h2 {
+  margin: 0 0 18px;
+
+  color: #15324a;
+
+  font-size: 18px;
+}
+
+.privacy-principle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.privacy-principle-grid strong {
+  color: #15324a;
+
+  font-size: 13px;
+}
+
+.privacy-principle-grid p {
+  margin: 6px 0 0;
+
+  color: #627b87;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.privacy-note {
+  margin: 16px 0 0;
+
+  color: #8497a6;
+
+  font-size: 11px;
+}
+
+@media (max-width: 800px) {
+  .privacy-grid,
+  .privacy-principle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .privacy-content {
+    padding: 30px 24px 38px;
+  }
+
+  .privacy-heading h1 {
+    font-size: 28px;
+  }
+
+  .privacy-setting-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+}

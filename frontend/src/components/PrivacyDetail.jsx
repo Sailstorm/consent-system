@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import Sidebar from './Sidebar'
+import PolicyLayout from './PolicyLayout'
 import '../styles/privacyDetail.css'
 
 function PrivacyDetail({
@@ -18,67 +18,66 @@ function PrivacyDetail({
   const analysisResult = location.state?.analysisResult
 
   return (
-    <div className="detail-page">
-      <Sidebar activePage="assistant" />
+    <PolicyLayout activePage="analysis">
+      <button
+        className="back-explanation"
+        onClick={() =>
+          navigate('/explanation', {
+            state: {
+              policyText: policyText,
+              analysisResult: analysisResult,
+            },
+          })
+        }
+      >
+        ← Back to Explanation
+      </button>
 
-      <main className="detail-content">
-        <button
-          className="back-explanation"
-          onClick={() =>
-            navigate('/explanation', {
-              state: {
-                policyText: policyText,
-                analysisResult: analysisResult,
-              },
-            })
-          }
-        >
-          ← Back to Explanation
-        </button>
+      <section className="detail-heading">
+        <p className="detail-label">POLICY ASSISTANT</p>
 
-        <div className="detail-heading">
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
-        </div>
+        <h1>{title}</h1>
 
-        <div className="detail-status">
-          <span>{statusLabel}</span>
-          <strong>{statusText}</strong>
-        </div>
+        <p>{subtitle}</p>
+      </section>
 
-        <div className="detail-grid">
-          <section className="detail-main-card">
-            <h2>What the policy says in simple terms</h2>
+      <div className="detail-status">
+        <span>{statusLabel}</span>
+        <strong>{statusText}</strong>
+      </div>
 
-            <div className="detail-sections">
-              {sections.map((section) => (
-                <div className="detail-section" key={section.heading}>
-                  <h3>{section.heading}</h3>
-                  <p>{section.text}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+      <div className="detail-grid">
+        <section className="detail-main-card">
+          <h2>What the policy says in simple terms</h2>
 
-          <section className="source-card">
-            <h2>Relevant source text</h2>
+          <div className="detail-sections">
+            {sections.map((section) => (
+              <div className="detail-section" key={section.heading}>
+                <h3>{section.heading}</h3>
+                <p>{section.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-            <div className="source-box">
-              <p>{sourceText}</p>
-            </div>
+        <section className="source-card">
+          <h2>Relevant source text</h2>
 
-            <div className="interpretation-box">
-              <h3>Interpretation</h3>
-              <p>{interpretation}</p>
-            </div>
+          <div className="source-box">
+            <p>{sourceText}</p>
+          </div>
 
-            <button className="source-link">
-              Source: submitted privacy text
-            </button>
-          </section>
-        </div>
-      </main>
-    </div>
+          <div className="interpretation-box">
+            <h3>Interpretation</h3>
+            <p>{interpretation}</p>
+          </div>
+
+          <button className="source-link">
+            Source: submitted privacy text
+          </button>
+        </section>
+      </div>
+    </PolicyLayout>
   )
 }
 
