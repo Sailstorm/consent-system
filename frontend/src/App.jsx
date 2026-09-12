@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import PasswordGate from './components/PasswordGate'
 import Home from './pages/Home'
+import PolicyExample from './pages/PolicyExample'
 import PrivacyAssistant from './pages/PrivacyAssistant'
 import InvalidInput from './pages/InvalidInput'
 import Processing from './pages/Processing'
@@ -24,6 +25,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+
+          <Route
+            path="/policy-assistant/example"
+            element={<PolicyExample />}
+          />
 
           <Route
             path="/privacy-assistant"

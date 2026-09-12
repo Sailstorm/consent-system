@@ -1,0 +1,48 @@
+.policy-example-intro {
+  margin-bottom: 28px;
+}
+
+.policy-example-label {
+  margin: 0 0 10px;
+  color: #087c74;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.policy-example-intro h1 {
+  margin: 0 0 8px;
+  color: #15324a;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.policy-example-intro > p:last-child {
+  margin: 0;
+  color: #688099;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.policy-example-card {
+  max-width: 760px;
+  min-height: 170px;
+  padding: 26px;
+  border: 1px solid #acd9e9;
+  border-radius: 10px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.policy-example-card h2 {
+  margin: 0 0 10px;
+  color: #15324a;
+  font-size: 20px;
+}
+
+.policy-example-card p {
+  margin: 0;
+  color: #688099;
+  font-size: 13px;
+  line-height: 1.6;
+}
