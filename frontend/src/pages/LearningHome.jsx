@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LearningLayout from '../components/LearningLayout'
 import { loadLearningProgress } from '../utils/learningProgress'
+import { getCompletedCount, getPracticeStatus } from '../utils/practice'
 import '../styles/learningHome.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -11,6 +12,8 @@ function LearningHome() {
 
   const completedTopics = loadLearningProgress()
   const completedCount = completedTopics.length
+  const practiceStatus = getPracticeStatus()
+  const practiceCount = getCompletedCount()
 
   const [overview, setOverview] = useState(null)
   const [sectors, setSectors] = useState([])
@@ -52,6 +55,16 @@ function LearningHome() {
 
   if (completedCount === 5) {
     learningButtonText = 'Review Learning'
+  }
+
+  let practiceButtonText = 'Start Practice'
+
+  if (practiceStatus === 'in_progress') {
+    practiceButtonText = 'Continue Practice'
+  }
+
+  if (practiceStatus === 'completed') {
+    practiceButtonText = 'Try Practice Again'
   }
 
   const formatDate = (date) => {
@@ -112,12 +125,20 @@ function LearningHome() {
           <span className="learning-card-number">02</span>
 
           <div>
-            <h2>Practice</h2>
+            <h2>Consent Simulation</h2>
 
             <p>
-              Apply what you learned to short privacy scenarios and everyday
-              decisions.
+              Practise realistic consent choices across three interactive
+              scenarios.
             </p>
+          </div>
+
+          <div className="learning-card-progress">
+            <span>Practice progress</span>
+
+            <strong>
+              {practiceCount} of 3 scenarios completed
+            </strong>
           </div>
 
           <button
@@ -125,7 +146,7 @@ function LearningHome() {
             type="button"
             onClick={() => navigate('/privacy-learning/practice')}
           >
-            Start Practice
+            {practiceButtonText}
           </button>
         </div>
 
@@ -133,11 +154,11 @@ function LearningHome() {
           <span className="learning-card-number">03</span>
 
           <div>
-            <h2>Progress</h2>
+            <h2>Learning Dashboard</h2>
 
             <p>
-              Review completed learning activities and see what is still left
-              to explore.
+              See completed topics, scenario progress and your next
+              recommended learning step.
             </p>
           </div>
 

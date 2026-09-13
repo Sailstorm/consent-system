@@ -8,7 +8,7 @@ function LearningActivity({ topic }) {
 
   const handleComplete = () => {
     markTopicCompleted(topic.slug)
-    navigate('/privacy-learning/learn')
+    navigate('/privacy-learning/progress')
   }
 
   return (
