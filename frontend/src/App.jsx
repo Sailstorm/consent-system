@@ -1,8 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import PasswordGate from './components/PasswordGate'
+import RequireAuth from './components/RequireAuth'
+import PublicOnly from './components/PublicOnly'
 
 import Home from './pages/Home'
+import Welcome from './pages/Welcome'
+import Register from './pages/Register'
+import Login from './pages/Login'
 import PolicyExample from './pages/PolicyExample'
 import PrivacyAssistant from './pages/PrivacyAssistant'
 import InvalidInput from './pages/InvalidInput'
@@ -38,6 +43,13 @@ function App() {
     <PasswordGate>
       <BrowserRouter>
         <Routes>
+          <Route element={<PublicOnly />}>
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
+
+          <Route element={<RequireAuth />}>
           <Route path="/" element={<Home />} />
 
           <Route
@@ -182,6 +194,7 @@ function App() {
             path="/help-privacy"
             element={<HelpPrivacy />}
           />
+          </Route>
         </Routes>
       </BrowserRouter>
     </PasswordGate>

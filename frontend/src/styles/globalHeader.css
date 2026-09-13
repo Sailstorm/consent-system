@@ -34,6 +34,12 @@
   background: #15324a;
 }
 
+.global-header-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
 .global-nav {
   display: flex;
   align-items: center;
@@ -56,6 +62,33 @@
 .global-nav-link.active {
   color: #087c78;
   font-weight: 700;
+}
+
+.global-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.global-account-name {
+  color: #15324a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.global-logout {
+  padding: 6px 12px;
+  border: 1px solid #acd9e9;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #087c74;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.global-logout:hover {
+  background: #eaf5fd;
 }
 
 @media (max-width: 900px) {
