@@ -40,7 +40,7 @@
 }
 
 .learning-home-card {
-  min-height: 230px;
+  min-height: 250px;
   padding: 22px;
 
   display: flex;
@@ -81,6 +81,32 @@
 
   font-size: 13px;
   line-height: 1.6;
+}
+
+.learning-card-progress {
+  width: 100%;
+  margin-top: 18px;
+  padding: 10px 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  border-radius: 6px;
+
+  background: #e5f4f1;
+}
+
+.learning-card-progress span {
+  color: #627b87;
+
+  font-size: 10px;
+}
+
+.learning-card-progress strong {
+  color: #15324a;
+
+  font-size: 11px;
 }
 
 .learning-card-button {
@@ -156,8 +182,146 @@
   text-decoration: underline;
 }
 
+.learning-real-world {
+  margin-top: 24px;
+  padding: 26px;
+
+  border: 1px solid #acd9e9;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.learning-real-world-heading {
+  max-width: 720px;
+  margin-bottom: 22px;
+}
+
+.learning-real-world-label {
+  margin: 0 0 8px;
+
+  color: #087c74;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.learning-real-world-heading h2 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 20px;
+}
+
+.learning-real-world-heading > p:last-child {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.learning-real-world-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.learning-real-world-stat {
+  min-height: 150px;
+  padding: 18px;
+
+  border-radius: 8px;
+
+  background: #f4f8f8;
+}
+
+.learning-real-world-stat > span {
+  display: block;
+  margin-bottom: 12px;
+
+  color: #627b87;
+
+  font-size: 11px;
+}
+
+.learning-real-world-stat > strong {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #15324a;
+
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.learning-real-world-stat > p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.learning-real-world-period {
+  font-size: 17px !important;
+}
+
+.learning-sector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.learning-sector-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.learning-sector-item span {
+  color: #526b7c;
+
+  font-size: 11px;
+}
+
+.learning-sector-item strong {
+  color: #15324a;
+
+  font-size: 11px;
+}
+
+.learning-real-world-source {
+  margin: 18px 0 0;
+
+  color: #8193a0;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.learning-real-world-message {
+  padding: 18px;
+
+  border-radius: 6px;
+
+  background: #f4f8f8;
+  color: #688099;
+
+  font-size: 12px;
+}
+
 @media (max-width: 900px) {
   .learning-home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-real-world-stats {
     grid-template-columns: 1fr;
   }
 }
