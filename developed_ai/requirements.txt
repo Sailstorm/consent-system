@@ -1,0 +1,24 @@
+# Python >= 3.10
+# Install from the repository root:
+#   python -m pip install -r developed_ai/requirements.txt
+
+# API and ASGI server
+fastapi>=0.100,<1
+pydantic>=2,<3
+uvicorn[standard]>=0.23,<1
+
+# Model inference: match the version recorded in the Stage 1 model config.
+transformers==5.16.1
+torch>=2.5,<3
+# Required by Stage 2's device_map="auto".
+accelerate>=1.1.0,<2
+# Used by Stage 1's Tensor.numpy() conversion.
+numpy>=1.26,<3
+# Read the local model.safetensors weights.
+safetensors>=0.8.0,<1
+
+# DeBERTa SentencePiece tokenizer and conversion support
+sentencepiece>=0.1.91,!=0.1.92,<1
+protobuf
+# Required by Stage 2's apply_chat_template().
+jinja2>=3.1.0,<4

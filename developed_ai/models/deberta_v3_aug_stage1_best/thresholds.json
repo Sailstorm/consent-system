@@ -1,0 +1,22 @@
+{
+  "data_collection": {
+    "threshold": 0.1,
+    "validation_f1": 0.46844919786096256
+  },
+  "purpose_of_use": {
+    "threshold": 0.1,
+    "validation_f1": 0.7758284600389863
+  },
+  "data_sharing": {
+    "threshold": 0.1,
+    "validation_f1": 0.27884615384615385
+  },
+  "data_retention": {
+    "threshold": 0.1,
+    "validation_f1": 0.07656967840735068
+  },
+  "user_control": {
+    "threshold": 0.1,
+    "validation_f1": 0.30727762803234504
+  }
+}

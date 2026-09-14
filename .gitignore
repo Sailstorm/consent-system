@@ -20,3 +20,6 @@ data/*.zip
 
 docs/
 .claude/
+
+
+/developed_ai/models/deberta_v3_aug_stage1_best/model.safetensors
