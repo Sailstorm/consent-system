@@ -59,6 +59,17 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Browser/CLI-based SSH via EC2 Instance Connect only (AWS-managed prefix
+  # list), not open to the internet. Fallback admin access path while SSM
+  # registration is broken (see docs/pentest-plan.md, finding 7).
+  ingress {
+    description     = "EC2 Instance Connect"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    prefix_list_ids = ["pl-0e1bc5673b8a57acc"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -132,8 +143,16 @@ resource "aws_instance" "app" {
     volume_type = "gp3"
   }
 
+  # IMDSv2 enforcement was applied manually out-of-band on the current
+  # instance (not previously in Terraform) to remediate the finding in
+  # docs/pentest-plan.md #5. Codified here so it survives instance replacement.
+  metadata_options {
+    http_tokens = "required"
+  }
+
   user_data = templatefile("${path.module}/user_data.sh.tpl", {
     repo_url               = var.repo_url
+    stable_ref             = var.stable_ref
     region                 = var.aws_region
     groq_param_name        = aws_ssm_parameter.groq_api_key.name
     db_password_param_name = aws_ssm_parameter.db_password.name

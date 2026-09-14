@@ -1,0 +1,44 @@
+# Deploy-only overlay implementing the URL versioning pipeline. Not used for
+# local dev (docker-compose.yml alone still works exactly as before). See
+# docs/url-versioning-pipeline.md and infra/user_data.sh.tpl, which is what
+# actually invokes this file:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# It must be run from the "active development" checkout (main HEAD), with a
+# sibling `../app-stable` git worktree checked out at the stable ref (see
+# infra/user_data.sh.tpl) — that's what the `frontend` build context below
+# points at.
+services:
+  # Overridden to be THE LIVE ROOT: rebuilt from the stable worktree (last
+  # complete iteration) instead of this checkout. Doesn't publish a host
+  # port (docker-compose.yml has none — only docker-compose.override.yml,
+  # local-dev-only, adds one) since the router owns :80 in this overlay.
+  frontend:
+    build:
+      context: ../app-stable/frontend
+
+  # Active Development: this checkout (iteration 2 in progress), served
+  # under /underdevelopment/.
+  frontend-dev:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ""
+        VITE_AI_URL: ""
+        VITE_BASE_PATH: "/underdevelopment/"
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - ai-model
+
+  router:
+    build: ./infra/nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - frontend-dev
+      - backend
+      - ai-model

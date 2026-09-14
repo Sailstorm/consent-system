@@ -21,7 +21,7 @@ import HelpPrivacy from './pages/HelpPrivacy'
 function App() {
   return (
     <PasswordGate>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Overview />} />
 

@@ -13,6 +13,12 @@ variable "repo_url" {
   default = "https://github.com/Sailstorm/consent-system.git"
 }
 
+variable "stable_ref" {
+  description = "Git ref (tag/branch) for the last complete iteration, served at the live root. See docs/url-versioning-pipeline.md."
+  type        = string
+  default     = "iteration-1"
+}
+
 variable "cors_origin" {
   description = "Allowed CORS origin for the backend/AI API. Same-origin requests via nginx aren't affected by this."
   type        = string

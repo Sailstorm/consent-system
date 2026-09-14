@@ -1,0 +1,8 @@
+# Auto-loaded by plain `docker compose up` (local dev only) so the frontend
+# is still reachable at http://localhost:80, same as before. Deploys use
+# `docker compose -f docker-compose.yml -f docker-compose.prod.yml ...`
+# explicitly, which skips this file — see docs/url-versioning-pipeline.md.
+services:
+  frontend:
+    ports:
+      - "80:80"

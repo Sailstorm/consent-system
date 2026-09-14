@@ -4,6 +4,11 @@ A full-stack application for exploring and reasoning about consent/privacy data,
 
 The product can be tested here: http://52.64.225.116/privacy-assistant
 
+Deployed environments follow a URL versioning pipeline — the live root
+(`/`) is always the last complete iteration, active development lives under
+`/underdevelopment/`, and retired iterations are archived under `/version1/`
+etc. See [`docs/url-versioning-pipeline.md`](docs/url-versioning-pipeline.md).
+
 ## Architecture
 
 - **`backend/`** — Node.js/Express API (`consent-assistant-backend`) serving data from Postgres, with importers for ASIC/OAIC datasets.
