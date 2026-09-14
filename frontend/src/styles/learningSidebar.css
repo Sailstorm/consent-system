@@ -76,21 +76,10 @@
   gap: 8px;
 }
 
-.learning-sidebar-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
+.learning-sidebar-icon {
   width: 16px;
   height: 16px;
-
-  border-radius: 50%;
-
-  background: #087c74;
-  color: #ffffff;
-
-  font-size: 10px;
-  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .learning-guest {

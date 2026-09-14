@@ -1,3 +1,36 @@
+export const LEARNING_TOPICS = [
+  {
+    id: 'data-collection',
+    title: 'Data Collection',
+    nextHint:
+      'Learn what information a service may collect about you, then try a practice scenario.',
+  },
+  {
+    id: 'purpose-of-use',
+    title: 'Purpose of Use',
+    nextHint:
+      'Learn why an organisation wants to use your information, then try a practice scenario.',
+  },
+  {
+    id: 'data-sharing',
+    title: 'Data Sharing',
+    nextHint:
+      'Learn who else may receive your information, then try a practice scenario.',
+  },
+  {
+    id: 'data-retention',
+    title: 'Data Retention',
+    nextHint:
+      'Learn how long organisations may keep information, then try the final practice scenario.',
+  },
+  {
+    id: 'user-control',
+    title: 'User Control',
+    nextHint:
+      'Learn the choices you may have over your information, then try a practice scenario.',
+  },
+]
+
 const LEARNING_PROGRESS_KEY = 'consent-assistant-learning-progress'
 
 export function loadLearningProgress() {
@@ -35,4 +68,28 @@ export function markTopicCompleted(topicSlug) {
   )
 
   return nextProgress
+}
+
+export function isTopicCompleted(
+  topicId,
+  progress = loadLearningProgress(),
+) {
+  return progress.includes(topicId)
+}
+
+export function getCompletedTopicCount(
+  progress = loadLearningProgress(),
+) {
+  return LEARNING_TOPICS.filter((topic) =>
+    isTopicCompleted(topic.id, progress),
+  ).length
+}
+
+export function getNextLearningTopic(
+  progress = loadLearningProgress(),
+) {
+  return (
+    LEARNING_TOPICS.find((topic) => !isTopicCompleted(topic.id, progress)) ||
+    null
+  )
 }
