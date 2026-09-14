@@ -1,0 +1,295 @@
+.info-heading {
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+
+.info-heading h1 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.info-heading p {
+  margin: 0;
+
+  color: #688099;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.info-questions-card,
+.info-advice-card {
+  min-height: 280px;
+  padding: 26px 24px;
+
+  border-radius: 14px;
+}
+
+.info-questions-card {
+  background: #eef7fb;
+}
+
+.info-advice-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+
+  background: #e7f6f1;
+}
+
+.info-questions-card h2,
+.info-advice-card h2 {
+  margin: 0 0 18px;
+
+  color: #15324a;
+
+  font-size: 18px;
+}
+
+.info-questions-card ul {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.info-questions-card li {
+  position: relative;
+
+  margin: 0 0 14px;
+  padding-left: 16px;
+
+  color: #5f7b86;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.info-questions-card li:last-child {
+  margin-bottom: 0;
+}
+
+.info-questions-card li::before {
+  content: '';
+
+  position: absolute;
+  top: 8px;
+  left: 0;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #087c74;
+}
+
+.info-advice-card p {
+  margin: 0;
+
+  color: #5f7b86;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.info-continue {
+  width: fit-content;
+  min-height: 40px;
+  min-width: 120px;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #087c74;
+  color: #ffffff;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.info-continue:hover {
+  background: #066b65;
+}
+
+.info-extra {
+  margin-top: 8px;
+  padding: 22px 24px;
+
+  border-radius: 14px;
+
+  background: #eef7fb;
+}
+
+.info-extra h2 {
+  margin: 0 0 8px;
+
+  color: #15324a;
+
+  font-size: 16px;
+}
+
+.info-extra h3 {
+  margin: 0 0 4px;
+
+  color: #15324a;
+
+  font-size: 14px;
+}
+
+.info-extra p,
+.info-extra label {
+  margin: 0;
+
+  color: #5f7b86;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.info-extra > p {
+  margin-bottom: 12px;
+}
+
+.info-extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 12px;
+  padding-top: 12px;
+
+  border-top: 1px solid #d7e7ec;
+}
+
+.info-extra-note {
+  margin-top: 16px !important;
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: #e7f6f1;
+  color: #087c74 !important;
+}
+
+.info-source {
+  margin-top: 14px;
+  padding-top: 14px;
+
+  border-top: 1px solid #d7e7ec;
+}
+
+.info-source a {
+  display: inline-block;
+  margin-top: 6px;
+
+  color: #087c74;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.info-source a:hover {
+  text-decoration: underline;
+}
+
+.info-extra select,
+.info-extra button {
+  min-height: 36px;
+  padding: 0 12px;
+
+  border: 1px solid #c5d8dc;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #15324a;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.info-extra button {
+  border: none;
+
+  background: #087c74;
+  color: #ffffff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.info-extra button:hover {
+  background: #066b65;
+}
+
+.info-toggle {
+  width: 46px;
+  height: 25px;
+  padding: 3px;
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 20px;
+
+  background: #cdd9dc;
+
+  cursor: pointer;
+}
+
+.info-toggle-thumb {
+  width: 19px;
+  height: 19px;
+
+  display: block;
+
+  border-radius: 50%;
+  background: #ffffff;
+
+  transition: transform 0.2s ease;
+}
+
+.info-toggle.on {
+  background: #087c74;
+}
+
+.info-toggle.on .info-toggle-thumb {
+  transform: translateX(21px);
+}
+
+@media (max-width: 900px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .info-heading h1 {
+    font-size: 28px;
+  }
+
+  .info-extra-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

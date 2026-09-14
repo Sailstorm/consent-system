@@ -1,0 +1,44 @@
+.learning-layout-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background: #f9fbfb;
+  color: #15324a;
+}
+
+.learning-layout-body {
+  flex: 1;
+  display: flex;
+}
+
+.learning-layout-main {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.learning-layout-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 38px 48px 48px;
+
+  flex: 1;
+
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .learning-layout-content {
+    padding: 32px 30px 40px;
+  }
+}
+
+@media (max-width: 720px) {
+  .learning-layout-content {
+    padding: 28px 24px 36px;
+  }
+}
