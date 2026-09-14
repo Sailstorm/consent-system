@@ -13,15 +13,12 @@ from .ai.stage2_summarizer import (
 )
 
 
-BASE_DIR = Path(__file__).resolve().parent
-STAGE1_MODEL_PATH = (
-    BASE_DIR / "models" / "deberta_v3_aug_stage1_best"
-)
+STAGE1_MODEL_ID = "Meiyao-AI-25379/consent-assistant-deberta-stage1"
 
 app = FastAPI()
 
 stage1_model, stage1_tokenizer = load_stage1_model(
-    str(STAGE1_MODEL_PATH)
+    STAGE1_MODEL_ID
 )
 
 stage2_model, stage2_tokenizer = load_stage2_model(
