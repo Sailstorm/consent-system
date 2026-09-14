@@ -1,28 +1,59 @@
+import { useNavigate } from 'react-router-dom'
 import LearningLayout from '../components/LearningLayout'
 import '../styles/learningPlaceholder.css'
 
-function LearningAbout() {
-  return (
-    <LearningLayout activePage="about">
-      <section className="learning-placeholder">
-        <p className="learning-placeholder-label">PRIVACY LEARNING</p>
+function LearningAbout({ headerActivePage = 'learning' }) {
+  const navigate = useNavigate()
 
-        <h1>About Privacy Learning</h1>
+  return (
+    <LearningLayout
+      activePage="about"
+      headerActivePage={headerActivePage}
+    >
+      <section className="learning-placeholder learning-about-page">
+        <p className="learning-placeholder-label">HELP</p>
+
+        <h1>Find a privacy policy and understand the results</h1>
 
         <p>
-          This section explains the purpose and structure of the privacy
-          learning experience.
+          Guided steps explain how to locate a policy, paste it into the
+          assistant and review the summary.
         </p>
 
-        <div className="learning-placeholder-card">
-          <span>About section</span>
+        <div className="learning-about-layout">
+          <div className="learning-placeholder-card learning-about-card">
+            <h2>What this page covers</h2>
 
-          <h2>Ready for Iteration 2 development</h2>
+            <ol>
+              <li>
+                <strong>01</strong> Clear explanation
+              </li>
+              <li>
+                <strong>02</strong> Practical guidance
+              </li>
+              <li>
+                <strong>03</strong> Original wording remains available
+              </li>
+            </ol>
+          </div>
 
-          <p>
-            More information about the learning experience can be added here
-            later.
-          </p>
+          <div className="learning-help-card">
+            <div>
+              <h2>Helpful guidance</h2>
+
+              <p>
+                Guided steps explain how to locate a policy, paste it into the
+                assistant and review the summary.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate('/policy-assistant/example')}
+            >
+              Open step-by-step help
+            </button>
+          </div>
         </div>
       </section>
     </LearningLayout>

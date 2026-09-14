@@ -3,10 +3,14 @@ import GlobalFooter from './GlobalFooter'
 import LearningSidebar from './LearningSidebar'
 import '../styles/learningLayout.css'
 
-function LearningLayout({ activePage = 'home', children }) {
+function LearningLayout({
+  activePage = 'home',
+  headerActivePage = 'learning',
+  children,
+}) {
   return (
     <div className="learning-layout-page">
-      <GlobalHeader activePage="learning" />
+      <GlobalHeader activePage={headerActivePage} />
 
       <div className="learning-layout-body">
         <LearningSidebar activePage={activePage} />
