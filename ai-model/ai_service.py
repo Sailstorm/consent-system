@@ -4,7 +4,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
-from groq import Groq
+from openai import OpenAI
 
 from prompt import build_prompt
 
@@ -20,8 +20,9 @@ load_dotenv()
 # Groq API Configuration
 # -------------------------
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
+client = OpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=os.getenv("NVIDIA_API_KEY")
 )
 
 
@@ -63,13 +64,9 @@ def analyze_category(policy_text, category):
         try:
             response = client.chat.completions.create(
                 model=GENERATION_MODEL,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                max_tokens=1500
+                messages=messages,
+                temperature=0.1,
+                max_tokens=4096
             )
 
             raw_output = response.choices[0].message.content
