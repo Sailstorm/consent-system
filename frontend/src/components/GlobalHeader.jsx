@@ -64,6 +64,18 @@ function GlobalHeader({ activePage = '' }) {
           >
             Risk Dashboard
           </button>
+
+          <button
+            className={
+              activePage === 'help'
+                ? 'global-nav-link active'
+                : 'global-nav-link'
+            }
+            type="button"
+            onClick={() => navigate('/help-privacy')}
+          >
+            Help
+          </button>
         </nav>
       </div>
     </header>

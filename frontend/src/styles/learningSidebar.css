@@ -38,6 +38,10 @@
   width: 100%;
   padding: 12px 14px;
 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   border: none;
   border-left: 3px solid transparent;
 
@@ -59,11 +63,33 @@
 }
 
 .learning-sidebar-item.active {
-  border-left-color: #087c74;
+  border-left-color: transparent;
+  border-radius: 8px;
 
   background: #e5f4f1;
   color: #15324a;
 
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.learning-sidebar-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+
+  border-radius: 50%;
+
+  background: #087c74;
+  color: #ffffff;
+
+  font-size: 10px;
   font-weight: 700;
 }
 

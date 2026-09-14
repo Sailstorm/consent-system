@@ -27,6 +27,10 @@ import DataSources from './pages/DataSources'
 import LearningHome from './pages/LearningHome'
 import Learn from './pages/Learn'
 import Practice from './pages/Practice'
+import PracticeScenario from './pages/PracticeScenario'
+import PracticeReady from './pages/PracticeReady'
+import PracticeFeedback from './pages/PracticeFeedback'
+import PracticeSummary from './pages/PracticeSummary'
 import Progress from './pages/Progress'
 import LearningAbout from './pages/LearningAbout'
 
@@ -143,6 +147,26 @@ function App() {
           <Route
             path="/privacy-learning/practice"
             element={<Practice />}
+          />
+
+          <Route
+            path="/privacy-learning/practice/scenario/:scenarioNumber"
+            element={<PracticeScenario />}
+          />
+
+          <Route
+            path="/privacy-learning/practice/ready"
+            element={<PracticeReady />}
+          />
+
+          <Route
+            path="/privacy-learning/practice/feedback"
+            element={<PracticeFeedback />}
+          />
+
+          <Route
+            path="/privacy-learning/practice/summary"
+            element={<PracticeSummary />}
           />
 
           <Route

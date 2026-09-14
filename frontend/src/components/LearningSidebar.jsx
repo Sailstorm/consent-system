@@ -44,7 +44,12 @@ function LearningSidebar({ activePage = 'home' }) {
               type="button"
               onClick={() => navigate('/privacy-learning/practice')}
             >
-              Practice
+              {activePage === 'practice' ? (
+                <span className="learning-sidebar-check" aria-hidden="true">
+                  ✓
+                </span>
+              ) : null}
+              Practise
             </button>
 
             <button
@@ -75,7 +80,9 @@ function LearningSidebar({ activePage = 'home' }) {
 
         <div className="learning-guest">
           <strong>Guest Mode</strong>
-          <p>Your learning progress stays in this browser.</p>
+          <p>
+            No account needed. Progress is kept on this device for this visit.
+          </p>
         </div>
       </div>
     </aside>
