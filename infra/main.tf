@@ -157,6 +157,8 @@ resource "aws_instance" "app" {
     groq_param_name        = aws_ssm_parameter.groq_api_key.name
     db_password_param_name = aws_ssm_parameter.db_password.name
     cors_origin            = var.cors_origin
+    domain_name            = var.domain_name
+    acme_email             = var.acme_email
   })
 
   tags = {

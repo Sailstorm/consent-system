@@ -19,6 +19,18 @@ variable "stable_ref" {
   default     = "iteration-1"
 }
 
+variable "domain_name" {
+  description = "Public hostname the router (Caddy) requests a Let's Encrypt cert for. Defaults to a sslip.io hostname that resolves to the current Elastic IP with no DNS setup required — update if you move to a real domain."
+  type        = string
+  default     = "52-64-225-116.sslip.io"
+}
+
+variable "acme_email" {
+  description = "Contact email registered with Let's Encrypt for TLS cert notices."
+  type        = string
+  default     = "saubhagyagupta2002@gmail.com"
+}
+
 variable "cors_origin" {
   description = "Allowed CORS origin for the backend/AI API. Same-origin requests via nginx aren't affected by this."
   type        = string

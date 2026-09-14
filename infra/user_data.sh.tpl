@@ -44,6 +44,8 @@ cat > /opt/app/.env <<EOF
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 GROQ_API_KEY=$GROQ_API_KEY
 CORS_ORIGIN=${cors_origin}
+DOMAIN=${domain_name}
+ACME_EMAIL=${acme_email}
 EOF
 
 COMPOSE="docker compose -f docker-compose.yml -f docker-compose.prod.yml"

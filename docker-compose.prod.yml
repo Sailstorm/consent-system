@@ -32,13 +32,27 @@ services:
       - backend
       - ai-model
 
+  # Terminates TLS. Caddy requests/renews a Let's Encrypt cert for $DOMAIN
+  # automatically (HTTP-01 on :80, which it also uses to redirect to
+  # HTTPS) and persists it in the caddy-data volume across rebuilds.
   router:
-    build: ./infra/nginx
+    build: ./infra/router
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
     depends_on:
       - frontend
       - frontend-dev
       - backend
       - ai-model
+
+volumes:
+  caddy-data:
+  caddy-config:

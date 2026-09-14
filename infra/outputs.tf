@@ -3,7 +3,7 @@ output "public_ip" {
 }
 
 output "app_url" {
-  value = "http://${aws_eip.app.public_ip}"
+  value = "https://${var.domain_name}"
 }
 
 output "ssm_connect_command" {

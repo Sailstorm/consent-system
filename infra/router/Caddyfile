@@ -1,0 +1,44 @@
+{
+	email {$ACME_EMAIL}
+}
+
+# URL versioning pipeline (docs/url-versioning-pipeline.md). Caddy handles
+# the ACME HTTP-01 challenge and TLS termination automatically for
+# {$DOMAIN} — no certbot/cron needed, certs persist in the caddy-data
+# volume across rebuilds.
+{$DOMAIN} {
+	encode gzip
+
+	# Shared backend/ai-model, same for every version (paths kept as-is,
+	# matching how the frontend builds call them: /api/..., /analyze).
+	handle /api/* {
+		reverse_proxy backend:3000
+	}
+
+	handle /analyze* {
+		reverse_proxy ai-model:8000 {
+			transport http {
+				response_header_timeout 120s
+			}
+		}
+	}
+
+	# Active Development (iteration in progress). Prefix stripped before
+	# forwarding since frontend-dev serves its own dist root.
+	handle_path /underdevelopment/* {
+		reverse_proxy frontend-dev:80
+	}
+
+	# The Archive. Placeholder until an iteration is retired here as part
+	# of the cutover runbook in docs/url-versioning-pipeline.md.
+	handle /version1/* {
+		root * /srv/archive-placeholder
+		rewrite * /placeholder.html
+		file_server
+	}
+
+	# The LIVE Root: always the last complete iteration.
+	handle {
+		reverse_proxy frontend:80
+	}
+}
