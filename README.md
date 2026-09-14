@@ -2,7 +2,7 @@
 
 A full-stack application for exploring and reasoning about consent/privacy data, combining a Postgres-backed API, an AI policy-analysis service, and a React frontend.
 
-The product can be tested here: http://52.64.225.116/privacy-assistant
+The product can be tested here: https://52-64-225-116.sslip.io/privacy-assistant
 
 Deployed environments follow a URL versioning pipeline — the live root
 (`/`) is always the last complete iteration, active development lives under
