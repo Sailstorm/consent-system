@@ -1,16 +1,24 @@
-from pathlib import Path
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
 from .config import STAGE1_THRESHOLDS
 from .ai.pipeline import analyze_policy
 from .ai.stage1_classifier import load_stage1_model
+from openai import (
+    APIConnectionError,
+    APIStatusError,
+    APITimeoutError,
+    RateLimitError,
+)
+
 from .ai.stage2_summarizer import (
-    load_stage2_model,
-    Stage2InputTooLongError,
+    create_stage2_client,
     Stage2OutputError,
 )
+
+import logging
+
+logger = logging.getLogger("uvicorn.error")
 
 
 STAGE1_MODEL_ID = "Meiyao-AI-25379/consent-assistant-deberta-stage1"
@@ -21,9 +29,7 @@ stage1_model, stage1_tokenizer = load_stage1_model(
     STAGE1_MODEL_ID
 )
 
-stage2_model, stage2_tokenizer = load_stage2_model(
-    "Qwen/Qwen2.5-3B-Instruct"
-)
+stage2_client = create_stage2_client()
 
 
 class PolicyRequest(BaseModel):
@@ -47,17 +53,50 @@ def analyze(request: PolicyRequest):
             policy_text=request.text,
             stage1_model=stage1_model,
             stage1_tokenizer=stage1_tokenizer,
-            stage2_model=stage2_model,
-            stage2_tokenizer=stage2_tokenizer,
+            stage2_client=stage2_client,
             thresholds=STAGE1_THRESHOLDS,
         )
-    except Stage2InputTooLongError as exc:
-        raise HTTPException(
-            status_code=422,
-            detail=str(exc),
-        ) from exc
+
     except Stage2OutputError as exc:
+        logger.exception("Stage 2 returned invalid output.")
         raise HTTPException(
-            status_code=500,
-            detail="The model could not produce a valid summary.",
+            status_code=502,
+            detail="The summarisation service returned invalid output.",
+        ) from exc
+
+    except APITimeoutError as exc:
+        logger.exception("NVIDIA API request timed out.")
+        raise HTTPException(
+            status_code=504,
+            detail="The summarisation service timed out.",
+        ) from exc
+
+    except RateLimitError as exc:
+        logger.exception("NVIDIA API rate limit or quota reached.")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "The summarisation service is currently limited "
+                "by its request rate or quota."
+            ),
+        ) from exc
+
+    except APIConnectionError as exc:
+        logger.exception("Could not connect to NVIDIA API.")
+        raise HTTPException(
+            status_code=503,
+            detail="Could not connect to the summarisation service.",
+        ) from exc
+
+    except APIStatusError as exc:
+        logger.exception(
+            "NVIDIA API returned HTTP %s.",
+            exc.status_code,
+        )
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "The summarisation service rejected the request. "
+                "Check the server logs for details."
+            ),
         ) from exc

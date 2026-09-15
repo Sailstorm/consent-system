@@ -222,7 +222,8 @@ def pack_sentences(
             chunks.extend(
                 hard_token_split(
                     sentence,
-                    max_tokens=max_tokens
+                    tokenizer=tokenizer,
+                    max_tokens=max_tokens,
                 )
             )
 

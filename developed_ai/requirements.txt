@@ -22,3 +22,5 @@ sentencepiece>=0.1.91,!=0.1.92,<1
 protobuf
 # Required by Stage 2's apply_chat_template().
 jinja2>=3.1.0,<4
+
+openai

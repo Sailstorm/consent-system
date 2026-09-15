@@ -1,33 +1,23 @@
-import torch
 import json
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-STAGE2_CONTEXT_LIMIT = 8192
-STAGE2_SAFETY_MARGIN = 64
-
-class Stage2InputTooLongError(ValueError):
-    pass
+import os
+from openai import OpenAI
 
 
 class Stage2OutputError(RuntimeError):
     pass
 
-def load_stage2_model(model_name):
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_name,
-        trust_remote_code=True,
+def create_stage2_client():
+    api_key = os.environ.get("NVIDIA_API_KEY")
+
+    if not api_key:
+        raise RuntimeError("NVIDIA_API_KEY is not configured.")
+
+    return OpenAI(
+        base_url="https://integrate.api.nvidia.com/v1",
+        api_key=api_key,
+        timeout=120.0,
+        max_retries=1,
     )
-
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.float16,
-        device_map="auto",
-        trust_remote_code=True,
-    )
-
-    model.eval()
-
-    return model, tokenizer
 
 CATEGORY_FIELDS = {
     "data_collection": [
@@ -217,8 +207,7 @@ Return exactly this JSON structure:
 def generate_category_summary(
     category,
     evidence,
-    model,
-    tokenizer,
+    client,
     max_new_tokens=700,
 ):
     if not evidence:
@@ -241,7 +230,7 @@ def generate_category_summary(
             "content": (
                 "You are a grounded privacy-policy summarisation "
                 "assistant. Never add facts that are not supported "
-                "by the supplied evidence."
+                "by the supplied evidence. Return valid JSON only."
             ),
         },
         {
@@ -250,103 +239,49 @@ def generate_category_summary(
         },
     ]
 
-    formatted_prompt = tokenizer.apply_chat_template(
-        messages,
-        tokenize=False,
-        add_generation_prompt=True,
+    completion = client.chat.completions.create(
+        model="meta/llama-3.3-70b-instruct",
+        messages=messages,
+        temperature=0,
+        max_tokens=max_new_tokens,
     )
 
-    
-    inputs = tokenizer(
-        formatted_prompt,
-        return_tensors="pt",
-        add_special_tokens=False,
-        truncation=False,
-    )
-
-    context_limit = STAGE2_CONTEXT_LIMIT
-
-
-    model_limit = getattr(
-        model.config,
-        "max_position_embeddings",
-        None,
-    )
-
-    if isinstance(model_limit, int) and model_limit > 0:
-        context_limit = min(context_limit, model_limit)
-
-    tokenizer_limit = getattr(
-        tokenizer,
-        "model_max_length",
-        None,
-    )
-
-    if isinstance(tokenizer_limit, int) and tokenizer_limit > 0:
-        context_limit = min(context_limit, tokenizer_limit)
-
-    input_budget = (
-        context_limit
-        - max_new_tokens
-        - STAGE2_SAFETY_MARGIN
-    )
-
-    if input_budget <= 0:
-        raise RuntimeError(
-            "Stage 2 context configuration leaves no input budget."
+    if not completion.choices:
+        raise Stage2OutputError(
+            f"{category}: the API returned no choices."
         )
 
-    input_length = inputs["input_ids"].shape[1]
+    choice = completion.choices[0]
 
-    if input_length > input_budget:
-        raise Stage2InputTooLongError(
-            f"Evidence for '{category}' is too long: "
-            f"{input_length} input tokens; "
-            f"the current limit is {input_budget}. "
-            "Please submit a shorter policy."
+    if choice.finish_reason == "length":
+        raise Stage2OutputError(
+            f"{category}: the output reached the token limit "
+            "and may be incomplete."
         )
 
-    inputs = inputs.to(model.device)
+    response = choice.message.content
 
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_new_tokens,
-            do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,
+    if not response or not response.strip():
+        raise Stage2OutputError(
+            f"{category}: the API returned empty content."
         )
 
-    generated_tokens = outputs[
-        0,
-        inputs["input_ids"].shape[1]:,
-    ]
+    return parse_stage2_response(
+        response.strip(),
+        category,
+    )
 
-    response = tokenizer.decode(
-        generated_tokens,
-        skip_special_tokens=True,
-    ).strip()
 
-    return parse_stage2_response(response, category)
-
-def generate_all_summaries(ir, model, tokenizer):
-
+def generate_all_summaries(ir, client):
     results = {}
 
     for category in CATEGORY_FIELDS:
+        evidence = ir["categories"][category]["evidence"]
 
-        evidence = (
-            ir["categories"]
-            [category]
-            ["evidence"]
-        )
-
-        results[category] = (
-            generate_category_summary(
-                category=category,
-                evidence=evidence,
-                model=model,
-                tokenizer=tokenizer
-            )
+        results[category] = generate_category_summary(
+            category=category,
+            evidence=evidence,
+            client=client,
         )
 
     return results
