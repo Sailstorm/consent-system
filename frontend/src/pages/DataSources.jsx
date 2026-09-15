@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import InfoPage from '../components/InfoPage'
 import '../styles/infoPage.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
 function formatDate(value) {
   if (!value) {
