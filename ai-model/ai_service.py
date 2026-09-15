@@ -17,7 +17,7 @@ load_dotenv()
 
 
 # -------------------------
-# Groq API Configuration
+# NVIDIA API Configuration
 # -------------------------
 
 client = OpenAI(
