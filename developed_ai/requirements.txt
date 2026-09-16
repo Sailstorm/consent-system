@@ -2,6 +2,15 @@
 # Install from the repository root:
 #   python -m pip install -r developed_ai/requirements.txt
 
+# CPU-only torch: this service always runs on CPU (Stage 1's DeBERTa
+# classifier is the only local inference; Stage 2 is the NVIDIA-hosted API).
+# Without this, pip pulls the default PyPI build, which bundles CUDA
+# runtime libs that are dead weight (and a much bigger, slower download) on
+# a GPU-less box. A "+cpu" local version (e.g. 2.6.0+cpu) sorts higher than
+# the plain version per PEP 440, so pip prefers it over the PyPI build once
+# this index is available, without needing to hand-pin an exact version.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # API and ASGI server
 fastapi>=0.100,<1
 pydantic>=2,<3
