@@ -576,18 +576,6 @@ def generate_category_summary(
 
     response = choice.message.content
 
-    # 临时调试：查看分类、证据和 API 原始输出。
-    print(
-        f"\n===== Stage 2 category: {category} =====",
-        flush=True,
-    )
-    print(
-        json.dumps(evidence, ensure_ascii=False, indent=2),
-        flush=True,
-    )
-    print("===== Raw API response =====", flush=True)
-    print(repr(response), flush=True)
-
     if not response or not response.strip():
         raise Stage2OutputError(
             f"{category}: the API returned empty content."
