@@ -10,6 +10,7 @@ from .intermediate_representation import (
 from .stage2_summarizer import generate_all_summaries
 
 
+
 logger = logging.getLogger("uvicorn.error")
 
 
@@ -50,7 +51,7 @@ def analyze_policy(
         model=stage1_model,
         tokenizer=stage1_tokenizer,
     )
-
+    
     logger.info(
         "[%s] Stage 1 complete in %.2f seconds.",
         policy_id,
@@ -64,6 +65,7 @@ def analyze_policy(
         thresholds=thresholds,
     )
 
+    
     # 4. ues NVIDIA API to generate summary
     stage2_started_at = time.perf_counter()
 
