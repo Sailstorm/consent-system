@@ -14,7 +14,7 @@ function GlobalHeader({ activePage = '' }) {
         >
           <img
             className="global-brand-logo"
-            src="/app-icon-512.png"
+            src="/logo-mark.svg"
             alt="Consent Assistant logo"
           />
           <span>Consent Assistant</span>
