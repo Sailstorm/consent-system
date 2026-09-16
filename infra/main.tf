@@ -27,9 +27,15 @@ data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
 
+  # "al2023-ami-*" also matches the minimal variant
+  # (al2023-ami-minimal-*), which most_recent can pick if it happens to be
+  # the newer publish - and minimal images don't ship ec2-instance-connect
+  # preinstalled, silently breaking SSH access (confirmed the hard way: an
+  # apply landed on a minimal AMI and EC2 Instance Connect failed outright).
+  # Requiring the literal year after "al2023-ami-" excludes "minimal-".
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 
   filter {

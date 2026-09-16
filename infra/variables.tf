@@ -6,11 +6,14 @@ variable "aws_region" {
 variable "instance_type" {
   # t3.micro (1GB RAM) can't fit developed_ai's local DeBERTa classifier
   # (torch+transformers, ~1.5-2GB alone) alongside db/backend/frontend/router
-  # on the same host. t3.medium (4GB) covers it with headroom; Stage 2
-  # (summarisation) is a NVIDIA-hosted API call, not local compute, so no
-  # GPU/large-instance sizing is needed for that part.
+  # on the same host. t3.medium would cover it, but this account's Free
+  # Tier eligibility doesn't include the t3/m/c "non-flex" families at that
+  # size (confirmed via a failed RunInstances call) - m7i-flex.large (8GB)
+  # is one of the account's actually-eligible types and gives real headroom
+  # for the whole stack sharing one box. Stage 2 (summarisation) is an
+  # NVIDIA-hosted API call, not local compute, so no GPU sizing is needed.
   type    = string
-  default = "t3.medium"
+  default = "m7i-flex.large"
 }
 
 variable "repo_url" {

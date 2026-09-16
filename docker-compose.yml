@@ -34,6 +34,16 @@ services:
     environment:
       NVIDIA_API_KEY: ${NVIDIA_API_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    networks:
+      default:
+        # The URL versioning pipeline's frozen "live root" build (the
+        # stable git worktree, see docker-compose.prod.yml) has its own
+        # nginx.conf baked in from whatever commit it's pinned to, which
+        # may still hardcode the old "ai-model" hostname from before this
+        # service was renamed. This alias keeps that historical build
+        # working without editing the frozen snapshot.
+        aliases:
+          - ai-model
 
   frontend:
     build:
