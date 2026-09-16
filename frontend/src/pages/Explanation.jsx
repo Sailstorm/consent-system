@@ -17,6 +17,88 @@ function Explanation() {
     analysisResult.data_collection ||
     {}
 
+  const getStatus = (values) => {
+    const foundCount = values.filter(Boolean).length
+
+    if (foundCount === values.length) {
+      return {
+        label: 'Complete information',
+        type: 'complete',
+      }
+    }
+
+    if (foundCount > 0) {
+      return {
+        label: 'Partial information',
+        type: 'partial',
+      }
+    }
+
+    return {
+      label: 'No information found',
+      type: 'missing',
+    }
+  }
+
+  const collectionExplanation =
+    dataCollection.detailed_explanation || {}
+
+  const purposeExplanation =
+    analysisResult.purpose_of_use?.detailed_explanation || {}
+
+  const sharingExplanation =
+    analysisResult.data_sharing?.detailed_explanation || {}
+
+  const retentionExplanation =
+    analysisResult.data_retention?.detailed_explanation || {}
+
+  const controlExplanation =
+    analysisResult.user_control?.detailed_explanation || {}
+
+  const collectionStatus = getStatus([
+    collectionExplanation.what_data_is_collected,
+    collectionExplanation.how_it_is_collected,
+    collectionExplanation.when_collection_happens,
+    collectionExplanation.required_or_optional,
+    collectionExplanation.what_is_not_confirmed,
+    collectionExplanation.why_this_matters,
+  ])
+
+  const purposeStatus = getStatus([
+    purposeExplanation.why_data_is_used,
+    purposeExplanation.data_and_purpose,
+    purposeExplanation.unspecified_purposes,
+    purposeExplanation.additional_uses,
+    purposeExplanation.why_this_matters,
+  ])
+
+  const sharingStatus = getStatus([
+    sharingExplanation.who_data_may_be_shared_with,
+    sharingExplanation.why_sharing_may_happen,
+    sharingExplanation.named_organisations,
+    sharingExplanation.what_data_is_shared,
+    sharingExplanation.user_control,
+    sharingExplanation.why_this_matters,
+  ])
+
+  const retentionStatus = getStatus([
+    retentionExplanation.what_is_retained,
+    retentionExplanation.how_long_data_is_kept,
+    retentionExplanation.why_data_is_retained,
+    retentionExplanation.deletion_condition,
+    retentionExplanation.why_this_matters,
+  ])
+
+  const controlStatus = getStatus([
+    controlExplanation.what_you_can_control,
+    controlExplanation.how_to_use_these_controls,
+    controlExplanation.access_and_correction,
+    controlExplanation.deletion,
+    controlExplanation.consent_or_opt_out,
+    controlExplanation.limitations,
+    controlExplanation.why_this_matters,
+  ])
+
   const categories = [
     {
       title: 'Data Collection',
@@ -25,10 +107,8 @@ function Explanation() {
           'No information is available for this category.',
         detailLevel,
       ),
-      status:
-        dataCollection.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Information found',
+      status: collectionStatus.label,
+      statusType: collectionStatus.type,
       path: '/data-collection',
     },
     {
@@ -38,10 +118,8 @@ function Explanation() {
           'No information is available for this category.',
         detailLevel,
       ),
-      status:
-        analysisResult.purpose_of_use?.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Information found',
+      status: purposeStatus.label,
+      statusType: purposeStatus.type,
       path: '/purpose-of-use',
     },
     {
@@ -51,10 +129,8 @@ function Explanation() {
           'No information is available for this category.',
         detailLevel,
       ),
-      status:
-        analysisResult.data_sharing?.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Information found',
+      status: sharingStatus.label,
+      statusType: sharingStatus.type,
       path: '/data-sharing',
     },
     {
@@ -64,10 +140,8 @@ function Explanation() {
           'No information is available for this category.',
         detailLevel,
       ),
-      status:
-        analysisResult.data_retention?.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Information found',
+      status: retentionStatus.label,
+      statusType: retentionStatus.type,
       path: '/data-retention',
     },
     {
@@ -77,16 +151,15 @@ function Explanation() {
           'No information is available for this category.',
         detailLevel,
       ),
-      status:
-        analysisResult.user_control?.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Information found',
+      status: controlStatus.label,
+      statusType: controlStatus.type,
       path: '/user-control',
     },
     {
       title: 'Source & Decision',
       text: 'Review the source text and make your own decision.',
       status: 'Source available',
+      statusType: 'source',
       path: '/source-decision',
     },
   ]
@@ -139,7 +212,9 @@ function Explanation() {
             </div>
 
             <div className="category-card-footer">
-              <span>{category.status}</span>
+              <span className={`category-status ${category.statusType}`}>
+                {category.status}
+              </span>
 
               <span className="category-card-arrow">→</span>
             </div>

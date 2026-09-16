@@ -7,6 +7,7 @@ function PrivacyDetail({
   subtitle,
   statusLabel,
   statusText,
+  statusType,
   sections,
   sourceText,
   interpretation,
@@ -41,7 +42,7 @@ function PrivacyDetail({
         <p>{subtitle}</p>
       </section>
 
-      <div className="detail-status">
+      <div className={`detail-status ${statusType}`}>
         <span>{statusLabel}</span>
         <strong>{statusText}</strong>
       </div>

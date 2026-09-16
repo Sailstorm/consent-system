@@ -5,20 +5,46 @@ function PurposeOfUse() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
+  const policyText = location.state?.policyText || ''
+
   const purposeOfUse = analysisResult.purpose_of_use || {}
-  const explanation = purposeOfUse.explanation || {}
+  const explanation = purposeOfUse.detailed_explanation || {}
+
+  const sectionValues = [
+    explanation.why_data_is_used,
+    explanation.data_and_purpose,
+    explanation.unspecified_purposes,
+    explanation.additional_uses,
+    explanation.why_this_matters,
+  ]
+
+  const foundCount = sectionValues.filter(Boolean).length
+
+  let statusType = 'missing'
+  let statusLabel = 'No information found'
+  let statusText = 'No purpose information was identified'
+
+  if (foundCount === sectionValues.length) {
+    statusType = 'complete'
+    statusLabel = 'Complete information'
+    statusText = 'All purpose details were identified'
+  } else if (foundCount > 0) {
+    statusType = 'partial'
+    statusLabel = 'Partial information'
+    statusText = 'Some purpose details are not clearly stated'
+  }
 
   const sections = [
     {
       heading: 'Why data is used',
       text:
-        explanation.stated_purposes ||
+        explanation.why_data_is_used ||
         'No information is available for this section.',
     },
     {
       heading: 'Data and purpose',
       text:
-        explanation.data_purpose_links ||
+        explanation.data_and_purpose ||
         'No information is available for this section.',
     },
     {
@@ -36,33 +62,26 @@ function PurposeOfUse() {
     {
       heading: 'Why this matters',
       text:
-        purposeOfUse.why_this_matters ||
+        explanation.why_this_matters ||
         'No information is available for this section.',
     },
   ]
 
   const sourceText =
-    purposeOfUse.extraction?.[0]?.evidence?.[0]?.text ||
+    policyText ||
     'No relevant source text was found.'
 
   return (
     <PrivacyDetail
       title="Purpose of Use"
       subtitle="A closer look at why the policy says your personal information may be used."
-      statusLabel={
-        purposeOfUse.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Purpose of use mentioned'
-      }
-      statusText={
-        purposeOfUse.clarity === 'clear'
-          ? 'Information is clearly stated'
-          : 'Some purposes may not be fully detailed'
-      }
+      statusLabel={statusLabel}
+      statusText={statusText}
+      statusType={statusType}
       sections={sections}
       sourceText={sourceText}
       interpretation={
-        purposeOfUse.why_this_matters ||
+        explanation.why_this_matters ||
         'No additional interpretation is available.'
       }
     />

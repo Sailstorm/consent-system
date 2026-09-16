@@ -240,11 +240,16 @@ def generate_category_summary(
     ]
 
     completion = client.chat.completions.create(
-        model="meta/llama-3.3-70b-instruct",
-        messages=messages,
-        temperature=0,
-        max_tokens=max_new_tokens,
-    )
+    model="nvidia/nemotron-3-super-120b-a12b",
+    messages=messages,
+    temperature=0,
+    max_tokens=max_new_tokens,
+    extra_body={
+        "chat_template_kwargs": {
+            "enable_thinking": False
+        }
+    },
+)
 
     if not completion.choices:
         raise Stage2OutputError(

@@ -107,13 +107,31 @@
   gap: 15px;
 }
 
-.category-card-footer > span:first-child {
+.category-status {
   width: fit-content;
   padding: 6px 9px;
   border-radius: 5px;
+  font-size: 11px;
+}
+
+.category-status.complete {
   background: #e5f4f1;
   color: #087c74;
-  font-size: 11px;
+}
+
+.category-status.partial {
+  background: #fff3cd;
+  color: #8a6500;
+}
+
+.category-status.missing {
+  background: #fde7e7;
+  color: #b42318;
+}
+
+.category-status.source {
+  background: #eef7fb;
+  color: #526b7c;
 }
 
 .category-card-arrow {

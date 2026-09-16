@@ -66,19 +66,52 @@
   align-items: center;
 
   border-radius: 6px;
-  background: #e5f4f1;
 
   font-size: 12px;
 }
 
 .detail-status span {
-  color: #087c74;
   font-weight: 700;
 }
 
 .detail-status strong {
-  color: #627b87;
   font-weight: 500;
+}
+
+.detail-status.complete {
+  background: #e5f4f1;
+}
+
+.detail-status.complete span {
+  color: #087c74;
+}
+
+.detail-status.complete strong {
+  color: #627b87;
+}
+
+.detail-status.partial {
+  background: #fff3cd;
+}
+
+.detail-status.partial span {
+  color: #8a6500;
+}
+
+.detail-status.partial strong {
+  color: #776e52;
+}
+
+.detail-status.missing {
+  background: #fde7e7;
+}
+
+.detail-status.missing span {
+  color: #b42318;
+}
+
+.detail-status.missing strong {
+  color: #8f4b46;
 }
 
 .detail-grid {

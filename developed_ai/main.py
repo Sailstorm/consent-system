@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 
 from .config import STAGE1_THRESHOLDS
@@ -24,6 +25,17 @@ logger = logging.getLogger("uvicorn.error")
 STAGE1_MODEL_ID = "Meiyao-AI-25379/consent-assistant-deberta-stage1"
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 stage1_model, stage1_tokenizer = load_stage1_model(
     STAGE1_MODEL_ID

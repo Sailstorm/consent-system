@@ -27,11 +27,11 @@
   cursor: pointer;
 }
 
-.global-brand-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #15324a;
+.global-brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .global-nav {

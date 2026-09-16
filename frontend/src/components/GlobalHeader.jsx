@@ -12,7 +12,11 @@ function GlobalHeader({ activePage = '' }) {
           type="button"
           onClick={() => navigate('/')}
         >
-          <span className="global-brand-dot"></span>
+          <img
+            className="global-brand-logo"
+            src="/app-icon-512.png"
+            alt="Consent Assistant logo"
+          />
           <span>Consent Assistant</span>
         </button>
 
