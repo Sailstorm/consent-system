@@ -1,5 +1,6 @@
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from openai import OpenAI
 
 
@@ -588,15 +589,25 @@ def generate_category_summary(
 
 
 def generate_all_summaries(ir, client):
-    results = {}
+    # Each category is an independent, blocking NVIDIA API call - running
+    # them one after another (the previous behaviour) meant total wall
+    # time was the sum of all 5, which could exceed the router's
+    # response-header timeout on longer policies. Running them
+    # concurrently instead cuts that to roughly the slowest single call.
+    with ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS)) as executor:
+        futures = {
+            category: executor.submit(
+                generate_category_summary,
+                category=category,
+                evidence=ir["categories"][category]["evidence"],
+                client=client,
+            )
+            for category in CATEGORY_FIELDS
+        }
 
-    for category in CATEGORY_FIELDS:
-        evidence = ir["categories"][category]["evidence"]
-
-        results[category] = generate_category_summary(
-            category=category,
-            evidence=evidence,
-            client=client,
-        )
+        results = {
+            category: future.result()
+            for category, future in futures.items()
+        }
 
     return results
