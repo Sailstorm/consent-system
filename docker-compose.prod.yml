@@ -32,16 +32,21 @@ services:
       - backend
       - developed_ai
 
-  # The Archive: a retired iteration, served under /version1/. Built
-  # unmodified from the archive worktree - that code predates this
-  # project's sub-path support (no VITE_BASE_PATH, no React Router
-  # basename), so the initial load and asset paths work fine (Caddy
-  # strips the /version1/ prefix before forwarding), but in-app
-  # navigation/refresh on a nested route can drift out of the prefix.
-  # Known, accepted limitation of archiving pre-versioning-era code as-is.
+  # The Archive: a retired iteration, served under /version1/. Source is
+  # the archive worktree (unmodified), but built via a Dockerfile that
+  # lives in THIS checkout (infra/frontend-archive/Dockerfile) instead of
+  # the archived one, since that code predates VITE_BASE_PATH support -
+  # without a --base override there, its absolute-root asset paths
+  # resolve against the domain root instead of /version1/ and 404 against
+  # whatever the live root happens to be serving (rendered as a blank
+  # page before this existed). In-app navigation/refresh on a nested
+  # route within the archive can still drift out of the /version1/
+  # prefix, since the archived App.jsx never reads a React Router
+  # basename either - known, accepted limitation.
   frontend-archive:
     build:
       context: ../app-archive/frontend
+      dockerfile: ../../app/infra/frontend-archive/Dockerfile
     restart: unless-stopped
 
   # Terminates TLS. Caddy requests/renews a Let's Encrypt cert for $DOMAIN
