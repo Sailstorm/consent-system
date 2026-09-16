@@ -24,7 +24,7 @@ variable "repo_url" {
 variable "stable_ref" {
   description = "Git ref (tag/branch) for the last complete iteration, served at the live root. See docs/url-versioning-pipeline.md."
   type        = string
-  default     = "iteration-1"
+  default     = "iteration-2"
 }
 
 variable "domain_name" {
