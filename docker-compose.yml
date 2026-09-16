@@ -26,11 +26,13 @@ services:
       db:
         condition: service_healthy
 
-  ai-model:
-    build: ./ai-model
+  developed_ai:
+    build:
+      context: .
+      dockerfile: developed_ai/Dockerfile
     restart: unless-stopped
     environment:
-      GROQ_API_KEY: ${GROQ_API_KEY}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
 
   frontend:
@@ -42,7 +44,7 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-      - ai-model
+      - developed_ai
 
 volumes:
   db-data:

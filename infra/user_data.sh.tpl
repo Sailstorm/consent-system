@@ -37,12 +37,12 @@ cd /opt/app
 # complete iteration) is served at the live root.
 git worktree add /opt/app-stable ${stable_ref}
 
-GROQ_API_KEY=$(aws ssm get-parameter --name "${groq_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
+NVIDIA_API_KEY=$(aws ssm get-parameter --name "${nvidia_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
 POSTGRES_PASSWORD=$(aws ssm get-parameter --name "${db_password_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
 
 cat > /opt/app/.env <<EOF
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-GROQ_API_KEY=$GROQ_API_KEY
+NVIDIA_API_KEY=$NVIDIA_API_KEY
 CORS_ORIGIN=${cors_origin}
 DOMAIN=${domain_name}
 ACME_EMAIL=${acme_email}

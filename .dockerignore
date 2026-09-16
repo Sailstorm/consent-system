@@ -1,0 +1,18 @@
+# Only applies to builds whose context is the repo root (currently just
+# developed_ai, since it needs relative-import package layout — see
+# developed_ai/Dockerfile). Other services build from their own
+# subdirectory context and aren't affected by this file.
+.git/
+node_modules/
+frontend/node_modules/
+frontend/dist/
+backend/node_modules/
+ai-model/__pycache__/
+ai-model/.venv/
+**/__pycache__/
+developed_ai/models/
+docs/
+infra/.terraform/
+infra/terraform.tfstate*
+*.log
+.DS_Store

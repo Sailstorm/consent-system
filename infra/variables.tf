@@ -4,8 +4,13 @@ variable "aws_region" {
 }
 
 variable "instance_type" {
+  # t3.micro (1GB RAM) can't fit developed_ai's local DeBERTa classifier
+  # (torch+transformers, ~1.5-2GB alone) alongside db/backend/frontend/router
+  # on the same host. t3.medium (4GB) covers it with headroom; Stage 2
+  # (summarisation) is a NVIDIA-hosted API call, not local compute, so no
+  # GPU/large-instance sizing is needed for that part.
   type    = string
-  default = "t3.micro"
+  default = "t3.medium"
 }
 
 variable "repo_url" {
@@ -37,8 +42,8 @@ variable "cors_origin" {
   default     = "http://localhost:5173"
 }
 
-variable "groq_api_key" {
-  description = "Groq API key used by the ai-model service"
+variable "nvidia_api_key" {
+  description = "NVIDIA API key used by the developed_ai service's Stage 2 summariser"
   type        = string
   sensitive   = true
 }

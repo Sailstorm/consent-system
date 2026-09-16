@@ -9,14 +9,14 @@
 {$DOMAIN} {
 	encode gzip
 
-	# Shared backend/ai-model, same for every version (paths kept as-is,
+	# Shared backend/developed_ai, same for every version (paths kept as-is,
 	# matching how the frontend builds call them: /api/..., /analyze).
 	handle /api/* {
 		reverse_proxy backend:3000
 	}
 
 	handle /analyze* {
-		reverse_proxy ai-model:8000 {
+		reverse_proxy developed_ai:8000 {
 			transport http {
 				response_header_timeout 120s
 			}

@@ -1,2 +1,2 @@
-groq_api_key = "replace-with-your-groq-api-key"
+nvidia_api_key = "replace-with-your-nvidia-api-key"
 db_password  = "replace-with-a-long-random-password"

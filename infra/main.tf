@@ -78,10 +78,10 @@ resource "aws_security_group" "app" {
   }
 }
 
-resource "aws_ssm_parameter" "groq_api_key" {
-  name  = "/sailstorm/groq_api_key"
+resource "aws_ssm_parameter" "nvidia_api_key" {
+  name  = "/sailstorm/nvidia_api_key"
   type  = "SecureString"
-  value = var.groq_api_key
+  value = var.nvidia_api_key
 }
 
 resource "aws_ssm_parameter" "db_password" {
@@ -119,7 +119,7 @@ resource "aws_iam_role_policy" "read_app_parameters" {
       Effect = "Allow"
       Action = ["ssm:GetParameter"]
       Resource = [
-        aws_ssm_parameter.groq_api_key.arn,
+        aws_ssm_parameter.nvidia_api_key.arn,
         aws_ssm_parameter.db_password.arn,
       ]
     }]
@@ -139,7 +139,10 @@ resource "aws_instance" "app" {
   iam_instance_profile   = aws_iam_instance_profile.app_host.name
 
   root_block_device {
-    volume_size = 20
+    # 20GB was tight even before developed_ai: torch+transformers+accelerate
+    # wheels, the downloaded DeBERTa weights, two git checkouts (main +
+    # stable worktree), and several Docker images all share this disk.
+    volume_size = 30
     volume_type = "gp3"
   }
 
@@ -154,7 +157,7 @@ resource "aws_instance" "app" {
     repo_url               = var.repo_url
     stable_ref             = var.stable_ref
     region                 = var.aws_region
-    groq_param_name        = aws_ssm_parameter.groq_api_key.name
+    nvidia_param_name      = aws_ssm_parameter.nvidia_api_key.name
     db_password_param_name = aws_ssm_parameter.db_password.name
     cors_origin            = var.cors_origin
     domain_name            = var.domain_name

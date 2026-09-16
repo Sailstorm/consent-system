@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-      - ai-model
+      - developed_ai
 
   # Terminates TLS. Caddy requests/renews a Let's Encrypt cert for $DOMAIN
   # automatically (HTTP-01 on :80, which it also uses to redirect to
@@ -51,7 +51,7 @@ services:
       - frontend
       - frontend-dev
       - backend
-      - ai-model
+      - developed_ai
 
 volumes:
   caddy-data:

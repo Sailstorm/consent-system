@@ -4,6 +4,8 @@ import PolicyLayout from '../components/PolicyLayout'
 import ProgressSteps from '../components/ProgressSteps'
 import '../styles/processing.css'
 
+const AI_URL = import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'
+
 function Processing() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -25,7 +27,7 @@ function Processing() {
 
     async function analysePolicy() {
       try {
-        const response = await fetch('http://127.0.0.1:8000/analyze', {
+        const response = await fetch(`${AI_URL}/analyze`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
