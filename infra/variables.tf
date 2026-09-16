@@ -28,9 +28,9 @@ variable "stable_ref" {
 }
 
 variable "archive_ref" {
-  description = "Git ref (tag/branch) for a retired iteration, served at /version1/. See docs/url-versioning-pipeline.md."
+  description = "Git ref (tag/branch) for a retired iteration, served at /version1/. iteration-1-archived, not iteration-1 itself: that code predates this project's sub-path support, and without a basename React Router can't match any route under /version1/ at all. See docs/url-versioning-pipeline.md."
   type        = string
-  default     = "iteration-1"
+  default     = "iteration-1-archived"
 }
 
 variable "domain_name" {
