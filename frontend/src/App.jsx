@@ -21,7 +21,7 @@ import HelpPrivacy from './pages/HelpPrivacy'
 function App() {
   return (
     <PasswordGate>
-      <BrowserRouter>
+      <BrowserRouter basename="/version1/">
         <Routes>
           <Route path="/" element={<Overview />} />
 
