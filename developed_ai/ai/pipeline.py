@@ -91,7 +91,15 @@ def analyze_policy(
         time.perf_counter() - started_at,
     )
 
+    results = {
+        category: {
+            **summary,
+            "evidence": ir["categories"][category]["evidence"],
+        }
+        for category, summary in summaries.items()
+    }
+
     return {
         "policy_id": policy_id,
-        "results": summaries,
+        "results": results,
     }
