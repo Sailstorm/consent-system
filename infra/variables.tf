@@ -27,6 +27,12 @@ variable "stable_ref" {
   default     = "iteration-2"
 }
 
+variable "archive_ref" {
+  description = "Git ref (tag/branch) for a retired iteration, served at /version1/. See docs/url-versioning-pipeline.md."
+  type        = string
+  default     = "iteration-1"
+}
+
 variable "domain_name" {
   description = "Public hostname the router (Caddy) requests a Let's Encrypt cert for. Defaults to a sslip.io hostname that resolves to the current Elastic IP with no DNS setup required — update if you move to a real domain."
   type        = string

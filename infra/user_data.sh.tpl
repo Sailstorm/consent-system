@@ -27,15 +27,17 @@ if [ ! -f /swapfile ]; then
   echo '/swapfile none swap sw 0 0' >> /etc/fstab
 fi
 
-rm -rf /opt/app /opt/app-stable
+rm -rf /opt/app /opt/app-stable /opt/app-archive
 git clone ${repo_url} /opt/app
 cd /opt/app
 
 # URL versioning pipeline (docs/url-versioning-pipeline.md): /opt/app tracks
 # the active-development ref (Iteration N+1 in progress) and is served under
 # /underdevelopment/. A second worktree checked out at the stable ref (last
-# complete iteration) is served at the live root.
+# complete iteration) is served at the live root, and a third at the
+# archive ref (a retired iteration) is served under /version1/.
 git worktree add /opt/app-stable ${stable_ref}
+git worktree add /opt/app-archive ${archive_ref}
 
 NVIDIA_API_KEY=$(aws ssm get-parameter --name "${nvidia_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
 POSTGRES_PASSWORD=$(aws ssm get-parameter --name "${db_password_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)

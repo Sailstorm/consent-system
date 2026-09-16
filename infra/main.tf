@@ -162,6 +162,7 @@ resource "aws_instance" "app" {
   user_data = templatefile("${path.module}/user_data.sh.tpl", {
     repo_url               = var.repo_url
     stable_ref             = var.stable_ref
+    archive_ref            = var.archive_ref
     region                 = var.aws_region
     nvidia_param_name      = aws_ssm_parameter.nvidia_api_key.name
     db_password_param_name = aws_ssm_parameter.db_password.name

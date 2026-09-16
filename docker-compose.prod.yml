@@ -5,10 +5,10 @@
 #
 #   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 #
-# It must be run from the "active development" checkout (main HEAD), with a
-# sibling `../app-stable` git worktree checked out at the stable ref (see
-# infra/user_data.sh.tpl) — that's what the `frontend` build context below
-# points at.
+# It must be run from the "active development" checkout (main HEAD), with
+# sibling `../app-stable` and `../app-archive` git worktrees checked out at
+# the stable/archive refs (see infra/user_data.sh.tpl) — that's what the
+# `frontend`/`frontend-archive` build contexts below point at.
 services:
   # Overridden to be THE LIVE ROOT: rebuilt from the stable worktree (last
   # complete iteration) instead of this checkout. Doesn't publish a host
@@ -32,6 +32,18 @@ services:
       - backend
       - developed_ai
 
+  # The Archive: a retired iteration, served under /version1/. Built
+  # unmodified from the archive worktree - that code predates this
+  # project's sub-path support (no VITE_BASE_PATH, no React Router
+  # basename), so the initial load and asset paths work fine (Caddy
+  # strips the /version1/ prefix before forwarding), but in-app
+  # navigation/refresh on a nested route can drift out of the prefix.
+  # Known, accepted limitation of archiving pre-versioning-era code as-is.
+  frontend-archive:
+    build:
+      context: ../app-archive/frontend
+    restart: unless-stopped
+
   # Terminates TLS. Caddy requests/renews a Let's Encrypt cert for $DOMAIN
   # automatically (HTTP-01 on :80, which it also uses to redirect to
   # HTTPS) and persists it in the caddy-data volume across rebuilds.
@@ -50,6 +62,7 @@ services:
     depends_on:
       - frontend
       - frontend-dev
+      - frontend-archive
       - backend
       - developed_ai
 

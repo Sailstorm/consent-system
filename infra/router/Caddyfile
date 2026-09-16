@@ -29,12 +29,13 @@
 		reverse_proxy frontend-dev:80
 	}
 
-	# The Archive. Placeholder until an iteration is retired here as part
-	# of the cutover runbook in docs/url-versioning-pipeline.md.
-	handle /version1/* {
-		root * /srv/archive-placeholder
-		rewrite * /placeholder.html
-		file_server
+	# The Archive: iteration-1, retired at the iteration-2 cutover. Prefix
+	# stripped before forwarding, same as /underdevelopment/ - see
+	# frontend-archive in docker-compose.prod.yml for the known caveat
+	# (that code predates sub-path support, so in-app nav/refresh on a
+	# nested route can drift out of this prefix).
+	handle_path /version1/* {
+		reverse_proxy frontend-archive:80
 	}
 
 	# The LIVE Root: always the last complete iteration.
