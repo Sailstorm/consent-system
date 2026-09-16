@@ -5,19 +5,41 @@ function DataCollection() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
+  const policyText = location.state?.policyText || ''
 
-  const dataCollection =
-    analysisResult.data_collection?.data_collection ||
-    analysisResult.data_collection ||
-    {}
+  const dataCollection = analysisResult.data_collection || {}
+  const explanation = dataCollection.detailed_explanation || {}
 
-  const explanation = dataCollection.explanation || {}
+  const sectionValues = [
+    explanation.what_data_is_collected,
+    explanation.how_it_is_collected,
+    explanation.when_collection_happens,
+    explanation.required_or_optional,
+    explanation.what_is_not_confirmed,
+    explanation.why_this_matters,
+  ]
+
+  const foundCount = sectionValues.filter(Boolean).length
+
+  let statusType = 'missing'
+  let statusLabel = 'No information found'
+  let statusText = 'No collection information was identified'
+
+  if (foundCount === sectionValues.length) {
+    statusType = 'complete'
+    statusLabel = 'Complete information'
+    statusText = 'All collection details were identified'
+  } else if (foundCount > 0) {
+    statusType = 'partial'
+    statusLabel = 'Partial information'
+    statusText = 'Some collection details are not clearly stated'
+  }
 
   const sections = [
     {
       heading: 'What data is collected',
       text:
-        explanation.what_is_collected ||
+        explanation.what_data_is_collected ||
         'No information is available for this section.',
     },
     {
@@ -29,7 +51,7 @@ function DataCollection() {
     {
       heading: 'When collection happens',
       text:
-        explanation.when_it_is_collected ||
+        explanation.when_collection_happens ||
         'No information is available for this section.',
     },
     {
@@ -41,39 +63,32 @@ function DataCollection() {
     {
       heading: 'What is not confirmed',
       text:
-        explanation.unclear_details ||
+        explanation.what_is_not_confirmed ||
         'No information is available for this section.',
     },
     {
       heading: 'Why this matters',
       text:
-        dataCollection.why_this_matters ||
+        explanation.why_this_matters ||
         'No information is available for this section.',
     },
   ]
 
   const sourceText =
-    dataCollection.extraction?.[0]?.evidence?.[0]?.text ||
+    policyText ||
     'No relevant source text was found.'
 
   return (
     <PrivacyDetail
       title="Data Collection"
       subtitle="A closer look at what personal information the policy says may be collected."
-      statusLabel={
-        dataCollection.status === 'not_mentioned'
-          ? 'Not clearly stated'
-          : 'Collection mentioned'
-      }
-      statusText={
-        dataCollection.clarity === 'clear'
-          ? 'Information is clearly stated'
-          : 'Some details may still be unclear'
-      }
+      statusLabel={statusLabel}
+      statusText={statusText}
+      statusType={statusType}
       sections={sections}
       sourceText={sourceText}
       interpretation={
-        dataCollection.why_this_matters ||
+        explanation.why_this_matters ||
         'No additional interpretation is available.'
       }
     />

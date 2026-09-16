@@ -30,7 +30,7 @@ function Processing() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            policy_text: policyText,
+            text: policyText,
           }),
         })
 
@@ -44,7 +44,7 @@ function Processing() {
         navigate('/explanation', {
           state: {
             policyText: policyText,
-            analysisResult: data.output,
+            analysisResult: data.results,
           },
         })
       } catch (error) {
