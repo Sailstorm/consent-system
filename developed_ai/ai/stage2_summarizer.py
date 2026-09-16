@@ -240,7 +240,7 @@ def generate_category_summary(
     ]
 
     completion = client.chat.completions.create(
-    model="nvidia/nemotron-3-super-120b-a12b",
+    model="google/gemma-4-31b-it",
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
