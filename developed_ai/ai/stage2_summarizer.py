@@ -85,6 +85,17 @@ def format_evidence(evidence):
     return "\n\n".join(blocks)
 
 def parse_stage2_response(response, category):
+
+    response = response.strip()
+    lines = response.splitlines()
+
+    if (
+        len(lines) >= 3
+        and lines[0].strip().lower() in ("```json", "```")
+        and lines[-1].strip() == "```"
+    ):
+        response = "\n".join(lines[1:-1]).strip()
+
     try:
         result = json.loads(response)
     except json.JSONDecodeError as exc:
@@ -564,6 +575,18 @@ def generate_category_summary(
         )
 
     response = choice.message.content
+
+    # 临时调试：查看分类、证据和 API 原始输出。
+    print(
+        f"\n===== Stage 2 category: {category} =====",
+        flush=True,
+    )
+    print(
+        json.dumps(evidence, ensure_ascii=False, indent=2),
+        flush=True,
+    )
+    print("===== Raw API response =====", flush=True)
+    print(repr(response), flush=True)
 
     if not response or not response.strip():
         raise Stage2OutputError(
