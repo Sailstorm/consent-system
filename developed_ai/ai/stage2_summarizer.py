@@ -1,6 +1,6 @@
 import json
 import os
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from openai import OpenAI
 
@@ -614,28 +614,40 @@ def generate_all_summaries(ir, client):
     executor = ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS))
 
     try:
-        futures = {
-            category: executor.submit(
+        # Keyed by future -> category (not the other way around) so
+        # as_completed(), which takes an iterable of futures, can be
+        # handed this dict directly - iterating a dict yields its keys.
+        future_to_category = {
+            executor.submit(
                 generate_category_summary,
                 category=category,
                 evidence=ir["categories"][category]["evidence"],
                 client=client,
-            )
+            ): category
             for category in CATEGORY_FIELDS
         }
 
         results = {}
 
-        for category, future in futures.items():
-            try:
-                results[category] = future.result(
-                    timeout=HARD_DEADLINE_SECONDS
-                )
-            except FutureTimeoutError as exc:
-                raise Stage2OutputError(
-                    f"{category}: exceeded the {HARD_DEADLINE_SECONDS}s "
-                    "hard deadline without responding."
-                ) from exc
+        try:
+            # as_completed's timeout is a single deadline for the whole
+            # batch, measured from now - not a fresh allowance per future.
+            # (An earlier version of this called future.result(timeout=...)
+            # per category in a loop, which resets the clock for each one
+            # checked and lets total wall time balloon well past the
+            # intended deadline if an early category is slow - confirmed
+            # live: it still hung to ~240s instead of failing at 180s.)
+            for future in as_completed(
+                future_to_category, timeout=HARD_DEADLINE_SECONDS
+            ):
+                category = future_to_category[future]
+                results[category] = future.result()
+        except FutureTimeoutError as exc:
+            missing = set(future_to_category.values()) - set(results)
+            raise Stage2OutputError(
+                f"{sorted(missing)}: exceeded the {HARD_DEADLINE_SECONDS}s "
+                "hard deadline without responding."
+            ) from exc
 
         return results
     finally:
