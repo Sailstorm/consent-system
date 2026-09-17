@@ -16,7 +16,12 @@ def create_stage2_client():
     return OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
         api_key=api_key,
-        timeout=120.0,
+        # NVIDIA's latency is variable enough that a single category call
+        # can occasionally exceed 120s on its own (independent of the 5
+        # categories running concurrently) - confirmed via a live
+        # openai.APITimeoutError. Widened for headroom; keep this and the
+        # router's response_header_timeout (infra/router/Caddyfile) equal.
+        timeout=240.0,
         max_retries=1,
     )
 

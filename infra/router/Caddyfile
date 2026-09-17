@@ -18,7 +18,9 @@
 	handle /analyze* {
 		reverse_proxy developed_ai:8000 {
 			transport http {
-				response_header_timeout 120s
+				# Kept equal to stage2_summarizer.py's openai client
+				# timeout, widened there for the same reason.
+				response_header_timeout 240s
 			}
 		}
 	}
