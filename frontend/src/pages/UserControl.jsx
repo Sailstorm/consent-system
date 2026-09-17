@@ -5,7 +5,6 @@ function UserControl() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
-  const policyText = location.state?.policyText || ''
 
   const userControl = analysisResult.user_control || {}
   const explanation = userControl.detailed_explanation || {}
@@ -81,8 +80,13 @@ function UserControl() {
     },
   ]
 
+  const evidence = userControl.evidence || []
+
   const sourceText =
-    policyText ||
+    evidence
+      .map((item) => item.text)
+      .filter(Boolean)
+      .join('\n\n') ||
     'No relevant source text was found.'
 
   return (

@@ -5,7 +5,6 @@ function DataCollection() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
-  const policyText = location.state?.policyText || ''
 
   const dataCollection = analysisResult.data_collection || {}
   const explanation = dataCollection.detailed_explanation || {}
@@ -74,8 +73,13 @@ function DataCollection() {
     },
   ]
 
+  const evidence = dataCollection.evidence || []
+
   const sourceText =
-    policyText ||
+    evidence
+      .map((item) => item.text)
+      .filter(Boolean)
+      .join('\n\n') ||
     'No relevant source text was found.'
 
   return (

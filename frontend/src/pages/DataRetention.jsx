@@ -5,7 +5,6 @@ function DataRetention() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
-  const policyText = location.state?.policyText || ''
 
   const dataRetention = analysisResult.data_retention || {}
   const explanation = dataRetention.detailed_explanation || {}
@@ -67,8 +66,13 @@ function DataRetention() {
     },
   ]
 
+  const evidence = dataRetention.evidence || []
+
   const sourceText =
-    policyText ||
+    evidence
+      .map((item) => item.text)
+      .filter(Boolean)
+      .join('\n\n') ||
     'No relevant source text was found.'
 
   return (

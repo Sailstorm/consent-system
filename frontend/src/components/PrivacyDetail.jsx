@@ -65,7 +65,9 @@ function PrivacyDetail({
           <h2>Relevant source text</h2>
 
           <div className="source-box">
-            <p>{sourceText}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}>
+              {sourceText}
+            </p>
           </div>
 
           <div className="interpretation-box">

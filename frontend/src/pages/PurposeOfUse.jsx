@@ -5,7 +5,6 @@ function PurposeOfUse() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
-  const policyText = location.state?.policyText || ''
 
   const purposeOfUse = analysisResult.purpose_of_use || {}
   const explanation = purposeOfUse.detailed_explanation || {}
@@ -67,8 +66,13 @@ function PurposeOfUse() {
     },
   ]
 
+  const evidence = purposeOfUse.evidence || []
+
   const sourceText =
-    policyText ||
+    evidence
+      .map((item) => item.text)
+      .filter(Boolean)
+      .join('\n\n') ||
     'No relevant source text was found.'
 
   return (

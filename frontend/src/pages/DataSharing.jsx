@@ -5,7 +5,6 @@ function DataSharing() {
   const location = useLocation()
 
   const analysisResult = location.state?.analysisResult || {}
-  const policyText = location.state?.policyText || ''
 
   const dataSharing = analysisResult.data_sharing || {}
   const explanation = dataSharing.detailed_explanation || {}
@@ -74,8 +73,13 @@ function DataSharing() {
     },
   ]
 
+  const evidence = dataSharing.evidence || []
+
   const sourceText =
-    policyText ||
+    evidence
+      .map((item) => item.text)
+      .filter(Boolean)
+      .join('\n\n') ||
     'No relevant source text was found.'
 
   return (
