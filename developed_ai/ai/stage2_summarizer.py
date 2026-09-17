@@ -1,6 +1,7 @@
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from openai import OpenAI
 
 
@@ -593,13 +594,26 @@ def generate_category_summary(
     )
 
 
+# Read timeouts (openai/httpx's own timeout=) measure time since the last
+# byte received, not total request duration - if NVIDIA's proxy trickles
+# occasional keep-alive data without ever finishing the response, that
+# timeout never fires and the call can hang indefinitely regardless of how
+# it's configured. This is a real, observed failure mode, not theoretical.
+# This hard wall-clock deadline is what actually bounds worst-case latency;
+# kept below the openai client's own timeout (240s) so this fires first
+# and produces a clean error instead of an indefinite hang.
+HARD_DEADLINE_SECONDS = 180
+
+
 def generate_all_summaries(ir, client):
     # Each category is an independent, blocking NVIDIA API call - running
     # them one after another (the previous behaviour) meant total wall
     # time was the sum of all 5, which could exceed the router's
     # response-header timeout on longer policies. Running them
     # concurrently instead cuts that to roughly the slowest single call.
-    with ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS)) as executor:
+    executor = ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS))
+
+    try:
         futures = {
             category: executor.submit(
                 generate_category_summary,
@@ -610,9 +624,23 @@ def generate_all_summaries(ir, client):
             for category in CATEGORY_FIELDS
         }
 
-        results = {
-            category: future.result()
-            for category, future in futures.items()
-        }
+        results = {}
 
-    return results
+        for category, future in futures.items():
+            try:
+                results[category] = future.result(
+                    timeout=HARD_DEADLINE_SECONDS
+                )
+            except FutureTimeoutError as exc:
+                raise Stage2OutputError(
+                    f"{category}: exceeded the {HARD_DEADLINE_SECONDS}s "
+                    "hard deadline without responding."
+                ) from exc
+
+        return results
+    finally:
+        # wait=False: if one category already hit the hard deadline above,
+        # don't also block here waiting for other still-running (possibly
+        # equally stuck) threads - they finish or fail in the background
+        # on their own, and their results are simply discarded.
+        executor.shutdown(wait=False)
