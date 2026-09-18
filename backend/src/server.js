@@ -4,6 +4,7 @@ import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pool } from "./db.js";
+import { breachesRouter } from "./routes/breaches.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -75,6 +76,8 @@ app.get("/api/data-sources", async (request, response, next) => {
     next(error);
   }
 });
+
+app.use("/api/breaches/latest", breachesRouter);
 
 app.get("/api/organisations/search", async (request, response, next) => {
   try {

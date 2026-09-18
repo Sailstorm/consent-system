@@ -15,6 +15,12 @@ function Overview() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
+  const [latestBreaches, setLatestBreaches] = useState([])
+  const [breachSource, setBreachSource] = useState(null)
+  const [breachNote, setBreachNote] = useState('')
+  const [breachesLoading, setBreachesLoading] = useState(true)
+  const [breachesError, setBreachesError] = useState('')
+
   const [organisationName, setOrganisationName] = useState('')
   const [organisationResults, setOrganisationResults] = useState([])
   const [organisationMessage, setOrganisationMessage] = useState('')
@@ -63,6 +69,38 @@ function Overview() {
     }
 
     loadData()
+  }, [])
+
+  useEffect(() => {
+    async function loadLatestBreaches() {
+      try {
+        setBreachesLoading(true)
+        setBreachesError('')
+
+        const response = await fetch(
+          `${API_URL}/api/breaches/latest?limit=6`
+        )
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Unable to load breach information')
+        }
+
+        setLatestBreaches(data.breaches || [])
+        setBreachSource(data.source || null)
+        setBreachNote(data.note || '')
+      } catch (err) {
+        console.log(err)
+        setBreachesError(
+          'Latest breach information is temporarily unavailable.'
+        )
+      } finally {
+        setBreachesLoading(false)
+      }
+    }
+
+    loadLatestBreaches()
   }, [])
 
   async function searchOrganisation(event) {
@@ -401,6 +439,107 @@ function Overview() {
               </div>
             </>
           )}
+        </section>
+
+        <section className="breach-section">
+          <div className="breach-section-heading">
+            <div>
+              <p className="breach-section-label">
+                GLOBAL BREACH INFORMATION
+              </p>
+              <h2>Latest Confirmed Data Breaches</h2>
+              <p>
+                Recently added verified breach records from Have I Been Pwned.
+              </p>
+            </div>
+
+            {breachSource?.url && (
+              <a
+                href={breachSource.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
+            )}
+          </div>
+
+          {breachesLoading && (
+            <div className="dashboard-message">
+              Loading latest breaches...
+            </div>
+          )}
+
+          {breachesError && (
+            <div className="dashboard-message breach-error">
+              {breachesError}
+            </div>
+          )}
+
+          {!breachesLoading && !breachesError && (
+            <div className="breach-grid">
+              {latestBreaches.map((breach) => (
+                <article className="breach-card" key={breach.name}>
+                  <div className="breach-card-heading">
+                    <div>
+                      <h3>{breach.title}</h3>
+                      <p>{breach.domain || 'Domain not available'}</p>
+                    </div>
+
+                    {breach.verified && (
+                      <span className="verified-label">Verified</span>
+                    )}
+                  </div>
+
+                  <div className="breach-details">
+                    <div>
+                      <span>Breach date</span>
+                      <strong>{formatDate(breach.breachDate)}</strong>
+                    </div>
+
+                    <div>
+                      <span>Affected accounts</span>
+                      <strong>
+                        {Number(
+                          breach.affectedAccounts || 0
+                        ).toLocaleString('en-AU')}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="breach-data-classes">
+                    <span>Exposed information</span>
+                    <p>
+                      {breach.dataClasses.length > 0
+                        ? breach.dataClasses.slice(0, 4).join(', ')
+                        : 'Not specified'}
+                    </p>
+                  </div>
+
+                  <p className="breach-added-date">
+                    Added to HIBP {formatDate(breach.addedDate)}
+                  </p>
+                </article>
+              ))}
+            </div>
+          )}
+
+          <div className="breach-attribution">
+            <p>
+              Source:{' '}
+              <a
+                href={breachSource?.url || 'https://haveibeenpwned.com'}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {breachSource?.name || 'Have I Been Pwned'}
+              </a>
+              {breachSource?.licence
+                ? `, licensed under ${breachSource.licence}.`
+                : '.'}
+            </p>
+            {breachNote && <p>{breachNote}</p>}
+          </div>
         </section>
 
         <section className="asic-section">
