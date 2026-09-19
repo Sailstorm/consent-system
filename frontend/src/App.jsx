@@ -34,6 +34,9 @@ import PracticeSummary from './pages/PracticeSummary'
 import Progress from './pages/Progress'
 import LearningAbout from './pages/LearningAbout'
 
+import Dashboard from './pages/Dashboard'
+import RecentBreaches from './pages/RecentBreaches'
+
 function App() {
   return (
     <PasswordGate>
@@ -177,6 +180,17 @@ function App() {
           <Route
             path="/privacy-learning/about"
             element={<LearningAbout />}
+          />
+
+          {/* Iteration 3 */}
+          <Route
+            path="/risk-dashboard"
+            element={<Dashboard />}
+          />
+
+          <Route
+            path="/risk-dashboard/breaches"
+            element={<RecentBreaches />}
           />
 
           <Route

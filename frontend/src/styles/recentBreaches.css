@@ -1,0 +1,377 @@
+.recent-breaches-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #3c8ca7;
+  color: #142243;
+}
+
+.recent-breaches-header {
+  height: 82px;
+  padding: 0 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2f7893;
+}
+
+.recent-breaches-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.recent-breaches-logo {
+  width: 48px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 4px solid #dcecf2;
+  border-radius: 50% 50% 46% 46%;
+  color: #3289a8;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.recent-breaches-logo span {
+  margin-top: 1px;
+}
+
+.recent-breaches-brand-name {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.recent-breaches-back {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 9px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.recent-breaches-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.recent-breaches-back span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.recent-breaches-main {
+  position: relative;
+  z-index: 2;
+  width: min(1120px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 30px 0 28px;
+}
+
+.recent-breaches-heading {
+  margin-bottom: 22px;
+}
+
+.recent-breaches-heading > p {
+  margin: 0 0 9px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recent-breaches-heading h1 {
+  margin: 0 0 5px;
+  color: #ffffff;
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.recent-breaches-heading > span {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.recent-breaches-card {
+  padding: 24px 26px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.recent-breaches-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.recent-breaches-label {
+  margin: 0 0 5px;
+  color: #2885a5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.recent-breaches-card-top h2 {
+  margin: 0 0 5px;
+  color: #142243;
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.recent-breaches-card-top > div:first-child > span {
+  color: #6f8199;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.recent-breaches-source {
+  min-width: 205px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  background: #f1f6f8;
+}
+
+.recent-breaches-source div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recent-breaches-source span {
+  color: #8b9bae;
+  font-size: 10px;
+}
+
+.recent-breaches-source strong {
+  color: #2e7f9d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.recent-breaches-source p {
+  margin: 7px 0 0;
+  color: #8a9bae;
+  font-size: 10px;
+}
+
+.recent-breaches-divider {
+  height: 1px;
+  margin: 18px 0 4px;
+  background: #dfe8ec;
+}
+
+.recent-breaches-message {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #75879f;
+  font-size: 14px;
+  text-align: center;
+}
+
+.recent-breaches-error {
+  color: #9d604d;
+}
+
+.recent-breaches-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-breach-row {
+  padding: 19px 6px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.85fr 0.75fr 1.6fr;
+  gap: 24px;
+  align-items: center;
+  border-bottom: 1px solid #e5ecef;
+}
+
+.recent-breach-row:last-child {
+  border-bottom: 0;
+}
+
+.recent-breach-name h3 {
+  margin: 0 0 5px;
+  color: #142243;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.recent-breach-name p {
+  margin: 0;
+  color: #8393a8;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.recent-breach-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-breach-detail > span {
+  color: #8fa0b4;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.recent-breach-detail > strong {
+  color: #354b67;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.recent-breach-data strong {
+  color: #4d6480;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.recent-breaches-scroll-note {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 11px;
+  text-align: center;
+}
+
+.recent-breaches-footer {
+  margin: 17px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  text-align: center;
+}
+
+.recent-breaches-watermark {
+  position: absolute;
+  right: -8px;
+  bottom: -18px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.09);
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
+@media (max-width: 950px) {
+  .recent-breaches-main {
+    width: min(880px, calc(100% - 48px));
+  }
+
+  .recent-breach-row {
+    grid-template-columns: 1.2fr 1fr 1fr;
+  }
+
+  .recent-breach-data {
+    grid-column: 1 / -1;
+    padding-top: 3px;
+  }
+}
+
+@media (max-width: 720px) {
+  .recent-breaches-header {
+    height: auto;
+    padding: 18px 22px;
+  }
+
+  .recent-breaches-brand {
+    gap: 12px;
+  }
+
+  .recent-breaches-logo {
+    width: 40px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .recent-breaches-brand-name {
+    font-size: 18px;
+  }
+
+  .recent-breaches-back {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .recent-breaches-main {
+    width: calc(100% - 32px);
+    padding-top: 22px;
+  }
+
+  .recent-breaches-heading h1 {
+    font-size: 31px;
+  }
+
+  .recent-breaches-heading > span {
+    font-size: 15px;
+  }
+
+  .recent-breaches-card {
+    padding: 20px;
+  }
+
+  .recent-breaches-card-top {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .recent-breaches-source {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .recent-breach-row {
+    padding: 17px 4px;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .recent-breach-name {
+    grid-column: 1 / -1;
+  }
+
+  .recent-breach-data {
+    grid-column: 1 / -1;
+  }
+
+  .recent-breaches-watermark {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .recent-breaches-brand-name {
+    display: none;
+  }
+
+  .recent-breaches-heading h1 {
+    font-size: 27px;
+  }
+
+  .recent-breaches-card-top h2 {
+    font-size: 20px;
+  }
+
+  .recent-breach-row {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-breach-name,
+  .recent-breach-data {
+    grid-column: auto;
+  }
+}

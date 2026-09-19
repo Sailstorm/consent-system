@@ -23,3 +23,5 @@ docs/
 
 
 /developed_ai/models/deberta_v3_aug_stage1_best/model.safetensors
+ai-model/venv/
+developed_ai/venv/
