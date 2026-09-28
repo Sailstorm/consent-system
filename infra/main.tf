@@ -174,6 +174,18 @@ resource "aws_instance" "app" {
   tags = {
     Name = "sailstorm-app"
   }
+
+  # data.aws_ami.al2023 tracks most_recent, so a plain `terraform apply`
+  # would otherwise propose replacing this instance (destroying its root
+  # volume, and with it the Postgres data) every time AWS publishes a
+  # newer AL2023 build - discovered the hard way when rotating a secret
+  # unexpectedly planned a full instance replacement. Pinning ami here
+  # means drift there no longer forces replacement of an existing
+  # instance; a genuinely new instance (e.g. after a deliberate destroy)
+  # still picks up whatever AMI is most recent at that time.
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
 
 resource "aws_eip" "app" {
