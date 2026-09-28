@@ -22,7 +22,7 @@ def create_stage2_client():
         # categories running concurrently) - confirmed via a live
         # openai.APITimeoutError. Widened for headroom; keep this and the
         # router's response_header_timeout (infra/router/Caddyfile) equal.
-        timeout=240.0,
+        timeout=600.0,
         max_retries=1,
     )
 
