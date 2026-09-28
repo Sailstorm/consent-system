@@ -155,11 +155,11 @@ def parse_stage2_response(response, category):
     for field in expected_fields:
         value = details[field]
 
-        if value is None:
+        if value is None or (isinstance(value, str) and not value.strip()):
             cleaned_details[field] = None
             continue
 
-        if not isinstance(value, str) or not value.strip():
+        if not isinstance(value, str):
             raise Stage2OutputError(
                 f"{category}: {field} must be a non-empty "
                 "string or null."
@@ -557,7 +557,7 @@ def generate_category_summary(
     ]
 
     completion = client.chat.completions.create(
-    model="google/gemma-4-31b-it",
+    model="nvidia/nemotron-3.5-lightning-30b-a3b",
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
