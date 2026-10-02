@@ -19,6 +19,11 @@ from .ai.stage2_summarizer import (
 
 import logging
 
+from .ai.url_extractor import (
+    PolicyExtractionError,
+    extract_policy_from_url,
+)
+
 logger = logging.getLogger("uvicorn.error")
 
 
@@ -112,3 +117,51 @@ def analyze(request: PolicyRequest):
                 "Check the server logs for details."
             ),
         ) from exc
+
+
+
+class PolicyUrlRequest(BaseModel):
+    url: str = Field(min_length=1, max_length=2048)
+
+    @field_validator("url")
+    @classmethod
+    def validate_url_text(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Policy URL must not be empty.")
+
+        return value
+
+
+@app.post("/analyze-url")
+def analyze_url(request: PolicyUrlRequest):
+    logger.info("Policy URL extraction started.")
+
+    try:
+        extracted = extract_policy_from_url(request.url)
+    except PolicyExtractionError as exc:
+        logger.warning(
+            "Policy URL extraction failed: status=%d",
+            exc.status_code,
+        )
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=str(exc),
+        ) from exc
+
+    # Reuse the existing analysis function and its exception handling.
+    result = analyze(
+        PolicyRequest(text=extracted["text"])
+    )
+
+    return {
+        **result,
+        "source": {
+            "type": "url",
+            "submitted_url": extracted["source_url"],
+            "final_url": extracted["final_url"],
+            "character_count": extracted["character_count"],
+            "extraction_seconds": extracted["extraction_seconds"],
+        },
+    }
