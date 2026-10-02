@@ -38,3 +38,7 @@ openai
 urllib3>=2.2,<3
 certifi
 trafilatura>=2.2,<3
+
+# PDF text extraction and multipart file uploads
+pypdf>=6,<7
+python-multipart>=0.0.20,<1
