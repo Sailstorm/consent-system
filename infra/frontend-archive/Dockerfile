@@ -10,9 +10,10 @@
 # usually a 404 (different build, different hashed filenames), which is
 # why the archive rendered as a blank page before this existed.
 #
-# This does NOT fix client-side navigation within the archive drifting
-# out of the /version1/ prefix (that needs a React Router `basename`,
-# which the archived App.jsx never reads) - known, accepted limitation.
+# This only fixes asset URLs. Client-side routing under /version1/ needs a
+# React Router `basename` too, which the archive ref supplies itself
+# (iteration-1-archived patches BrowserRouter basename="/version1/" onto
+# iteration-1).
 FROM node:22-alpine AS build
 
 WORKDIR /app

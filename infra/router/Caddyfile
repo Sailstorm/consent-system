@@ -33,9 +33,8 @@
 
 	# The Archive: iteration-1, retired at the iteration-2 cutover. Prefix
 	# stripped before forwarding, same as /underdevelopment/ - see
-	# frontend-archive in docker-compose.prod.yml for the known caveat
-	# (that code predates sub-path support, so in-app nav/refresh on a
-	# nested route can drift out of this prefix).
+	# frontend-archive in docker-compose.prod.yml for how that pre-sub-path
+	# code is built to work under this prefix.
 	handle_path /version1/* {
 		reverse_proxy frontend-archive:80
 	}

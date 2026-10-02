@@ -39,10 +39,9 @@ services:
   # without a --base override there, its absolute-root asset paths
   # resolve against the domain root instead of /version1/ and 404 against
   # whatever the live root happens to be serving (rendered as a blank
-  # page before this existed). In-app navigation/refresh on a nested
-  # route within the archive can still drift out of the /version1/
-  # prefix, since the archived App.jsx never reads a React Router
-  # basename either - known, accepted limitation.
+  # page before this existed). The matching React Router basename comes
+  # from the archive ref itself (iteration-1-archived patches
+  # BrowserRouter basename="/version1/" onto iteration-1).
   frontend-archive:
     build:
       context: ../app-archive/frontend
