@@ -1,12 +1,22 @@
 import json
+import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from openai import OpenAI
 
+logger = logging.getLogger("uvicorn.error")
+
 
 class Stage2OutputError(RuntimeError):
-    pass
+    def __init__(self, message, retryable=True):
+        super().__init__(message)
+        # False for failures where retrying with the same parameters is
+        # known to reproduce the same outcome (e.g. hitting max_tokens),
+        # so the retry loop in generate_category_summary doesn't waste a
+        # second, equally-doomed NVIDIA round-trip against the shared
+        # HARD_DEADLINE_SECONDS budget.
+        self.retryable = retryable
 
 def create_stage2_client():
     api_key = os.environ.get("NVIDIA_API_KEY")
@@ -91,6 +101,52 @@ def format_evidence(evidence):
 
     return "\n\n".join(blocks)
 
+def _coerce_detail_value_to_text(value):
+    """
+    nemotron-3.5-lightning occasionally returns a nested dict or list for
+    a detail field instead of the flat string the schema asks for (e.g.
+    {"device_identifiers": "improve services", "location_data": "improve
+    services"} instead of one sentence) - confirmed via live logging.
+    That's still real, grounded content the model extracted, just in the
+    wrong shape, so it's worth flattening into readable text rather than
+    discarding a correct answer over a formatting mismatch. Returns None
+    if the value isn't something this can safely turn into text (the
+    caller then falls back to rejecting the response).
+    """
+
+    if isinstance(value, dict):
+        parts = [
+            str(v).strip()
+            for v in value.values()
+            if isinstance(v, (str, int, float)) and str(v).strip()
+        ]
+
+    elif isinstance(value, (list, tuple)):
+        parts = [
+            str(v).strip()
+            for v in value
+            if isinstance(v, (str, int, float)) and str(v).strip()
+        ]
+
+    elif isinstance(value, (int, float, bool)):
+        return str(value)
+
+    else:
+        return None
+
+    if not parts:
+        return None
+
+    # Dedupe while preserving order - the observed real example had the
+    # same value repeated under every key.
+    seen = []
+    for part in parts:
+        if part not in seen:
+            seen.append(part)
+
+    return ", ".join(seen)
+
+
 def parse_stage2_response(response, category):
 
     response = response.strip()
@@ -104,8 +160,20 @@ def parse_stage2_response(response, category):
         response = "\n".join(lines[1:-1]).strip()
 
     try:
-        result = json.loads(response)
+        # strict=False: nemotron-3.5-lightning occasionally emits a literal
+        # newline/control character inside a JSON string value instead of
+        # an escaped \n (e.g. multi-line explanation text) - the default
+        # strict JSON parser rejects that outright even though the
+        # structure is otherwise well-formed. This is the documented,
+        # narrow way to tolerate it without hand-rolling control-character
+        # escaping ourselves.
+        result = json.loads(response, strict=False)
     except json.JSONDecodeError as exc:
+        logger.warning(
+            "%s: raw Stage 2 output that failed JSON parsing: %r",
+            category,
+            response[:2000],
+        )
         raise Stage2OutputError(
             f"{category}: model output is not valid JSON."
         ) from exc
@@ -155,15 +223,29 @@ def parse_stage2_response(response, category):
     for field in expected_fields:
         value = details[field]
 
-        if value is None:
+        if value is None or (isinstance(value, str) and not value.strip()):
             cleaned_details[field] = None
             continue
 
-        if not isinstance(value, str) or not value.strip():
-            raise Stage2OutputError(
-                f"{category}: {field} must be a non-empty "
-                "string or null."
+        if not isinstance(value, str):
+            coerced = _coerce_detail_value_to_text(value)
+
+            logger.warning(
+                "%s: %s had unexpected type %s, value: %r%s",
+                category,
+                field,
+                type(value).__name__,
+                value,
+                " - coerced to text" if coerced else " - could not coerce",
             )
+
+            if coerced is None:
+                raise Stage2OutputError(
+                    f"{category}: {field} must be a non-empty "
+                    "string or null."
+                )
+
+            value = coerced
 
         cleaned_details[field] = value.strip()
 
@@ -525,7 +607,14 @@ def generate_category_summary(
     category,
     evidence,
     client,
-    max_new_tokens=700,
+    # 700 was tuned against the previous model; gpt-oss-20b hit this limit
+    # on a real test (data_collection, confirmed via live logs) with
+    # plenty of genuinely relevant evidence to summarise. Widened for
+    # headroom rather than left tight, since "reached token limit" is
+    # deliberately non-retryable (retrying the same budget would just
+    # fail the same way again) - this is the real fix for that class of
+    # failure, not the retry.
+    max_new_tokens=1200,
 ):
     if not evidence:
         return {
@@ -536,6 +625,50 @@ def generate_category_summary(
             },
         }
 
+    last_error = None
+
+    # Stage2OutputError means the model's response was malformed in some
+    # way (broke into visible reasoning instead of finishing the JSON,
+    # wrong field type, etc.), not that the request itself failed - live
+    # logging confirmed this is a one-off generation glitch on an
+    # otherwise-fine request, so a single retry of the same prompt is a
+    # cheap, effective mitigation. Deliberately NOT retrying on
+    # timeouts/API errors here (those aren't Stage2OutputError) - retrying
+    # an already-slow request just burns more of the shared
+    # HARD_DEADLINE_SECONDS budget for no real benefit.
+    for attempt in range(2):
+        try:
+            return _request_and_parse_category_summary(
+                category=category,
+                evidence=evidence,
+                client=client,
+                max_new_tokens=max_new_tokens,
+            )
+        except Stage2OutputError as exc:
+            last_error = exc
+
+            will_retry = attempt == 0 and exc.retryable
+
+            logger.warning(
+                "%s: attempt %d produced malformed output (%s)%s",
+                category,
+                attempt + 1,
+                exc,
+                ", retrying" if will_retry else ", giving up",
+            )
+
+            if not will_retry:
+                break
+
+    raise last_error
+
+
+def _request_and_parse_category_summary(
+    category,
+    evidence,
+    client,
+    max_new_tokens,
+):
     prompt = build_stage2_prompt(
         category=category,
         evidence=evidence,
@@ -557,14 +690,29 @@ def generate_category_summary(
     ]
 
     completion = client.chat.completions.create(
-    model="google/gemma-4-31b-it",
+    model="openai/gpt-oss-20b",
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
+    # Two different reasoning-suppression knobs for two different model
+    # families, sent together deliberately. chat_template_kwargs.
+    # enable_thinking is Qwen/nemotron-architecture's switch; it's a
+    # silent no-op on OpenAI-architecture models like gpt-oss, which use
+    # reasoning_effort instead - confirmed live: with only
+    # enable_thinking set, gpt-oss-20b spent its *entire* max_tokens
+    # budget on invisible reasoning and returned zero visible content
+    # (finish_reason="length", 700/700 completion tokens, empty string).
+    # reasoning_effort="low" fixed it (441/700 tokens, clean JSON). Given
+    # this project has already swapped the underlying model twice this
+    # iteration for reliability reasons, sending both unconditionally -
+    # each backend should just ignore the parameter it doesn't
+    # recognise - is cheaper than remembering to change this block again
+    # on the next swap.
     extra_body={
         "chat_template_kwargs": {
             "enable_thinking": False
-        }
+        },
+        "reasoning_effort": "low",
     },
 )
 
@@ -578,7 +726,8 @@ def generate_category_summary(
     if choice.finish_reason == "length":
         raise Stage2OutputError(
             f"{category}: the output reached the token limit "
-            "and may be incomplete."
+            "and may be incomplete.",
+            retryable=False,
         )
 
     response = choice.message.content

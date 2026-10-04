@@ -2,12 +2,44 @@
 
 A full-stack application for exploring and reasoning about consent/privacy data, combining a Postgres-backed API, an AI policy-analysis service, and a React frontend.
 
-The product can be tested here: https://52-64-225-116.sslip.io/privacy-assistant
+## Live URLs
 
-Deployed environments follow a URL versioning pipeline — the live root
-(`/`) is always the last complete iteration, active development lives under
-`/underdevelopment/`, and retired iterations are archived under `/version1/`
-etc. See [`docs/url-versioning-pipeline.md`](docs/url-versioning-pipeline.md).
+One deployed host serves every version of the app side by side, each under
+its own URL path:
+
+| URL | Role | What it serves |
+|-----|------|----------------|
+| https://52-64-225-116.sslip.io/ | **Live root** | The last *complete* iteration, currently git tag `iteration-2.1`. Password protected. |
+| https://52-64-225-116.sslip.io/underdevelopment/ | **Active development** | `main` HEAD, the iteration currently in progress. |
+| https://52-64-225-116.sslip.io/version1/ | **Archive** | Iteration 1, frozen (git tag `iteration-1-archived`). |
+
+All three share the same backend (`/api/*`), AI service (`/analyze`) and
+database. Only the frontend differs between them.
+
+### Versioning logic
+
+- **`/` always lags behind `main`.** It's pinned to a git tag through the
+  Terraform variable `stable_ref` (`infra/variables.tf`), so ongoing work on
+  `main` never reaches the live root by accident.
+- **`/underdevelopment/` always tracks `main`.** Every redeploy picks up the
+  latest commit. Its frontend is built with `VITE_BASE_PATH=/underdevelopment/`
+  so assets and routes resolve under that prefix.
+- **`/versionN/` holds retired iterations.** It's pinned through
+  `archive_ref`. The archive uses `iteration-1-archived` rather than
+  `iteration-1`. The original iteration-1 code predates sub-path support,
+  so that tag adds a one-line patch: a React Router
+  `basename="/version1/"`. It's built with `vite build --base=/version1/`
+  through `infra/frontend-archive/Dockerfile`.
+- **Cutover:** when an iteration is complete, tag the commit on `main`
+  (for example `git tag iteration-3 <sha>`), point `stable_ref` at the new
+  tag, move the outgoing iteration into the archive, and redeploy. A patch
+  cutover (`iteration-2` → `iteration-2.1`) only retags and bumps
+  `stable_ref`, so the archive is left unchanged.
+
+The routing is handled by Caddy (`infra/router/Caddyfile`), which also
+provisions HTTPS automatically. The container wiring lives in
+`docker-compose.prod.yml`. Full design and runbook:
+[`docs/url-versioning-pipeline.md`](docs/url-versioning-pipeline.md).
 
 ## Architecture
 

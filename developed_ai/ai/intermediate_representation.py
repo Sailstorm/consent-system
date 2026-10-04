@@ -17,6 +17,16 @@ DEFAULT_THRESHOLDS = {
     "user_control": 0.10,
 }
 
+# At the current (deliberately low) STAGE1_THRESHOLDS, most/all segments of
+# a real policy can clear the bar for a given category, since categories
+# are scored independently rather than as a single softmax choice. Without
+# a cap, the frontend (which joins every evidence item into one block of
+# "relevant source text") ends up showing something close to the entire
+# policy instead of a few genuinely relevant excerpts. Capping here, not by
+# raising the threshold, avoids depending on a threshold value tuned against
+# an uncalibrated classifier.
+MAX_EVIDENCE_PER_CATEGORY = 3
+
 def build_intermediate_representation(
     policy_id: str,
     segment_predictions: List[Dict[str, Any]],
@@ -93,6 +103,25 @@ def build_intermediate_representation(
                     "text": text,
                     "confidence": probability,
                 })
+
+    # Keep only the most relevant segments per category, then restore
+    # document order within that subset so excerpts read naturally rather
+    # than jumping around by confidence rank.
+    for category in CATEGORIES:
+
+        evidence = ir["categories"][category]["evidence"]
+
+        if len(evidence) > MAX_EVIDENCE_PER_CATEGORY:
+
+            evidence = sorted(
+                evidence,
+                key=lambda item: item["confidence"],
+                reverse=True,
+            )[:MAX_EVIDENCE_PER_CATEGORY]
+
+            evidence.sort(key=lambda item: item["segment_id"])
+
+            ir["categories"][category]["evidence"] = evidence
 
     return ir
 

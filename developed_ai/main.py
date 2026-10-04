@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 
@@ -18,6 +18,17 @@ from .ai.stage2_summarizer import (
 )
 
 import logging
+
+from .ai.url_extractor import (
+    PolicyExtractionError,
+    extract_policy_from_url,
+)
+
+from .ai.pdf_extractor import (
+    MAX_PDF_BYTES,
+    PdfExtractionError,
+    extract_policy_from_pdf,
+)
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -112,3 +123,117 @@ def analyze(request: PolicyRequest):
                 "Check the server logs for details."
             ),
         ) from exc
+
+
+
+class PolicyUrlRequest(BaseModel):
+    url: str = Field(min_length=1, max_length=2048)
+
+    @field_validator("url")
+    @classmethod
+    def validate_url_text(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Policy URL must not be empty.")
+
+        return value
+
+
+@app.post("/analyze-url")
+def analyze_url(request: PolicyUrlRequest):
+    logger.info("Policy URL extraction started.")
+
+    try:
+        extracted = extract_policy_from_url(request.url)
+    except PolicyExtractionError as exc:
+        logger.warning(
+            "Policy URL extraction failed: status=%d",
+            exc.status_code,
+        )
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=str(exc),
+        ) from exc
+
+    # Reuse the existing analysis function and its exception handling.
+    result = analyze(
+        PolicyRequest(text=extracted["text"])
+    )
+
+    return {
+        **result,
+        "source": {
+            "type": "url",
+            "submitted_url": extracted["source_url"],
+            "final_url": extracted["final_url"],
+            "character_count": extracted["character_count"],
+            "extraction_seconds": extracted["extraction_seconds"],
+        },
+    }
+
+@app.post("/analyze-pdf")
+def analyze_pdf(file: UploadFile = File(...)):
+    # Only use the basename as display metadata.
+    # Never use the uploaded filename as a filesystem path.
+    filename = (
+        (file.filename or "uploaded.pdf")
+        .replace("\\", "/")
+        .rsplit("/", 1)[-1]
+    )
+
+    filename = "".join(
+        character
+        for character in filename
+        if character.isprintable()
+    )[:200] or "uploaded.pdf"
+
+    logger.info("PDF extraction started.")
+
+    try:
+        try:
+            # Read at most the configured limit plus one byte.
+            pdf_bytes = file.file.read(MAX_PDF_BYTES + 1)
+        except OSError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="The uploaded file could not be read.",
+            ) from exc
+
+        if len(pdf_bytes) > MAX_PDF_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail="The PDF exceeds the 10 MiB file size limit.",
+            )
+
+        try:
+            extracted = extract_policy_from_pdf(pdf_bytes)
+        except PdfExtractionError as exc:
+            logger.warning(
+                "PDF extraction failed: status=%d",
+                exc.status_code,
+            )
+            raise HTTPException(
+                status_code=exc.status_code,
+                detail=str(exc),
+            ) from exc
+
+    finally:
+        # Close the upload's temporary file on success or failure.
+        file.file.close()
+
+    # Reuse the existing pipeline and NVIDIA error handling.
+    result = analyze(
+        PolicyRequest(text=extracted["text"])
+    )
+
+    return {
+        **result,
+        "source": {
+            "type": "pdf",
+            "filename": filename,
+            "page_count": extracted["page_count"],
+            "character_count": extracted["character_count"],
+            "extraction_seconds": extracted["extraction_seconds"],
+        },
+    }
