@@ -163,6 +163,7 @@ def analyze_url(request: PolicyUrlRequest):
 
     return {
         **result,
+        "policy_text": extracted["text"],
         "source": {
             "type": "url",
             "submitted_url": extracted["source_url"],
@@ -229,6 +230,7 @@ def analyze_pdf(file: UploadFile = File(...)):
 
     return {
         **result,
+        "policy_text": extracted["text"],
         "source": {
             "type": "pdf",
             "filename": filename,

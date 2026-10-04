@@ -1,156 +1,173 @@
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import LearningLayout from '../components/LearningLayout'
-import '../styles/learningLesson.css'
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+import AnalysisStatus from '../components/AnalysisStatus'
+
+import {
+  practiceTopics,
+  startTopicPractice,
+} from '../utils/practice'
+
+import '../styles/learningLesson.css'
 
 function LessonDetail({ topic }) {
   const navigate = useNavigate()
 
-  const [informationTypes, setInformationTypes] = useState([])
-  const [dataLoading, setDataLoading] = useState(false)
+  function startPractice() {
+    const practiceTopic = practiceTopics.find(
+      (item) => item.title === topic.title,
+    )
 
-  useEffect(() => {
-    if (topic.slug !== 'data-collection') {
+    if (!practiceTopic) {
       return
     }
 
-    async function loadInformationTypes() {
-      setDataLoading(true)
+    const state = startTopicPractice(
+      practiceTopic.key,
+    )
 
-      try {
-        const response = await fetch(
-          `${API_URL}/api/ndb/information-types`,
-        )
-
-        if (!response.ok) {
-          throw new Error('Unable to load information types')
-        }
-
-        const data = await response.json()
-
-        setInformationTypes(
-          (data.informationTypes || []).slice(0, 3),
-        )
-      } catch {
-        setInformationTypes([])
-      } finally {
-        setDataLoading(false)
-      }
+    if (!state) {
+      return
     }
 
-    loadInformationTypes()
-  }, [topic.slug])
+    navigate(
+      `/privacy-learning/practice/${practiceTopic.slug}/question`,
+    )
+  }
 
   return (
-    <LearningLayout activePage="learn">
-      <button
-        className="lesson-back-button"
-        type="button"
-        onClick={() => navigate('/privacy-learning/learn')}
-      >
-        ← Back to Learning Hub
-      </button>
+    <div className="i3-lesson-page">
+      <header className="i3-lesson-header">
+        <div className="i3-lesson-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-lesson-logo"
+          />
 
-      <section className="lesson-heading">
-        <p className="lesson-label">
-          LESSON {topic.number}
-        </p>
+          <span>Consent Assistant</span>
+        </div>
 
-        <h1>{topic.title}</h1>
+        <button
+          type="button"
+          className="i3-lesson-header-back"
+          onClick={() =>
+            navigate('/privacy-learning/learn')
+          }
+        >
+          ← Back
+        </button>
+      </header>
 
-        <p>{topic.description}</p>
-      </section>
+      <main className="i3-lesson-content">
+        <div className="i3-lesson-heading-row">
+          <section className="i3-lesson-heading">
+            <p className="i3-lesson-label">
+              PRIVACY LEARNING&nbsp; • &nbsp;LESSON
+            </p>
 
-      <div className="lesson-grid">
-        <section className="lesson-main-card">
-          <div className="lesson-section">
-            <h2>What does it mean?</h2>
+            <h1>{topic.title}</h1>
+
+            <p className="i3-lesson-description">
+              {topic.description}
+            </p>
+          </section>
+
+          <div className="i3-lesson-analysis">
+            <AnalysisStatus />
+          </div>
+        </div>
+
+        <div className="i3-lesson-divider"></div>
+
+        <section className="i3-lesson-overview">
+          <p className="i3-lesson-overview-label">
+            LESSON OVERVIEW
+          </p>
+
+          <h2>Learn the essentials</h2>
+        </section>
+
+        <section className="i3-lesson-card">
+          <img
+            src="/lesson-meaning.jpg"
+            alt=""
+            className="i3-lesson-card-background"
+          />
+
+          <div className="i3-lesson-card-copy">
+            <h3>What does it mean?</h3>
 
             <p>{topic.meaning}</p>
           </div>
+        </section>
 
-          <div className="lesson-section">
-            <h2>Example</h2>
+        <section className="i3-lesson-card">
+          <img
+            src="/lesson-example.jpg"
+            alt=""
+            className="i3-lesson-card-background"
+          />
+
+          <div className="i3-lesson-card-copy">
+            <h3>Example</h3>
 
             <p>{topic.example}</p>
           </div>
+        </section>
 
-          <div className="lesson-section">
-            <h2>Why does it matter?</h2>
+        <section className="i3-lesson-card">
+          <img
+            src="/lesson-importance.jpg"
+            alt=""
+            className="i3-lesson-card-background"
+          />
+
+          <div className="i3-lesson-card-copy">
+            <h3>Why does it matter?</h3>
 
             <p>{topic.importance}</p>
           </div>
         </section>
 
-        <aside className="lesson-side">
-          <div className="lesson-tip-card">
-            <p className="lesson-tip-label">PRIVACY TIP</p>
+        <section className="i3-lesson-tip">
+          <div>
+            <p className="i3-lesson-tip-label">
+              PRIVACY TIP
+            </p>
 
-            <h2>{topic.tipTitle}</h2>
-
-            <p>{topic.tip}</p>
+            <h3>{topic.tipTitle}</h3>
           </div>
 
-          {topic.slug === 'data-collection' && (
-            <div className="lesson-insight-card">
-              <p className="lesson-insight-label">
-                REAL-WORLD INSIGHT
-              </p>
+          <p>{topic.tip}</p>
+        </section>
 
-              <h2>
-                Personal information in reported data breaches
-              </h2>
-
-              <p className="lesson-insight-description">
-                OAIC data shows the types of personal information
-                involved in reported data breach notifications.
-              </p>
-
-              {dataLoading ? (
-                <p className="lesson-insight-message">
-                  Loading Australian data...
-                </p>
-              ) : informationTypes.length > 0 ? (
-                <div className="lesson-insight-list">
-                  {informationTypes.map((item) => (
-                    <div
-                      className="lesson-insight-item"
-                      key={item.informationType}
-                    >
-                      <span>{item.informationType}</span>
-
-                      <strong>{item.notifications}</strong>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="lesson-insight-message">
-                  Real-world data is unavailable right now.
-                </p>
-              )}
-
-              <p className="lesson-insight-source">
-                Source: OAIC Notifiable Data Breaches
-              </p>
-            </div>
-          )}
-
+        <div className="i3-lesson-actions">
           <button
-            className="lesson-activity-button"
             type="button"
+            className="i3-lesson-back-topics"
             onClick={() =>
-              navigate(
-                `/privacy-learning/learn/${topic.slug}/activity`,
-              )
+              navigate('/privacy-learning/learn')
             }
           >
-            Start Activity
+            Back to topics
           </button>
-        </aside>
-      </div>
-    </LearningLayout>
+
+          <button
+            type="button"
+            className="i3-lesson-start"
+            onClick={startPractice}
+          >
+            Start activity →
+          </button>
+        </div>
+      </main>
+
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-lesson-watermark"
+      />
+    </div>
   )
 }
 

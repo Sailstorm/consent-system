@@ -5,10 +5,11 @@ import {
   useParams,
 } from 'react-router-dom'
 
-import LearningLayout from '../components/LearningLayout'
+import AnalysisStatus from '../components/AnalysisStatus'
 import LessonDetail from './LessonDetail'
 import LearningActivity from './LearningActivity'
 import { loadLearningProgress } from '../utils/learningProgress'
+
 import '../styles/learningHub.css'
 
 function Learn() {
@@ -29,6 +30,9 @@ function Learn() {
       number: '01',
       slug: 'data-collection',
       title: 'Data Collection',
+      shortDescription:
+        'Understand what information a service may ask you to provide.',
+      image: '/data-collection.jpg',
       description:
         'Learn what information a service may collect about you and your activity.',
       meaning:
@@ -70,10 +74,14 @@ function Learn() {
           'Before sharing information, understand what is being collected and why it may be needed.',
       },
     },
+
     {
       number: '02',
       slug: 'purpose-of-use',
       title: 'Purpose of Use',
+      shortDescription:
+        'Learn why an organisation may want to use your information.',
+      image: '/purpose-of-use.jpg',
       description:
         'Understand why an organisation wants to use your information.',
       meaning:
@@ -115,10 +123,14 @@ function Learn() {
           'Do not only look at what data is collected. Also check why the organisation wants to use it.',
       },
     },
+
     {
       number: '03',
       slug: 'data-sharing',
       title: 'Data Sharing',
+      shortDescription:
+        'Understand who your information may be shared with.',
+      image: '/data-sharing.jpg',
       description:
         'Learn who else may receive or access your information.',
       meaning:
@@ -160,10 +172,14 @@ function Learn() {
           'When you share data with one service, check whether other organisations may also receive it.',
       },
     },
+
     {
       number: '04',
       slug: 'data-retention',
       title: 'Data Retention',
+      shortDescription:
+        'Learn how long your information may be kept.',
+      image: '/data-retention.jpg',
       description:
         'Learn how long your information may be stored and what happens to it later.',
       meaning:
@@ -205,10 +221,14 @@ function Learn() {
           'Check not only what is collected, but also how long the organisation plans to keep it.',
       },
     },
+
     {
       number: '05',
       slug: 'user-control',
       title: 'User Control',
+      shortDescription:
+        'Understand the choices and controls that may be available to you.',
+      image: '/user-control.jpg',
       description:
         'Understand the choices you may have over your personal information.',
       meaning:
@@ -258,79 +278,137 @@ function Learn() {
     )
 
     if (selectedTopic) {
-      const isActivity = location.pathname.endsWith('/activity')
+      const isActivity =
+        location.pathname.endsWith('/activity')
 
       if (isActivity) {
-        return <LearningActivity topic={selectedTopic} />
+        return (
+          <LearningActivity
+            topic={selectedTopic}
+          />
+        )
       }
 
-      return <LessonDetail topic={selectedTopic} />
+      return (
+        <LessonDetail
+          topic={selectedTopic}
+        />
+      )
     }
   }
 
   return (
-    <LearningLayout activePage="learn">
-      <section className="learning-hub-heading">
-        <p className="learning-hub-label">
-          PRIVACY LEARNING HUB
-        </p>
+    <div className="i3-learn-page">
+      <header className="i3-learn-header">
+        <div className="i3-learn-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-learn-logo"
+          />
 
-        <h1>Choose a topic to explore</h1>
+          <span>
+            Consent Assistant
+          </span>
+        </div>
 
-        <p>
-          Each lesson takes only a few minutes and uses simple, everyday
-          explanations.
-        </p>
-      </section>
+        <button
+          type="button"
+          className="i3-learn-back"
+          onClick={() => navigate('/')}
+        >
+          ← Back
+        </button>
+      </header>
 
-      <section className="learning-topic-grid">
-        {topics.map((topic) => {
-          const completed = completedTopics.includes(topic.slug)
+      <main className="i3-learn-content">
+        <div className="i3-learn-heading-row">
+          <section className="i3-learn-heading">
+            <p>
+              PRIVACY LEARNING
+            </p>
 
-          return (
-            <article
-              className="learning-topic-card"
+            <h1>
+              Choose a topic to explore
+            </h1>
+
+            <span>
+              Explore simple privacy topics at your own pace.
+              Each lesson only takes a few minutes.
+            </span>
+          </section>
+
+          <div className="i3-learn-analysis">
+            <AnalysisStatus />
+          </div>
+        </div>
+
+        <div className="i3-learn-divider"></div>
+
+        <section className="i3-topic-grid">
+          {topics.map((topic) => (
+            <button
+              type="button"
               key={topic.slug}
+              className="i3-topic-card"
+              onClick={() =>
+                navigate(
+                  `/privacy-learning/learn/${topic.slug}`,
+                )
+              }
             >
-              <div className="learning-topic-top">
-                <span className="learning-topic-number">
-                  {topic.number}
+              <img
+                src={topic.image}
+                alt=""
+                className="i3-topic-background"
+              />
+
+              <span className="i3-topic-arrow">
+                →
+              </span>
+
+              <div className="i3-topic-copy">
+                <h2>
+                  {topic.title}
+                </h2>
+
+                <p>
+                  {topic.shortDescription}
+                </p>
+              </div>
+
+              {completedTopics.includes(topic.slug) && (
+                <span className="i3-topic-completed">
+                  ✓
                 </span>
+              )}
+            </button>
+          ))}
+        </section>
 
-                {completed && (
-                  <span className="learning-topic-completed">
-                    Completed
-                  </span>
-                )}
-              </div>
+        <div className="i3-learn-note">
+          <span className="i3-note-icon">
+            ⓘ
+          </span>
 
-              <div className="learning-topic-copy">
-                <h2>{topic.title}</h2>
+          <p>
+            Choose any topic. You can return here and
+            explore another lesson at any time.
+          </p>
+        </div>
 
-                <p>{topic.description}</p>
-              </div>
+        <p className="i3-learn-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
 
-              <button
-                type="button"
-                onClick={() =>
-                  navigate(`/privacy-learning/learn/${topic.slug}`)
-                }
-              >
-                {completed ? 'Review lesson →' : 'Open lesson →'}
-              </button>
-            </article>
-          )
-        })}
-      </section>
-
-      <div className="learning-hub-progress">
-        <span>Guest progress</span>
-
-        <strong>
-          {completedTopics.length} of 5 topics explored
-        </strong>
-      </div>
-    </LearningLayout>
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-learn-watermark"
+      />
+    </div>
   )
 }
 

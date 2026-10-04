@@ -1,260 +1,323 @@
-.lesson-back-button {
-  min-height: 38px;
-  margin-bottom: 28px;
-  padding: 0 16px;
+.i3-lesson-page {
+  position: relative;
 
-  border: 1px solid #cfdde1;
-  border-radius: 5px;
+  min-height: 100vh;
+  overflow: hidden;
 
-  background: #ffffff;
-  color: #526b7c;
+  background: #4c8ca8;
+  color: #ffffff;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-
-  cursor: pointer;
 }
 
-.lesson-back-button:hover {
-  border-color: #087c74;
-  color: #087c74;
-}
-
-.lesson-heading {
-  max-width: 760px;
-  margin-bottom: 30px;
-}
-
-.lesson-label {
-  margin: 0 0 10px;
-
-  color: #087c74;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.lesson-heading h1 {
-  margin: 0 0 8px;
-
-  color: #15324a;
-
-  font-size: 32px;
-  line-height: 1.2;
-}
-
-.lesson-heading > p:last-child {
-  margin: 0;
-
-  color: #688099;
-
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.lesson-grid {
-  display: grid;
-  grid-template-columns: 1.7fr 0.8fr;
-  gap: 18px;
-}
-
-.lesson-main-card {
-  padding: 26px;
-
-  border: 1px solid #acd9e9;
-  border-radius: 10px;
-
-  background: #ffffff;
-}
-
-.lesson-section {
-  padding: 0 0 24px;
-  margin-bottom: 24px;
-
-  border-bottom: 1px solid #e4ecee;
-}
-
-.lesson-section:last-child {
-  padding-bottom: 0;
-  margin-bottom: 0;
-
-  border-bottom: none;
-}
-
-.lesson-section h2 {
-  margin: 0 0 9px;
-
-  color: #15324a;
-
-  font-size: 17px;
-}
-
-.lesson-section p {
-  margin: 0;
-
-  color: #688099;
-
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.lesson-side {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.lesson-tip-card {
-  padding: 24px;
-
-  border-radius: 10px;
-
-  background: #e5f4f1;
-}
-
-.lesson-tip-label {
-  margin: 0 0 12px;
-
-  color: #087c74;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.lesson-tip-card h2 {
-  margin: 0 0 10px;
-
-  color: #15324a;
-
-  font-size: 17px;
-  line-height: 1.4;
-}
-
-.lesson-tip-card > p:last-child {
-  margin: 0;
-
-  color: #627b87;
-
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.lesson-insight-card {
-  padding: 24px;
-
-  border: 1px solid #acd9e9;
-  border-radius: 10px;
-
-  background: #ffffff;
-}
-
-.lesson-insight-label {
-  margin: 0 0 12px;
-
-  color: #087c74;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.lesson-insight-card h2 {
-  margin: 0 0 8px;
-
-  color: #15324a;
-
-  font-size: 16px;
-  line-height: 1.4;
-}
-
-.lesson-insight-description {
-  margin: 0 0 16px;
-
-  color: #688099;
-
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.lesson-insight-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lesson-insight-item {
-  padding: 9px 10px;
+.i3-lesson-header {
+  height: 70px;
+  padding: 0 38px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
 
-  border-radius: 5px;
-
-  background: #f4f8f8;
+  background: #2b7189;
 }
 
-.lesson-insight-item span {
-  color: #526b7c;
+.i3-lesson-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
-  font-size: 11px;
-}
-
-.lesson-insight-item strong {
-  color: #15324a;
-
-  font-size: 11px;
-}
-
-.lesson-insight-message {
-  margin: 12px 0;
-
-  color: #688099;
-
-  font-size: 12px;
-}
-
-.lesson-insight-source {
-  margin: 15px 0 0;
-
-  color: #8193a0;
-
-  font-size: 10px;
-}
-
-.lesson-activity-button {
-  min-height: 42px;
-  padding: 0 17px;
-
-  border: none;
-  border-radius: 5px;
-
-  background: #087c74;
   color: #ffffff;
 
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.i3-lesson-logo {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 8px;
+
+  object-fit: contain;
+}
+
+.i3-lesson-header-back {
+  min-width: 98px;
+  min-height: 40px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9px;
+
+  background: transparent;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 14px;
 
   cursor: pointer;
 }
 
-.lesson-activity-button:hover {
-  background: #066b65;
+.i3-lesson-content {
+  position: relative;
+  z-index: 2;
+
+  width: min(1100px, calc(100% - 72px));
+
+  margin: 0 auto;
+
+  padding: 27px 0 18px;
 }
 
-@media (max-width: 850px) {
-  .lesson-grid {
-    grid-template-columns: 1fr;
+.i3-lesson-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 45px;
+}
+
+.i3-lesson-heading {
+  flex: 1;
+}
+
+.i3-lesson-label {
+  margin: 0 0 12px;
+
+  color: #e2f1f5;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.i3-lesson-heading h1 {
+  margin: 0 0 7px;
+
+  color: #ffffff;
+
+  font-size: 39px;
+  line-height: 1.05;
+}
+
+.i3-lesson-description {
+  margin: 0;
+
+  color: #e5f0f4;
+
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.i3-lesson-analysis {
+  width: 430px;
+  flex-shrink: 0;
+}
+
+.i3-lesson-divider {
+  height: 1px;
+
+  margin: 15px 0 22px;
+
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.i3-lesson-overview {
+  margin-bottom: 10px;
+}
+
+.i3-lesson-overview-label {
+  margin: 0 0 8px;
+
+  color: #e2f1f5;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.i3-lesson-overview h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 29px;
+}
+
+.i3-lesson-card {
+  position: relative;
+
+  min-height: 88px;
+
+  margin-top: 11px;
+  padding: 18px 22px;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  color: #172845;
+}
+
+.i3-lesson-card-background {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  z-index: 1;
+}
+
+.i3-lesson-card-copy {
+  position: relative;
+  z-index: 2;
+
+  max-width: 74%;
+}
+
+.i3-lesson-card h3 {
+  margin: 0 0 7px;
+
+  color: #172845;
+
+  font-size: 19px;
+}
+
+.i3-lesson-card p {
+  margin: 0;
+
+  color: #627895;
+
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.i3-lesson-tip {
+  min-height: 76px;
+
+  margin-top: 11px;
+  padding: 15px 22px;
+
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  align-items: center;
+
+  gap: 35px;
+
+  border-radius: 12px;
+
+  background: #e8f7f4;
+  color: #172845;
+}
+
+.i3-lesson-tip-label {
+  margin: 0 0 7px;
+
+  color: #168b99;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.i3-lesson-tip h3 {
+  margin: 0;
+
+  color: #172845;
+
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.i3-lesson-tip > p {
+  margin: 0;
+
+  color: #627895;
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.i3-lesson-actions {
+  margin-top: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.i3-lesson-back-topics {
+  min-width: 150px;
+  min-height: 45px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #16819a;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.i3-lesson-start {
+  min-width: 185px;
+  min-height: 45px;
+
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #299abc;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.i3-lesson-watermark {
+  position: absolute;
+
+  right: -42px;
+  bottom: -56px;
+
+  width: 300px;
+  height: 300px;
+
+  object-fit: contain;
+
+  opacity: 0.1;
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .i3-lesson-heading-row {
+    flex-direction: column;
   }
-}
 
-@media (max-width: 720px) {
-  .lesson-heading h1 {
-    font-size: 28px;
+  .i3-lesson-analysis {
+    width: 100%;
+  }
+
+  .i3-lesson-card-copy {
+    max-width: 100%;
+  }
+
+  .i3-lesson-tip {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }

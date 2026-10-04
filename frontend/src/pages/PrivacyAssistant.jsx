@@ -1,130 +1,319 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import PolicyLayout from '../components/PolicyLayout'
-import ProgressSteps from '../components/ProgressSteps'
 import {
   loadDraftPolicy,
-  loadSettings,
   saveDraftPolicy,
 } from '../utils/settings'
 import '../styles/privacyAssistant.css'
 
 function PrivacyAssistant() {
-  const location = useLocation()
   const navigate = useNavigate()
-  const settings = loadSettings()
+  const location = useLocation()
+
+  const [inputType, setInputType] = useState('text')
 
   const [policyText, setPolicyText] = useState(
     location.state?.policyText ||
-      (settings.keepSession ? loadDraftPolicy() : '') ||
-      ''
+      loadDraftPolicy() ||
+      '',
   )
+
+  const [policyUrl, setPolicyUrl] = useState('')
+  const [pdfFile, setPdfFile] = useState(null)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (!loadSettings().keepSession) {
-      return
-    }
-
-    saveDraftPolicy(policyText)
-  }, [policyText])
-
-  const handleClear = () => {
-    setPolicyText('')
+  function changeInputType(type) {
+    setInputType(type)
     setError('')
-    saveDraftPolicy('')
   }
 
-  const handleAnalyse = () => {
+  function analyseText() {
     const text = policyText.trim()
 
     if (!text) {
-      setError('Please enter privacy policy content before continuing.')
+      setError('Please enter a privacy policy or notice.')
       return
     }
 
     if (text.length < 50) {
-      setError('')
       navigate('/invalid-input')
       return
     }
 
-    setError('')
+    saveDraftPolicy(text)
 
     navigate('/processing', {
       state: {
+        inputType: 'text',
         policyText: text,
       },
     })
   }
 
+  function analyseUrl() {
+    const url = policyUrl.trim()
+
+    if (!url) {
+      setError('Please enter a privacy policy URL.')
+      return
+    }
+
+    navigate('/processing', {
+      state: {
+        inputType: 'url',
+        policyUrl: url,
+      },
+    })
+  }
+
+  function analysePdf() {
+    if (!pdfFile) {
+      setError('Please choose a PDF file.')
+      return
+    }
+
+    if (pdfFile.type !== 'application/pdf') {
+      setError('Please choose a PDF file.')
+      return
+    }
+
+    const maxSize = 10 * 1024 * 1024
+
+    if (pdfFile.size > maxSize) {
+      setError('The PDF must be 10 MB or smaller.')
+      return
+    }
+
+    navigate('/processing', {
+      state: {
+        inputType: 'pdf',
+        pdfFile,
+      },
+    })
+  }
+
+  function handleAnalyse() {
+    setError('')
+
+    if (inputType === 'text') {
+      analyseText()
+      return
+    }
+
+    if (inputType === 'url') {
+      analyseUrl()
+      return
+    }
+
+    if (inputType === 'pdf') {
+      analysePdf()
+    }
+  }
+
+  const canAnalyse =
+    (inputType === 'text' &&
+      policyText.trim().length > 0) ||
+    (inputType === 'url' &&
+      policyUrl.trim().length > 0) ||
+    (inputType === 'pdf' && pdfFile)
+
   return (
-    <PolicyLayout activePage="analysis">
-      <section className="assistant-heading">
-        <p className="assistant-label">POLICY ASSISTANT</p>
+    <div className="i3-assistant-page">
+      <header className="i3-assistant-header">
+        <div className="i3-assistant-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-assistant-logo"
+          />
 
-        <h1>Privacy Policy Analysis</h1>
+          <span>Consent Assistant</span>
+        </div>
 
-        <p>
-          Paste a privacy policy or notice and get a clearer explanation
-          before you decide.
-        </p>
-      </section>
+        <button
+          type="button"
+          className="i3-assistant-back"
+          onClick={() => navigate('/')}
+        >
+          ← Back
+        </button>
+      </header>
 
-      <ProgressSteps current={1} />
-
-      <section className="input-card">
-        <div className="input-heading">
-          <h2>Enter privacy information</h2>
+      <main className="i3-assistant-content">
+        <section className="i3-assistant-heading">
+          <h1>Upload your privacy policy</h1>
 
           <p>
-            Only the text you paste here will be analysed. The tool does not
-            make your final decision for you. Please enter no more than 8,000
-            characters.
+            Choose how you would like to provide the policy.
           </p>
-        </div>
+        </section>
 
-        <textarea
-          className={error ? 'policy-input input-error' : 'policy-input'}
-          value={policyText}
-          onChange={(event) => {
-            setPolicyText(event.target.value)
-
-            if (error) {
-              setError('')
+        <div className="i3-assistant-tabs">
+          <button
+            type="button"
+            className={
+              inputType === 'url'
+                ? 'i3-assistant-tab active'
+                : 'i3-assistant-tab'
             }
-          }}
-          placeholder="Paste a Privacy Policy, Privacy Notice, or terms about personal data here..."
-        />
-
-        <div className="input-footer">
-          <span>{policyText.length} characters</span>
-          <span>Your text is used only for this analysis.</span>
-        </div>
-
-        {error && <p className="error-message">{error}</p>}
-
-        <div className="input-actions">
-          <button className="clear-button" onClick={handleClear}>
-            Clear
+            onClick={() => changeInputType('url')}
+          >
+            Paste Link
           </button>
 
-          <button className="analyse-button" onClick={handleAnalyse}>
-            Analyse
+          <button
+            type="button"
+            className={
+              inputType === 'text'
+                ? 'i3-assistant-tab active'
+                : 'i3-assistant-tab'
+            }
+            onClick={() => changeInputType('text')}
+          >
+            Paste text
+          </button>
+
+          <button
+            type="button"
+            className={
+              inputType === 'pdf'
+                ? 'i3-assistant-tab active'
+                : 'i3-assistant-tab'
+            }
+            onClick={() => changeInputType('pdf')}
+          >
+            Upload a file
           </button>
         </div>
-      </section>
 
-      <section className="before-card">
-        <h3>Before you continue</h3>
+        {inputType === 'url' && (
+          <section className="i3-url-card">
+            <div className="i3-url-icon">
+              ↗
+            </div>
 
-        <p>
-          The explanation is for understanding only. It highlights what the
-          policy says and what may not be clearly stated, so you can make
-          your own privacy decision.
+            <h2>Paste Privacy Policy URL</h2>
+
+            <p>
+              Enter the link to the privacy policy you want
+              to analyse.
+            </p>
+
+            <input
+              type="url"
+              value={policyUrl}
+              onChange={(event) => {
+                setPolicyUrl(event.target.value)
+                setError('')
+              }}
+              placeholder="https://example.com/privacy-policy/"
+            />
+          </section>
+        )}
+
+        {inputType === 'text' && (
+          <section className="i3-text-card">
+            <textarea
+              value={policyText}
+              onChange={(event) => {
+                setPolicyText(event.target.value)
+                setError('')
+              }}
+              placeholder="Paste the privacy policy text here..."
+            />
+
+            <span className="i3-character-count">
+              {policyText.length} characters
+            </span>
+          </section>
+        )}
+
+        {inputType === 'pdf' && (
+          <section className="i3-upload-card">
+            <div className="i3-upload-icon">
+              ⇧
+            </div>
+
+            <h2>Upload Privacy Policy</h2>
+
+            <p>
+              Choose a PDF file from your device.
+            </p>
+
+            <label
+              className="i3-browse-button"
+              htmlFor="policy-pdf"
+            >
+              Browse files
+            </label>
+
+            <input
+              id="policy-pdf"
+              type="file"
+              accept="application/pdf,.pdf"
+              className="i3-file-input"
+              onChange={(event) => {
+                const file =
+                  event.target.files?.[0] || null
+
+                setPdfFile(file)
+                setError('')
+              }}
+            />
+
+            {pdfFile ? (
+              <p className="i3-selected-file">
+                Selected: {pdfFile.name}
+              </p>
+            ) : (
+              <span className="i3-file-help">
+                PDF • maximum 10 MB
+              </span>
+            )}
+          </section>
+        )}
+
+        {error && (
+          <p className="i3-assistant-error">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="button"
+          className={
+            canAnalyse
+              ? 'i3-assistant-analyse active'
+              : 'i3-assistant-analyse'
+          }
+          onClick={handleAnalyse}
+        >
+          Analyse Policy
+        </button>
+
+        <p className="i3-assistant-help">
+          {inputType === 'url' &&
+            'Paste a privacy policy link to enable analysis.'}
+
+          {inputType === 'text' &&
+            'Paste the privacy policy text to enable analysis.'}
+
+          {inputType === 'pdf' &&
+            'Upload a privacy policy to enable analysis.'}
         </p>
-      </section>
-    </PolicyLayout>
+
+        <p className="i3-assistant-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
+
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-assistant-watermark"
+      />
+    </div>
   )
 }
 

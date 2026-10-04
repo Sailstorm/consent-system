@@ -1,0 +1,1143 @@
+{
+  "version": "2.0",
+  "description": "Consent Assistant Privacy Learning question bank: 5 topics, 20 questions per topic, 100 questions total.",
+  "activityConfig": {
+    "displayMode": "one_question_at_a_time",
+    "questionsPerSession": "unlimited_until_exit_or_topic_complete",
+    "shuffleQuestionsOnPageLoad": true,
+    "shuffleOptionsForEachQuestion": true,
+    "showExplanationAfterAnswer": true,
+    "autoAdvanceAfterExplanation": true,
+    "preventQuestionRepeatsWithinCurrentRun": true,
+    "topicCompletionRule": "all_questions_answered",
+    "resetOrderOnRefresh": true,
+    "note": "The frontend should shuffle the selected topic's full question array on every page load or refresh. It should also shuffle each question's options independently. correctAnswer stores the answer text, not A/B/C, so option shuffling does not change correctness. Display one question at a time. After an answer, show feedback and explanation, then automatically advance to the next unanswered question. Continue until the user leaves the page or all questions in the topic have been answered."
+  },
+  "topics": {
+    "dataCollection": {
+      "title": "Data Collection",
+      "questions": [
+        {
+          "id": "dc01",
+          "question": "A weather app asks for precise location access. What should you consider first?",
+          "options": [
+            "Whether precise location is necessary for the feature you want to use",
+            "Whether the app has many positive reviews",
+            "Whether location access will make the app load faster"
+          ],
+          "correctAnswer": "Whether precise location is necessary for the feature you want to use",
+          "explanation": "Consider whether the requested level of location access is actually necessary for the feature."
+        },
+        {
+          "id": "dc02",
+          "question": "Which situation is the clearest example of data collection?",
+          "options": [
+            "A website changes the size of its headings",
+            "An app records which sections you visit and how long you spend there",
+            "A service publishes a new privacy policy"
+          ],
+          "correctAnswer": "An app records which sections you visit and how long you spend there",
+          "explanation": "Recording how you use a service creates activity data about you."
+        },
+        {
+          "id": "dc03",
+          "question": "A shopping app asks to access your contacts. What is the most useful question to ask?",
+          "options": [
+            "Whether the app offers contactless payment",
+            "Whether contact access is necessary for the shopping feature you are using",
+            "Whether your contacts also use the app"
+          ],
+          "correctAnswer": "Whether contact access is necessary for the shopping feature you are using",
+          "explanation": "A permission should have a clear connection to the feature you are using."
+        },
+        {
+          "id": "dc04",
+          "question": "Which information could reveal patterns in your daily routine?",
+          "options": [
+            "Location history collected over time",
+            "The colour theme selected in the app",
+            "The size of the app on your phone"
+          ],
+          "correctAnswer": "Location history collected over time",
+          "explanation": "Repeated location information can reveal places you visit and patterns in your routine."
+        },
+        {
+          "id": "dc05",
+          "question": "A navigation app needs your location while giving directions. Which permission is more limited?",
+          "options": [
+            "Allow location whenever the phone is switched on",
+            "Allow location all the time",
+            "Allow location only while using the app"
+          ],
+          "correctAnswer": "Allow location only while using the app",
+          "explanation": "While-in-use access limits when the app can access your location."
+        },
+        {
+          "id": "dc06",
+          "question": "Which information may be collected without you typing it into a form?",
+          "options": [
+            "A password that you never entered",
+            "Device model and browser information",
+            "A message that you wrote on paper"
+          ],
+          "correctAnswer": "Device model and browser information",
+          "explanation": "Services can automatically collect technical information about the device and browser you use."
+        },
+        {
+          "id": "dc07",
+          "question": "Why should you review the permissions requested by an app?",
+          "options": [
+            "Some permissions may provide access beyond what a feature needs",
+            "Every permission means the information will be publicly displayed",
+            "Apps are legally required to request every available permission"
+          ],
+          "correctAnswer": "Some permissions may provide access beyond what a feature needs",
+          "explanation": "Reviewing permissions helps you decide whether each type of access is relevant and necessary."
+        },
+        {
+          "id": "dc08",
+          "question": "A fitness app records how often you open it and which features you use. What is this?",
+          "options": [
+            "Contact information",
+            "Payment information",
+            "Activity or usage data"
+          ],
+          "correctAnswer": "Activity or usage data",
+          "explanation": "Information about how you interact with a service is activity or usage data."
+        },
+        {
+          "id": "dc09",
+          "question": "A website records your browser type, operating system and device model. What is happening?",
+          "options": [
+            "The website is collecting device information",
+            "The website has verified your legal identity",
+            "The website is changing your device settings"
+          ],
+          "correctAnswer": "The website is collecting device information",
+          "explanation": "Browser, operating-system and device details are forms of device information."
+        },
+        {
+          "id": "dc10",
+          "question": "Which choice generally gives a user more control over collection?",
+          "options": [
+            "Accepting every permission during installation",
+            "Allowing access only when the relevant feature needs it",
+            "Leaving permissions unchanged after first use"
+          ],
+          "correctAnswer": "Allowing access only when the relevant feature needs it",
+          "explanation": "Limiting access to when it is needed can reduce unnecessary collection."
+        },
+        {
+          "id": "dc11",
+          "question": "A photo app asks for access to your entire photo library when you want to edit one image. What should you check?",
+          "options": [
+            "Whether limited or selected-photo access is available",
+            "Whether the app can increase screen brightness",
+            "Whether your phone has enough free storage"
+          ],
+          "correctAnswer": "Whether limited or selected-photo access is available",
+          "explanation": "A more limited permission may allow the feature to work without exposing the entire library."
+        },
+        {
+          "id": "dc12",
+          "question": "Which statement about data collection is most accurate?",
+          "options": [
+            "Collection happens only after you create an account",
+            "Collection happens only when you manually submit information",
+            "Information may be collected through input, activity, devices and permissions"
+          ],
+          "correctAnswer": "Information may be collected through input, activity, devices and permissions",
+          "explanation": "Data can be collected actively or automatically through several different mechanisms."
+        },
+        {
+          "id": "dc13",
+          "question": "A service asks for your date of birth. What is the best way to assess the request?",
+          "options": [
+            "Provide it because most online services ask for personal details",
+            "Consider why it is needed and whether the purpose is relevant to the service",
+            "Enter a different date so no real information is collected"
+          ],
+          "correctAnswer": "Consider why it is needed and whether the purpose is relevant to the service",
+          "explanation": "The important questions are why the information is requested and whether it is necessary."
+        },
+        {
+          "id": "dc14",
+          "question": "Which example best reflects collecting only what is needed?",
+          "options": [
+            "A map app accesses location while you are actively navigating",
+            "A calculator requests continuous location access",
+            "A flashlight app requests your full contact list"
+          ],
+          "correctAnswer": "A map app accesses location while you are actively navigating",
+          "explanation": "The map example connects the information collected to a specific feature and limits access."
+        },
+        {
+          "id": "dc15",
+          "question": "A website uses cookies to remember pages you viewed. What may those cookies help collect?",
+          "options": [
+            "Objects physically near your computer",
+            "Information about your browsing activity on the service",
+            "Files stored on another person's device"
+          ],
+          "correctAnswer": "Information about your browsing activity on the service",
+          "explanation": "Cookies can be used to record interactions such as pages viewed and preferences."
+        },
+        {
+          "id": "dc16",
+          "question": "Why does continuous location access deserve more attention than while-in-use access?",
+          "options": [
+            "It may allow location to be collected when you are not actively using the app",
+            "It always publishes your location to other users",
+            "It prevents the phone from using other location services"
+          ],
+          "correctAnswer": "It may allow location to be collected when you are not actively using the app",
+          "explanation": "Continuous permission can extend collection beyond active use of the app."
+        },
+        {
+          "id": "dc17",
+          "question": "An app requests microphone access for voice search. What should you check?",
+          "options": [
+            "Whether the app also supports dark mode",
+            "When microphone access can occur and why it is needed",
+            "Whether the microphone icon matches the app design"
+          ],
+          "correctAnswer": "When microphone access can occur and why it is needed",
+          "explanation": "Both the purpose and the timing of access are relevant when reviewing a permission."
+        },
+        {
+          "id": "dc18",
+          "question": "Which situation gives the strongest reason to question a data request?",
+          "options": [
+            "The service explains a clear reason for the request",
+            "The service offers a limited-access option",
+            "The requested information appears unrelated to the feature being used"
+          ],
+          "correctAnswer": "The requested information appears unrelated to the feature being used",
+          "explanation": "An unclear connection between the requested data and the feature deserves closer review."
+        },
+        {
+          "id": "dc19",
+          "question": "You turn off a permission after finishing a feature. What does this demonstrate?",
+          "options": [
+            "Reviewing and controlling ongoing data access",
+            "Deleting all information previously collected",
+            "Preventing every possible form of future data collection"
+          ],
+          "correctAnswer": "Reviewing and controlling ongoing data access",
+          "explanation": "Changing permissions is one way to manage future access, although it does not automatically delete past data."
+        },
+        {
+          "id": "dc20",
+          "question": "Before allowing data collection, which combination is most useful to consider?",
+          "options": [
+            "What is collected, why it is needed, and when access occurs",
+            "The app logo, download size, and number of menu items",
+            "Phone battery level, screen size, and network speed"
+          ],
+          "correctAnswer": "What is collected, why it is needed, and when access occurs",
+          "explanation": "Scope, purpose and timing are key factors for understanding a collection request."
+        }
+      ]
+    },
+    "purposeOfUse": {
+      "title": "Purpose of Use",
+      "questions": [
+        {
+          "id": "pu01",
+          "question": "A retailer asks for your email to send an electronic receipt. Later it wants to use the same email for promotions. What is the key issue?",
+          "options": [
+            "Whether the promotional use is the same as the purpose originally explained",
+            "Whether promotional emails contain images",
+            "Whether the receipt was sent quickly"
+          ],
+          "correctAnswer": "Whether the promotional use is the same as the purpose originally explained",
+          "explanation": "Information collected for one purpose may later be proposed for another, so the purposes should be distinguished."
+        },
+        {
+          "id": "pu02",
+          "question": "A health-booking service says it uses your phone number for appointment reminders. Which explanation is most useful?",
+          "options": [
+            "We use information to improve our business",
+            "We use your phone number to send appointment reminders",
+            "We may use information when appropriate"
+          ],
+          "correctAnswer": "We use your phone number to send appointment reminders",
+          "explanation": "A specific explanation makes it easier to understand why the information is being used."
+        },
+        {
+          "id": "pu03",
+          "question": "Which statement gives the clearest purpose for collecting location data?",
+          "options": [
+            "To provide nearby service results when you request them",
+            "To improve your experience",
+            "For operational purposes"
+          ],
+          "correctAnswer": "To provide nearby service results when you request them",
+          "explanation": "A clear purpose identifies the feature or outcome the information supports."
+        },
+        {
+          "id": "pu04",
+          "question": "A service collected your address to deliver an order. It later wants to analyse addresses for a new marketing project. What should a user notice?",
+          "options": [
+            "The address is already stored, so any later use is equivalent",
+            "The new use may be different from the delivery purpose originally explained",
+            "Marketing analysis cannot involve personal information"
+          ],
+          "correctAnswer": "The new use may be different from the delivery purpose originally explained",
+          "explanation": "A later use can be different from the reason the information was originally collected."
+        },
+        {
+          "id": "pu05",
+          "question": "Which purpose statement is the most transparent?",
+          "options": [
+            "We use your browsing activity to recommend products based on pages you viewed",
+            "We use data to optimise things",
+            "We process information for legitimate business needs"
+          ],
+          "correctAnswer": "We use your browsing activity to recommend products based on pages you viewed",
+          "explanation": "Specific language helps users understand what information is used and for what outcome."
+        },
+        {
+          "id": "pu06",
+          "question": "An app says it needs your date of birth 'to improve services'. What would make this explanation more useful?",
+          "options": [
+            "A larger heading",
+            "A clearer description of how date of birth contributes to the stated purpose",
+            "A statement that many other apps do the same"
+          ],
+          "correctAnswer": "A clearer description of how date of birth contributes to the stated purpose",
+          "explanation": "Users need enough detail to understand the connection between the information and its purpose."
+        },
+        {
+          "id": "pu07",
+          "question": "Why is it useful to distinguish necessary uses from optional uses?",
+          "options": [
+            "It helps users understand which uses are required for the service and which may involve a choice",
+            "It guarantees that optional uses never involve personal information",
+            "It means necessary uses do not need to be explained"
+          ],
+          "correctAnswer": "It helps users understand which uses are required for the service and which may involve a choice",
+          "explanation": "Separating required and optional purposes can make choices and consequences clearer."
+        },
+        {
+          "id": "pu08",
+          "question": "A music app uses listening history to create personalised recommendations. Which description best explains the purpose?",
+          "options": [
+            "Listening history is collected because it is available",
+            "Listening history is used to suggest music based on previous listening activity",
+            "Listening history is used for general system purposes"
+          ],
+          "correctAnswer": "Listening history is used to suggest music based on previous listening activity",
+          "explanation": "The second statement clearly connects the information to the personalised recommendation feature."
+        },
+        {
+          "id": "pu09",
+          "question": "Which situation most clearly involves a secondary use?",
+          "options": [
+            "Using a delivery address to deliver the order",
+            "Using payment details to process the purchase",
+            "Using purchase history collected for orders to build a separate advertising profile"
+          ],
+          "correctAnswer": "Using purchase history collected for orders to build a separate advertising profile",
+          "explanation": "A secondary use is an additional use beyond the original immediate purpose."
+        },
+        {
+          "id": "pu10",
+          "question": "A privacy notice lists 'security' as a purpose. Which extra detail would be most helpful?",
+          "options": [
+            "How the information is used to detect suspicious activity or protect accounts",
+            "The colour of the security icon",
+            "How many employees work for the organisation"
+          ],
+          "correctAnswer": "How the information is used to detect suspicious activity or protect accounts",
+          "explanation": "Explaining how information contributes to security makes the purpose more meaningful."
+        },
+        {
+          "id": "pu11",
+          "question": "Why can a broad phrase such as 'improve our services' be difficult for users?",
+          "options": [
+            "It may not clearly show what information is used or what improvement means",
+            "It always means the organisation is selling the information",
+            "It prevents the service from making any improvements"
+          ],
+          "correctAnswer": "It may not clearly show what information is used or what improvement means",
+          "explanation": "Broad wording can make it difficult to understand the actual use of information."
+        },
+        {
+          "id": "pu12",
+          "question": "An app asks for contacts so you can find friends already using the service. Which purpose description is clearest?",
+          "options": [
+            "To support social functionality",
+            "To compare your contacts with registered users when you choose Find Friends",
+            "To improve connectivity"
+          ],
+          "correctAnswer": "To compare your contacts with registered users when you choose Find Friends",
+          "explanation": "The specific description explains both the action and the feature involved."
+        },
+        {
+          "id": "pu13",
+          "question": "A service wants to use account activity for fraud detection. What should the explanation help users understand?",
+          "options": [
+            "Which activity may be examined and how it supports fraud detection",
+            "Only the name of the fraud-detection software",
+            "Whether fraud exists on other websites"
+          ],
+          "correctAnswer": "Which activity may be examined and how it supports fraud detection",
+          "explanation": "A useful explanation connects the information examined with the security purpose."
+        },
+        {
+          "id": "pu14",
+          "question": "Which change should prompt a user to review a service's explanation of purpose?",
+          "options": [
+            "The organisation begins using existing information for a substantially different function",
+            "The website changes its background colour",
+            "The organisation moves a button on the homepage"
+          ],
+          "correctAnswer": "The organisation begins using existing information for a substantially different function",
+          "explanation": "A meaningful change in how information is used can affect what users previously understood."
+        },
+        {
+          "id": "pu15",
+          "question": "A service says your information may be used for 'research'. What question would best clarify the purpose?",
+          "options": [
+            "What kind of research and how will my information be used in it?",
+            "Will the research page use the same font?",
+            "How long is the organisation's name?"
+          ],
+          "correctAnswer": "What kind of research and how will my information be used in it?",
+          "explanation": "The scope and nature of the research help users understand what the stated purpose actually involves."
+        },
+        {
+          "id": "pu16",
+          "question": "Why should purpose information be presented before or when information is requested?",
+          "options": [
+            "So users can understand why the request is being made when considering it",
+            "So the organisation never needs a privacy policy",
+            "So every user will make the same decision"
+          ],
+          "correctAnswer": "So users can understand why the request is being made when considering it",
+          "explanation": "Timely explanations help users consider a request with relevant context."
+        },
+        {
+          "id": "pu17",
+          "question": "A budgeting app requests transaction information to categorise spending. Which use is most directly connected to that purpose?",
+          "options": [
+            "Sorting transactions into spending categories",
+            "Using transactions for unrelated advertising without further explanation",
+            "Publishing individual transactions on a public page"
+          ],
+          "correctAnswer": "Sorting transactions into spending categories",
+          "explanation": "Categorising transactions directly supports the budgeting feature described."
+        },
+        {
+          "id": "pu18",
+          "question": "Which statement best helps a user compare two purposes?",
+          "options": [
+            "Both purposes use data, so there is no meaningful difference",
+            "Consider what information each purpose needs and what outcome each use produces",
+            "Only compare the length of each purpose statement"
+          ],
+          "correctAnswer": "Consider what information each purpose needs and what outcome each use produces",
+          "explanation": "Comparing the data involved and the intended outcome helps distinguish purposes."
+        },
+        {
+          "id": "pu19",
+          "question": "If a service cannot clearly explain why it needs a particular piece of information, what is a reasonable response?",
+          "options": [
+            "Assume the purpose must be necessary",
+            "Look for more information or reconsider providing it until the purpose is clearer",
+            "Provide additional information as well"
+          ],
+          "correctAnswer": "Look for more information or reconsider providing it until the purpose is clearer",
+          "explanation": "A lack of clear purpose is a reason to seek clarification before making a decision."
+        },
+        {
+          "id": "pu20",
+          "question": "Which combination gives the clearest picture of purpose of use?",
+          "options": [
+            "What information is used, for what specific reason, and what feature or outcome it supports",
+            "How popular the service is, how old it is, and its logo",
+            "How quickly the page loads, its font, and its colour scheme"
+          ],
+          "correctAnswer": "What information is used, for what specific reason, and what feature or outcome it supports",
+          "explanation": "A useful purpose explanation connects the information, reason and resulting function or outcome."
+        }
+      ]
+    },
+    "dataSharing": {
+      "title": "Data Sharing",
+      "questions": [
+        {
+          "id": "ds01",
+          "question": "A service says it shares information with 'trusted partners'. What would be most useful to know next?",
+          "options": [
+            "Who those partners are or what types of partners they are, and why information is shared",
+            "Whether the partners use the same logo",
+            "Whether the partners have larger websites"
+          ],
+          "correctAnswer": "Who those partners are or what types of partners they are, and why information is shared",
+          "explanation": "The recipient and purpose of sharing are important for understanding what happens to information."
+        },
+        {
+          "id": "ds02",
+          "question": "An online store sends your delivery address to a courier. What best describes this situation?",
+          "options": [
+            "Information is shared with another organisation to provide delivery",
+            "The store has automatically made your address public",
+            "No sharing occurs because delivery is part of the purchase"
+          ],
+          "correctAnswer": "Information is shared with another organisation to provide delivery",
+          "explanation": "Providing information to a separate delivery provider is a form of sharing, even when it supports the service."
+        },
+        {
+          "id": "ds03",
+          "question": "Which statement about third-party sharing is most accurate?",
+          "options": [
+            "All third-party sharing is unnecessary",
+            "Sharing may support a service, but users should be told who receives information and why",
+            "Third parties can only receive anonymous information"
+          ],
+          "correctAnswer": "Sharing may support a service, but users should be told who receives information and why",
+          "explanation": "Sharing can have legitimate purposes, but transparency about recipients and purposes matters."
+        },
+        {
+          "id": "ds04",
+          "question": "A service uses an external payment processor. Which information is most relevant to a user?",
+          "options": [
+            "What information is sent to the processor and why",
+            "The processor's office furniture",
+            "Whether the processor's website uses the same colours"
+          ],
+          "correctAnswer": "What information is sent to the processor and why",
+          "explanation": "Understanding what is shared and for what purpose helps users assess the arrangement."
+        },
+        {
+          "id": "ds05",
+          "question": "What does 'sharing overseas' generally mean in a privacy context?",
+          "options": [
+            "Information may be disclosed to or handled by recipients in another country",
+            "The user must travel overseas",
+            "The organisation's website can only be opened overseas"
+          ],
+          "correctAnswer": "Information may be disclosed to or handled by recipients in another country",
+          "explanation": "Overseas sharing concerns where recipients or processing of information may be located."
+        },
+        {
+          "id": "ds06",
+          "question": "A privacy notice says data 'may be shared for business purposes'. What is the main limitation of this wording?",
+          "options": [
+            "It may be too broad to explain the recipients and specific purposes",
+            "It contains too few technical terms",
+            "It guarantees that no information is actually shared"
+          ],
+          "correctAnswer": "It may be too broad to explain the recipients and specific purposes",
+          "explanation": "Broad wording may not give users enough detail to understand the sharing arrangement."
+        },
+        {
+          "id": "ds07",
+          "question": "Which example is most clearly different from making information public?",
+          "options": [
+            "Sending necessary order details to a contracted courier",
+            "Posting a customer's address on a public webpage",
+            "Publishing a customer list on social media"
+          ],
+          "correctAnswer": "Sending necessary order details to a contracted courier",
+          "explanation": "Sharing with a specific service provider is different from making information publicly accessible."
+        },
+        {
+          "id": "ds08",
+          "question": "A company shares email addresses with a marketing provider to send campaigns. What should be clear?",
+          "options": [
+            "That the provider receives the email addresses and the reason for the sharing",
+            "Only how many employees the provider has",
+            "Only whether the campaign uses images"
+          ],
+          "correctAnswer": "That the provider receives the email addresses and the reason for the sharing",
+          "explanation": "Users should be able to understand the recipient or recipient category and the purpose."
+        },
+        {
+          "id": "ds09",
+          "question": "Why might a user care whether information is shared with another organisation?",
+          "options": [
+            "Because sharing can affect who has access to the information and how it may be handled",
+            "Because sharing always deletes the original information",
+            "Because shared information automatically becomes inaccurate"
+          ],
+          "correctAnswer": "Because sharing can affect who has access to the information and how it may be handled",
+          "explanation": "Sharing can expand the number of organisations handling the information."
+        },
+        {
+          "id": "ds10",
+          "question": "A service provider processes information only on behalf of the main organisation. Why is this still relevant to explain?",
+          "options": [
+            "Another organisation may still receive or handle the user's information",
+            "Service providers never use computer systems",
+            "The main organisation no longer has any responsibility"
+          ],
+          "correctAnswer": "Another organisation may still receive or handle the user's information",
+          "explanation": "Users may reasonably want to know when external providers handle their information."
+        },
+        {
+          "id": "ds11",
+          "question": "Which question best helps a user understand a data-sharing arrangement?",
+          "options": [
+            "Who receives the information, what is shared, and for what purpose?",
+            "How many pages are on the recipient's website?",
+            "Does the recipient use the same app store?"
+          ],
+          "correctAnswer": "Who receives the information, what is shared, and for what purpose?",
+          "explanation": "Recipient, information type and purpose are the central elements of a sharing explanation."
+        },
+        {
+          "id": "ds12",
+          "question": "A service says it shares 'de-identified information'. What should a careful user understand?",
+          "options": [
+            "The term describes information intended not to directly identify a person, but the notice should still explain the context and use",
+            "It necessarily means the original information was never personal",
+            "It means the information has been deleted"
+          ],
+          "correctAnswer": "The term describes information intended not to directly identify a person, but the notice should still explain the context and use",
+          "explanation": "De-identification changes how information may identify people, but it is still useful to understand the context and purpose."
+        },
+        {
+          "id": "ds13",
+          "question": "Which scenario most clearly deserves additional attention?",
+          "options": [
+            "A service unexpectedly begins sharing account information with a new category of advertising partner",
+            "A courier receives an address to deliver an order as explained",
+            "A payment processor receives payment information as explained at checkout"
+          ],
+          "correctAnswer": "A service unexpectedly begins sharing account information with a new category of advertising partner",
+          "explanation": "A new and different category of sharing can change what the user previously understood."
+        },
+        {
+          "id": "ds14",
+          "question": "If a service shares information with government authorities when legally required, what should the notice ideally do?",
+          "options": [
+            "Explain that this type of disclosure may occur and the circumstances in general terms",
+            "Promise that government disclosure can never occur",
+            "List every government employee who could ever receive information"
+          ],
+          "correctAnswer": "Explain that this type of disclosure may occur and the circumstances in general terms",
+          "explanation": "A clear general explanation can inform users without making unrealistic promises."
+        },
+        {
+          "id": "ds15",
+          "question": "What is the main difference between collecting and sharing information?",
+          "options": [
+            "Collection concerns obtaining information; sharing concerns providing or disclosing it to another party",
+            "Collection happens online while sharing happens offline",
+            "There is no meaningful difference"
+          ],
+          "correctAnswer": "Collection concerns obtaining information; sharing concerns providing or disclosing it to another party",
+          "explanation": "Collection and sharing describe different stages in how information may be handled."
+        },
+        {
+          "id": "ds16",
+          "question": "A company uses several cloud providers. Which disclosure would be more informative?",
+          "options": [
+            "We may use cloud service providers to store or process specified information, including where relevant overseas locations",
+            "We use modern technology",
+            "Our systems use the internet"
+          ],
+          "correctAnswer": "We may use cloud service providers to store or process specified information, including where relevant overseas locations",
+          "explanation": "The more specific statement explains the type of recipient and what role it plays."
+        },
+        {
+          "id": "ds17",
+          "question": "A user sees 'we do not sell your data'. Does that alone explain all data sharing?",
+          "options": [
+            "No. Information may still be shared in other ways, such as with service providers",
+            "Yes. If data is not sold, no other organisation can receive it",
+            "Yes. Selling and sharing always mean exactly the same thing"
+          ],
+          "correctAnswer": "No. Information may still be shared in other ways, such as with service providers",
+          "explanation": "A no-sale statement does not necessarily describe every other form of disclosure or sharing."
+        },
+        {
+          "id": "ds18",
+          "question": "Which detail is especially relevant when information may be sent overseas?",
+          "options": [
+            "Where or in what countries recipients may be located, where this can be stated",
+            "The user's preferred holiday destination",
+            "The currency shown on the homepage"
+          ],
+          "correctAnswer": "Where or in what countries recipients may be located, where this can be stated",
+          "explanation": "Location of overseas recipients can help users understand where their information may be handled."
+        },
+        {
+          "id": "ds19",
+          "question": "A service introduces a new analytics provider that receives user activity data. What should be reviewed?",
+          "options": [
+            "Whether the privacy information clearly explains the new recipient category and purpose",
+            "Whether the provider has a shorter company name",
+            "Whether the provider uses a different programming language"
+          ],
+          "correctAnswer": "Whether the privacy information clearly explains the new recipient category and purpose",
+          "explanation": "Changes in recipients or purposes should be reflected clearly in privacy information."
+        },
+        {
+          "id": "ds20",
+          "question": "Which summary best supports an informed review of data sharing?",
+          "options": [
+            "What is shared, with whom, why, and whether overseas recipients may be involved",
+            "The organisation's revenue, logo and number of offices",
+            "The user's screen size, battery level and browser theme"
+          ],
+          "correctAnswer": "What is shared, with whom, why, and whether overseas recipients may be involved",
+          "explanation": "These four points give users a practical overview of a sharing arrangement."
+        }
+      ]
+    },
+    "dataRetention": {
+      "title": "Data Retention",
+      "questions": [
+        {
+          "id": "dr01",
+          "question": "What does data retention describe?",
+          "options": [
+            "How long information is kept and what influences when it is deleted or no longer retained",
+            "How quickly information is typed into a form",
+            "How often a website changes its design"
+          ],
+          "correctAnswer": "How long information is kept and what influences when it is deleted or no longer retained",
+          "explanation": "Retention concerns the period information remains stored or otherwise retained."
+        },
+        {
+          "id": "dr02",
+          "question": "A privacy notice says information is kept 'as long as necessary'. What would make this clearer?",
+          "options": [
+            "The criteria used to decide what 'necessary' means or a relevant retention period",
+            "A larger privacy-policy heading",
+            "The number of users of the service"
+          ],
+          "correctAnswer": "The criteria used to decide what 'necessary' means or a relevant retention period",
+          "explanation": "Retention criteria or periods help users understand what an open-ended phrase means in practice."
+        },
+        {
+          "id": "dr03",
+          "question": "Why can indefinite retention create privacy concerns?",
+          "options": [
+            "Information remains available for longer, increasing the period during which it may be accessed or exposed",
+            "Older information automatically becomes public",
+            "Stored information always changes its meaning after one year"
+          ],
+          "correctAnswer": "Information remains available for longer, increasing the period during which it may be accessed or exposed",
+          "explanation": "Keeping information longer extends the period in which it must be protected and managed."
+        },
+        {
+          "id": "dr04",
+          "question": "An online store keeps transaction records after an account is closed. Which explanation is most useful?",
+          "options": [
+            "The specific reason certain records must be retained and for approximately how long",
+            "The colour of the database interface",
+            "The number of products previously purchased"
+          ],
+          "correctAnswer": "The specific reason certain records must be retained and for approximately how long",
+          "explanation": "Users benefit from knowing why information remains after account closure and the relevant retention period."
+        },
+        {
+          "id": "dr05",
+          "question": "Which statement is most transparent?",
+          "options": [
+            "We keep everything for as long as we want",
+            "We retain account records for seven years where required for specified record-keeping obligations",
+            "We keep data when appropriate"
+          ],
+          "correctAnswer": "We retain account records for seven years where required for specified record-keeping obligations",
+          "explanation": "A stated period linked to a reason gives users clearer information."
+        },
+        {
+          "id": "dr06",
+          "question": "Does deleting an app from your phone necessarily delete information held by the service?",
+          "options": [
+            "Yes, uninstalling always deletes all server-side information",
+            "No, information may remain with the service according to its retention and deletion practices",
+            "Yes, unless the app was used for more than a year"
+          ],
+          "correctAnswer": "No, information may remain with the service according to its retention and deletion practices",
+          "explanation": "Removing an app from a device does not necessarily remove information already held by the provider."
+        },
+        {
+          "id": "dr07",
+          "question": "A service keeps inactive accounts indefinitely without explaining why. What is the main issue?",
+          "options": [
+            "The retention period and reason are unclear",
+            "Inactive accounts cannot contain personal information",
+            "The account should automatically become public"
+          ],
+          "correctAnswer": "The retention period and reason are unclear",
+          "explanation": "Users should be able to understand how long inactive-account information may remain and why."
+        },
+        {
+          "id": "dr08",
+          "question": "Which factor can legitimately affect how long different information is retained?",
+          "options": [
+            "The purpose for which it is needed and applicable record-keeping requirements",
+            "The colour selected by the user",
+            "The position of a button on the homepage"
+          ],
+          "correctAnswer": "The purpose for which it is needed and applicable record-keeping requirements",
+          "explanation": "Different purposes and obligations can lead to different retention periods."
+        },
+        {
+          "id": "dr09",
+          "question": "Why might different categories of information have different retention periods?",
+          "options": [
+            "They may serve different purposes or be subject to different requirements",
+            "All categories must actually have identical periods",
+            "Retention is determined only by file size"
+          ],
+          "correctAnswer": "They may serve different purposes or be subject to different requirements",
+          "explanation": "Retention can depend on the nature, purpose and requirements applying to the information."
+        },
+        {
+          "id": "dr10",
+          "question": "A user closes an account. What is a useful question to ask?",
+          "options": [
+            "What information will be deleted, what may be retained, and for how long?",
+            "Will the login button change colour?",
+            "Will the company change its name?"
+          ],
+          "correctAnswer": "What information will be deleted, what may be retained, and for how long?",
+          "explanation": "Account closure does not always mean immediate deletion of every record."
+        },
+        {
+          "id": "dr11",
+          "question": "Which practice best reflects data minimisation over time?",
+          "options": [
+            "Keeping information indefinitely in case it becomes useful",
+            "Reviewing stored information and deleting or de-identifying it when it is no longer needed",
+            "Making additional copies before deciding whether information is needed"
+          ],
+          "correctAnswer": "Reviewing stored information and deleting or de-identifying it when it is no longer needed",
+          "explanation": "Retention should be reviewed so information is not kept without an ongoing reason."
+        },
+        {
+          "id": "dr12",
+          "question": "A company keeps support-chat records for quality review. What should be clear?",
+          "options": [
+            "Why the records are retained and the period or criteria used to determine retention",
+            "Whether the support agent likes the chat software",
+            "Whether chats use complete sentences"
+          ],
+          "correctAnswer": "Why the records are retained and the period or criteria used to determine retention",
+          "explanation": "Purpose and retention period or criteria are the useful details for users."
+        },
+        {
+          "id": "dr13",
+          "question": "What is the difference between retention and backup?",
+          "options": [
+            "Backups may be one location where retained information continues to exist; retention is the broader question of how long information is kept",
+            "Retention only applies to paper while backup only applies to phones",
+            "There is no relationship between them"
+          ],
+          "correctAnswer": "Backups may be one location where retained information continues to exist; retention is the broader question of how long information is kept",
+          "explanation": "Copies in backups can be relevant when explaining how long information remains available."
+        },
+        {
+          "id": "dr14",
+          "question": "A service says deleted account data may remain in backups for a limited period. What would improve transparency?",
+          "options": [
+            "State the approximate backup retention period or deletion process",
+            "Remove any mention of backups",
+            "Describe the brand of storage hardware"
+          ],
+          "correctAnswer": "State the approximate backup retention period or deletion process",
+          "explanation": "A timeframe or process helps users understand what 'limited period' means."
+        },
+        {
+          "id": "dr15",
+          "question": "Which situation should prompt closer review of retention?",
+          "options": [
+            "Sensitive information is kept for a long period with no clear explanation",
+            "Information is deleted when its stated purpose ends",
+            "The service provides a clear retention schedule"
+          ],
+          "correctAnswer": "Sensitive information is kept for a long period with no clear explanation",
+          "explanation": "Long retention without a clear reason is harder for users to assess."
+        },
+        {
+          "id": "dr16",
+          "question": "Why is a retention period useful in a privacy summary?",
+          "options": [
+            "It helps users understand how long their information may remain with the organisation",
+            "It guarantees no security incident can occur",
+            "It shows how quickly the website loads"
+          ],
+          "correctAnswer": "It helps users understand how long their information may remain with the organisation",
+          "explanation": "Retention information helps users understand the duration of information handling."
+        },
+        {
+          "id": "dr17",
+          "question": "A company must retain some records but no longer needs others. Which approach is more appropriate?",
+          "options": [
+            "Keep all information because some records must be retained",
+            "Distinguish the records that must be retained from information that no longer has a reason to be kept",
+            "Publish all older records"
+          ],
+          "correctAnswer": "Distinguish the records that must be retained from information that no longer has a reason to be kept",
+          "explanation": "A requirement applying to some records does not automatically justify retaining every category."
+        },
+        {
+          "id": "dr18",
+          "question": "What should 'until you withdraw consent' make a user consider?",
+          "options": [
+            "Whether withdrawal is available, what happens after withdrawal, and whether another reason for retention may still apply",
+            "That all data disappears instantly in every system",
+            "That consent can never be changed"
+          ],
+          "correctAnswer": "Whether withdrawal is available, what happens after withdrawal, and whether another reason for retention may still apply",
+          "explanation": "The practical effect of withdrawal and any remaining retention basis should be understood."
+        },
+        {
+          "id": "dr19",
+          "question": "Which statement best distinguishes account closure from data deletion?",
+          "options": [
+            "They are always identical events",
+            "Closing access to an account may not immediately remove every record held by the organisation",
+            "Data deletion happens automatically before an account can be closed"
+          ],
+          "correctAnswer": "Closing access to an account may not immediately remove every record held by the organisation",
+          "explanation": "An account can be closed while some information remains for stated reasons."
+        },
+        {
+          "id": "dr20",
+          "question": "Which combination gives the clearest retention information?",
+          "options": [
+            "How long information is kept, why it is kept, and what happens when it is no longer needed",
+            "The database name, website colour and number of employees",
+            "The user's device model, password length and screen size"
+          ],
+          "correctAnswer": "How long information is kept, why it is kept, and what happens when it is no longer needed",
+          "explanation": "Period, purpose and end-of-retention handling provide a useful overview."
+        }
+      ]
+    },
+    "userControl": {
+      "title": "User Control",
+      "questions": [
+        {
+          "id": "uc01",
+          "question": "Which feature gives a user meaningful control over location collection?",
+          "options": [
+            "A choice between never, while using the app, and other available permission levels",
+            "A message saying location is useful without any settings",
+            "A button that changes the map colour"
+          ],
+          "correctAnswer": "A choice between never, while using the app, and other available permission levels",
+          "explanation": "Meaningful controls allow users to adjust the scope of access where options are available."
+        },
+        {
+          "id": "uc02",
+          "question": "A service provides an unsubscribe link for marketing emails. What type of control is this?",
+          "options": [
+            "A way to change a communication preference",
+            "A guarantee that the entire account will be deleted",
+            "A way to change the organisation's privacy policy"
+          ],
+          "correctAnswer": "A way to change a communication preference",
+          "explanation": "Unsubscribing allows a user to change a particular communication preference."
+        },
+        {
+          "id": "uc03",
+          "question": "Why should privacy controls be easy to find?",
+          "options": [
+            "Users are more able to understand and exercise available choices",
+            "Hidden controls collect less information",
+            "Visible controls guarantee every user will choose the same setting"
+          ],
+          "correctAnswer": "Users are more able to understand and exercise available choices",
+          "explanation": "Accessible controls make it easier for users to act on available privacy choices."
+        },
+        {
+          "id": "uc04",
+          "question": "A user wants to correct an incorrect phone number in their account. Which control is most relevant?",
+          "options": [
+            "Access and correction of account information",
+            "Changing the website theme",
+            "Deleting browser history on another device"
+          ],
+          "correctAnswer": "Access and correction of account information",
+          "explanation": "Correction controls help users update inaccurate information held in their account."
+        },
+        {
+          "id": "uc05",
+          "question": "Which design provides a clearer privacy choice?",
+          "options": [
+            "One button saying Continue, with optional uses hidden elsewhere",
+            "Separate understandable choices for necessary and optional uses where appropriate",
+            "Automatically enabling every optional setting"
+          ],
+          "correctAnswer": "Separate understandable choices for necessary and optional uses where appropriate",
+          "explanation": "Separating choices can help users understand what is required and what is optional."
+        },
+        {
+          "id": "uc06",
+          "question": "An app allows a permission to be turned off later in device settings. Why is this useful?",
+          "options": [
+            "Users can review and change future access after their initial decision",
+            "It guarantees previously collected information is erased",
+            "It prevents the app from ever asking for another permission"
+          ],
+          "correctAnswer": "Users can review and change future access after their initial decision",
+          "explanation": "Ongoing controls allow users to revisit earlier decisions about access."
+        },
+        {
+          "id": "uc07",
+          "question": "Which statement about withdrawing a choice is most accurate?",
+          "options": [
+            "Withdrawal always erases every historical record immediately",
+            "Withdrawal can affect future processing or access, but the service should explain what happens to existing information",
+            "Once a choice is made it can never be changed"
+          ],
+          "correctAnswer": "Withdrawal can affect future processing or access, but the service should explain what happens to existing information",
+          "explanation": "Users need to understand both future effects and what happens to information already held."
+        },
+        {
+          "id": "uc08",
+          "question": "A privacy setting is technically available but buried several menus deep under an unrelated heading. What is the main concern?",
+          "options": [
+            "The control may be difficult for users to discover and use",
+            "The control becomes legally invalid because it uses menus",
+            "The setting automatically becomes a data breach"
+          ],
+          "correctAnswer": "The control may be difficult for users to discover and use",
+          "explanation": "A control is more useful when users can reasonably find and understand it."
+        },
+        {
+          "id": "uc09",
+          "question": "A service offers 'Delete account'. What should users ideally be told?",
+          "options": [
+            "What deletion does, what information may remain, and any relevant timeframe",
+            "Only the colour of the delete button",
+            "That deletion always removes every record instantly"
+          ],
+          "correctAnswer": "What deletion does, what information may remain, and any relevant timeframe",
+          "explanation": "Clear consequences help users understand what the deletion control actually does."
+        },
+        {
+          "id": "uc10",
+          "question": "Which option best supports informed user control?",
+          "options": [
+            "A pre-selected optional setting with no explanation",
+            "A clear explanation of the choice and what changes if the user selects or declines it",
+            "A warning that all privacy settings should remain unchanged"
+          ],
+          "correctAnswer": "A clear explanation of the choice and what changes if the user selects or declines it",
+          "explanation": "Users can make more informed choices when consequences are explained."
+        },
+        {
+          "id": "uc11",
+          "question": "A user wants to know what personal information a service holds about them. Which type of control is most relevant?",
+          "options": [
+            "Access to personal information",
+            "Changing notification sounds",
+            "Rearranging homepage cards"
+          ],
+          "correctAnswer": "Access to personal information",
+          "explanation": "Access mechanisms can help users review information held about them."
+        },
+        {
+          "id": "uc12",
+          "question": "Why is an 'Accept all' button alone not the same as granular control?",
+          "options": [
+            "It may not let users make separate choices about different optional uses",
+            "It always prevents the service from working",
+            "It automatically deletes existing preferences"
+          ],
+          "correctAnswer": "It may not let users make separate choices about different optional uses",
+          "explanation": "Granular controls distinguish between different purposes or permissions rather than combining them into one choice."
+        },
+        {
+          "id": "uc13",
+          "question": "A user disables personalised recommendations. What should a clear interface explain?",
+          "options": [
+            "What changes in the service and whether non-personalised functionality remains available",
+            "That the user's account must always be deleted",
+            "That no information of any kind will ever be processed again"
+          ],
+          "correctAnswer": "What changes in the service and whether non-personalised functionality remains available",
+          "explanation": "Users should understand the practical effect of changing a preference."
+        },
+        {
+          "id": "uc14",
+          "question": "Which is the strongest example of a reversible privacy control?",
+          "options": [
+            "A setting the user can review and change later",
+            "A one-time choice that can never be found again",
+            "A notice with no action available"
+          ],
+          "correctAnswer": "A setting the user can review and change later",
+          "explanation": "Reversible settings allow users to reconsider and update their choices."
+        },
+        {
+          "id": "uc15",
+          "question": "A service asks users to contact support to change a simple privacy preference that could reasonably be a setting. What may be the usability issue?",
+          "options": [
+            "The extra effort may make the control harder to exercise",
+            "Support staff can never handle privacy requests",
+            "Privacy choices are only valid when made by phone"
+          ],
+          "correctAnswer": "The extra effort may make the control harder to exercise",
+          "explanation": "Unnecessary friction can make available choices harder for users to use."
+        },
+        {
+          "id": "uc16",
+          "question": "Which wording best supports an older user deciding whether to enable an optional feature?",
+          "options": [
+            "Enable advanced processing",
+            "Allow location while using Nearby Stores so we can show stores close to you",
+            "Optimise experience"
+          ],
+          "correctAnswer": "Allow location while using Nearby Stores so we can show stores close to you",
+          "explanation": "Plain language that explains the information, timing and purpose makes the choice easier to understand."
+        },
+        {
+          "id": "uc17",
+          "question": "A user changes a privacy preference but receives no confirmation. What improvement would help?",
+          "options": [
+            "Provide clear feedback that the setting was saved and show its current state",
+            "Hide the setting after it is changed",
+            "Reset the setting whenever the page reloads"
+          ],
+          "correctAnswer": "Provide clear feedback that the setting was saved and show its current state",
+          "explanation": "Confirmation helps users understand whether their action took effect."
+        },
+        {
+          "id": "uc18",
+          "question": "Which situation best demonstrates control without requiring an account login?",
+          "options": [
+            "Storing a local learning preference on the user's device and allowing it to be reset",
+            "Creating a hidden profile linked to the user's identity",
+            "Requiring government identification for a simple preference"
+          ],
+          "correctAnswer": "Storing a local learning preference on the user's device and allowing it to be reset",
+          "explanation": "Local, resettable preferences can support limited functionality without requiring an identified account."
+        },
+        {
+          "id": "uc19",
+          "question": "A service offers several privacy choices. What is most important for the interface?",
+          "options": [
+            "Each choice should clearly state what it controls and the effect of changing it",
+            "All controls should use technical legal terminology",
+            "Every option should look identical whether enabled or disabled"
+          ],
+          "correctAnswer": "Each choice should clearly state what it controls and the effect of changing it",
+          "explanation": "Clear labels, consequences and visible states help users understand their choices."
+        },
+        {
+          "id": "uc20",
+          "question": "Which combination best represents meaningful user control?",
+          "options": [
+            "Clear choices, understandable consequences, accessible settings, and the ability to review or change choices where applicable",
+            "More settings, smaller text, and longer legal explanations",
+            "One permanent choice made during first use with no later access"
+          ],
+          "correctAnswer": "Clear choices, understandable consequences, accessible settings, and the ability to review or change choices where applicable",
+          "explanation": "Meaningful control depends on clarity, accessibility and the practical ability to act on available choices."
+        }
+      ]
+    }
+  }
+}

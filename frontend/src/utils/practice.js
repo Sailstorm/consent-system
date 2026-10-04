@@ -1,18 +1,52 @@
-import { practiceQuestions } from '../data/practiceQuestions'
+import questionBank from '../data/consentPracticeQuestions.json'
 
 const PRACTICE_KEY = 'consent-assistant-practice'
 
+export const practiceTopics = [
+  {
+    key: 'dataCollection',
+    slug: 'data-collection',
+    title: 'Data Collection',
+  },
+  {
+    key: 'purposeOfUse',
+    slug: 'purpose-of-use',
+    title: 'Purpose of Use',
+  },
+  {
+    key: 'dataSharing',
+    slug: 'data-sharing',
+    title: 'Data Sharing',
+  },
+  {
+    key: 'dataRetention',
+    slug: 'data-retention',
+    title: 'Data Retention',
+  },
+  {
+    key: 'userControl',
+    slug: 'user-control',
+    title: 'User Control',
+  },
+]
+
 export const emptyPracticeState = {
+  selectedTopic: null,
   questionIds: [],
+  currentIndex: 0,
   choices: {},
-  completed: false,
+  completedQuestionIds: [],
+  completedTopics: [],
 }
 
 function shuffle(items) {
   const next = [...items]
 
   for (let index = next.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1))
+    const swapIndex = Math.floor(
+      Math.random() * (index + 1),
+    )
+
     const current = next[index]
     next[index] = next[swapIndex]
     next[swapIndex] = current
@@ -21,42 +55,54 @@ function shuffle(items) {
   return next
 }
 
-export function selectPracticeQuestions(questions = practiceQuestions, count = 3) {
-  const grouped = questions.reduce((groups, question) => {
-    if (!groups[question.topic]) {
-      groups[question.topic] = []
-    }
+export function getTopicByKey(topicKey) {
+  return (
+    practiceTopics.find(
+      (topic) => topic.key === topicKey,
+    ) || null
+  )
+}
 
-    groups[question.topic].push(question)
-    return groups
-  }, {})
+export function getTopicBySlug(slug) {
+  return (
+    practiceTopics.find(
+      (topic) => topic.slug === slug,
+    ) || null
+  )
+}
 
-  const selected = []
-  const usedIds = new Set()
+export function getTopicQuestions(topicKey) {
+  const topic = questionBank.topics?.[topicKey]
 
-  for (const topic of shuffle(Object.keys(grouped))) {
-    if (selected.length >= count) {
-      break
-    }
-
-    const [question] = shuffle(grouped[topic])
-    selected.push(question)
-    usedIds.add(question.id)
+  if (!topic || !Array.isArray(topic.questions)) {
+    return []
   }
 
-  if (selected.length < count) {
-    const remaining = shuffle(
-      questions.filter((question) => !usedIds.has(question.id)),
-    )
-    selected.push(...remaining.slice(0, count - selected.length))
+  return topic.questions
+}
+
+export function getQuestionById(id) {
+  for (const topic of practiceTopics) {
+    const question = getTopicQuestions(
+      topic.key,
+    ).find((item) => item.id === id)
+
+    if (question) {
+      return {
+        ...question,
+        topicKey: topic.key,
+        topic: topic.title,
+      }
+    }
   }
 
-  return selected.slice(0, count)
+  return null
 }
 
 export function loadPracticeState() {
   try {
-    const stored = localStorage.getItem(PRACTICE_KEY)
+    const stored =
+      localStorage.getItem(PRACTICE_KEY)
 
     if (!stored) {
       return { ...emptyPracticeState }
@@ -68,7 +114,21 @@ export function loadPracticeState() {
       ...emptyPracticeState,
       ...parsed,
       choices: parsed.choices || {},
-      questionIds: Array.isArray(parsed.questionIds) ? parsed.questionIds : [],
+      questionIds: Array.isArray(
+        parsed.questionIds,
+      )
+        ? parsed.questionIds
+        : [],
+      completedQuestionIds: Array.isArray(
+        parsed.completedQuestionIds,
+      )
+        ? parsed.completedQuestionIds
+        : [],
+      completedTopics: Array.isArray(
+        parsed.completedTopics,
+      )
+        ? parsed.completedTopics
+        : [],
     }
   } catch {
     return { ...emptyPracticeState }
@@ -77,105 +137,312 @@ export function loadPracticeState() {
 
 export function savePracticeState(state) {
   try {
-    localStorage.setItem(PRACTICE_KEY, JSON.stringify(state))
+    localStorage.setItem(
+      PRACTICE_KEY,
+      JSON.stringify(state),
+    )
   } catch {
-    // Ignore storage errors in private browsing.
+    // Ignore storage errors.
   }
 
   return state
 }
 
-export function getQuestionById(id) {
-  return practiceQuestions.find((question) => question.id === id) || null
+export function startTopicPractice(topicKey) {
+  const questions =
+    getTopicQuestions(topicKey)
+
+  if (!questions.length) {
+    return null
+  }
+
+  const shuffledQuestions =
+    shuffle(questions)
+
+  const state = loadPracticeState()
+
+  return savePracticeState({
+    ...state,
+    selectedTopic: topicKey,
+    questionIds: shuffledQuestions.map(
+      (question) => question.id,
+    ),
+    currentIndex: 0,
+    choices: {},
+    completedQuestionIds: [],
+  })
 }
 
-export function getSessionQuestions(state = loadPracticeState()) {
-  return state.questionIds.map((id) => getQuestionById(id)).filter(Boolean)
+export function resumeTopicPractice(topicKey) {
+  const state = loadPracticeState()
+
+  if (
+    state.selectedTopic !== topicKey ||
+    !state.questionIds.length
+  ) {
+    return null
+  }
+
+  return state
 }
 
-export function getCompletedCount(state = loadPracticeState()) {
-  return getSessionQuestions(state).filter(
-    (question) => state.choices[question.id],
-  ).length
+export function getSessionQuestions(
+  state = loadPracticeState(),
+) {
+  return state.questionIds
+    .map((id) => getQuestionById(id))
+    .filter(Boolean)
 }
 
-export function getPracticeStatus(state = loadPracticeState()) {
-  if (!state.questionIds.length) {
+export function getCurrentQuestion(
+  state = loadPracticeState(),
+) {
+  const questions =
+    getSessionQuestions(state)
+
+  return (
+    questions[state.currentIndex] || null
+  )
+}
+
+export function getShuffledOptions(question) {
+  if (
+    !question ||
+    !Array.isArray(question.options)
+  ) {
+    return []
+  }
+
+  return shuffle(question.options)
+}
+
+export function savePracticeChoice(
+  questionId,
+  option,
+) {
+  const state = loadPracticeState()
+
+  const choices = {
+    ...state.choices,
+    [questionId]: option,
+  }
+
+  const completedQuestionIds =
+    state.completedQuestionIds.includes(
+      questionId,
+    )
+      ? state.completedQuestionIds
+      : [
+          ...state.completedQuestionIds,
+          questionId,
+        ]
+
+  return savePracticeState({
+    ...state,
+    choices,
+    completedQuestionIds,
+  })
+}
+
+export function isAnswerCorrect(
+  question,
+  selectedOption,
+) {
+  if (!question) {
+    return false
+  }
+
+  return (
+    question.correctAnswer ===
+    selectedOption
+  )
+}
+
+export function moveToNextQuestion() {
+  const state = loadPracticeState()
+
+  const questions =
+    getSessionQuestions(state)
+
+  if (!questions.length) {
+    return state
+  }
+
+  const nextIndex =
+    state.currentIndex + 1
+
+  if (nextIndex >= questions.length) {
+    const completedTopics =
+      state.selectedTopic &&
+      !state.completedTopics.includes(
+        state.selectedTopic,
+      )
+        ? [
+            ...state.completedTopics,
+            state.selectedTopic,
+          ]
+        : state.completedTopics
+
+    return savePracticeState({
+      ...state,
+      completedTopics,
+      currentIndex:
+        questions.length - 1,
+    })
+  }
+
+  return savePracticeState({
+    ...state,
+    currentIndex: nextIndex,
+  })
+}
+
+export function getCompletedCount(
+  state = loadPracticeState(),
+) {
+  return state.completedQuestionIds.length
+}
+
+export function getPracticeStatus(
+  state = loadPracticeState(),
+) {
+  if (
+    !state.selectedTopic ||
+    !state.questionIds.length
+  ) {
     return 'not_started'
   }
 
-  if (state.completed || getCompletedCount(state) >= 3) {
+  if (
+    state.completedQuestionIds.length >=
+    state.questionIds.length
+  ) {
     return 'completed'
   }
 
   return 'in_progress'
 }
 
-export function getExploredTopics(state = loadPracticeState()) {
-  return [
-    ...new Set(getSessionQuestions(state).map((question) => question.topic)),
-  ]
-}
+export function getTopicPracticeStatus(
+  topicKey,
+  state = loadPracticeState(),
+) {
+  if (
+    state.selectedTopic === topicKey &&
+    state.questionIds.length
+  ) {
+    if (
+      state.completedQuestionIds.length >=
+      state.questionIds.length
+    ) {
+      return 'completed'
+    }
 
-export function getResumeIndex(state = loadPracticeState()) {
-  const questions = getSessionQuestions(state)
-  const unanswered = questions.findIndex(
-    (question) => !state.choices[question.id],
-  )
-
-  if (unanswered === -1) {
-    return questions.length ? questions.length - 1 : 0
+    return 'in_progress'
   }
 
-  return unanswered
+  if (
+    state.completedTopics.includes(topicKey)
+  ) {
+    return 'completed'
+  }
+
+  return 'not_started'
 }
 
-export function startPracticeSession() {
-  const selected = selectPracticeQuestions()
-
-  return savePracticeState({
-    questionIds: selected.map((question) => question.id),
-    choices: {},
-    completed: false,
-  })
+export function getResumeIndex(
+  state = loadPracticeState(),
+) {
+  return state.currentIndex || 0
 }
 
-export function savePracticeChoice(questionId, option) {
+export function getExploredTopics(
+  state = loadPracticeState(),
+) {
+  return state.completedTopics
+    .map((topicKey) =>
+      getTopicByKey(topicKey),
+    )
+    .filter(Boolean)
+    .map((topic) => topic.title)
+}
+
+export function resetCurrentPractice() {
   const state = loadPracticeState()
-  const choices = {
-    ...state.choices,
-    [questionId]: option,
-  }
-  const questions = getSessionQuestions(state)
-  const completed =
-    questions.length > 0 && questions.every((question) => choices[question.id])
 
   return savePracticeState({
     ...state,
-    choices,
-    completed,
+    selectedTopic: null,
+    questionIds: [],
+    currentIndex: 0,
+    choices: {},
+    completedQuestionIds: [],
   })
+}
+
+export function resetAllPracticeProgress() {
+  return savePracticeState({
+    ...emptyPracticeState,
+  })
+}
+
+export function startPracticeSession(
+  topicKey,
+) {
+  if (topicKey) {
+    return startTopicPractice(topicKey)
+  }
+
+  return null
 }
 
 export function markPracticeComplete() {
   const state = loadPracticeState()
 
+  if (
+    !state.selectedTopic ||
+    !state.questionIds.length
+  ) {
+    return state
+  }
+
+  const completedTopics =
+    !state.completedTopics.includes(
+      state.selectedTopic,
+    )
+      ? [
+          ...state.completedTopics,
+          state.selectedTopic,
+        ]
+      : state.completedTopics
+
   return savePracticeState({
     ...state,
-    completed: getCompletedCount(state) >= 3,
+    completedTopics,
   })
 }
 
 export function getTopicIcon(topic) {
-  if (topic === 'Data Sharing') {
+  if (
+    topic === 'Data Sharing' ||
+    topic === 'dataSharing'
+  ) {
     return 'share'
   }
 
-  if (topic === 'Data Retention') {
+  if (
+    topic === 'Data Retention' ||
+    topic === 'dataRetention'
+  ) {
     return 'clock'
   }
 
-  if (topic === 'User Control' || topic === 'Purpose of Use') {
+  if (
+    topic === 'User Control' ||
+    topic === 'userControl' ||
+    topic === 'Purpose of Use' ||
+    topic === 'purposeOfUse'
+  ) {
     return 'control'
   }
 

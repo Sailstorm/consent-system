@@ -1,116 +1,341 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import LearningLayout from '../components/LearningLayout'
+import {
+  Navigate,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
+import AnalysisStatus from '../components/AnalysisStatus'
 import PracticeIcon from '../components/PracticeIcon'
 import {
-  getPracticeStatus,
+  getCurrentQuestion,
   getSessionQuestions,
+  getShuffledOptions,
+  getTopicBySlug,
   getTopicIcon,
+  isAnswerCorrect,
   loadPracticeState,
+  moveToNextQuestion,
   savePracticeChoice,
 } from '../utils/practice'
 import '../styles/practice.css'
 
 function PracticeScenario() {
   const navigate = useNavigate()
-  const { scenarioNumber } = useParams()
-  const index = Number(scenarioNumber) - 1
-  const state = loadPracticeState()
-  const questions = getSessionQuestions(state)
-  const question = questions[index]
-  const status = getPracticeStatus(state)
-  const savedChoice = question ? state.choices[question.id] || '' : ''
-  const [selected, setSelected] = useState(savedChoice)
+  const { topicId } = useParams()
+
+  const topic = getTopicBySlug(topicId)
+
+  const [practiceState, setPracticeState] =
+    useState(loadPracticeState)
+
+  const question =
+    getCurrentQuestion(practiceState)
+
+  const questions =
+    getSessionQuestions(practiceState)
+
+  const savedChoice = question
+    ? practiceState.choices[question.id] || ''
+    : ''
+
+  const [selected, setSelected] =
+    useState(savedChoice)
+
+  const [answered, setAnswered] =
+    useState(Boolean(savedChoice))
+
+  const [options, setOptions] = useState(() =>
+    getShuffledOptions(question),
+  )
 
   useEffect(() => {
-    setSelected(savedChoice)
-  }, [savedChoice, question?.id])
+    if (!question) {
+      return
+    }
 
-  if (!question || status === 'not_started') {
-    return <Navigate to="/privacy-learning/practice" replace />
+    const choice =
+      practiceState.choices[question.id] || ''
+
+    setSelected(choice)
+    setAnswered(Boolean(choice))
+    setOptions(getShuffledOptions(question))
+  }, [question?.id])
+
+  if (
+    !topic ||
+    !question ||
+    practiceState.selectedTopic !== topic.key
+  ) {
+    return (
+      <Navigate
+        to="/privacy-learning/practice"
+        replace
+      />
+    )
   }
 
-  const handleSelect = (option) => {
+  const isCorrect =
+    answered &&
+    isAnswerCorrect(question, selected)
+
+  const isLast =
+    practiceState.currentIndex >=
+    questions.length - 1
+
+  const progress =
+    ((practiceState.currentIndex + 1) /
+      questions.length) *
+    100
+
+  function handleSelect(option) {
+    if (answered) {
+      return
+    }
+
+    const updatedState = savePracticeChoice(
+      question.id,
+      option,
+    )
+
     setSelected(option)
-    savePracticeChoice(question.id, option)
+    setAnswered(true)
+    setPracticeState(updatedState)
   }
 
-  const handleNext = () => {
-    if (!selected) {
+  function handleNext() {
+    if (!answered) {
       return
     }
 
-    if (index >= questions.length - 1) {
-      navigate('/privacy-learning/practice/ready')
+    const updatedState =
+      moveToNextQuestion()
+
+    if (isLast) {
+      navigate('/privacy-learning/practice')
       return
     }
 
-    navigate(`/privacy-learning/practice/scenario/${index + 2}`)
+    setPracticeState(updatedState)
   }
 
-  const isLast = index >= questions.length - 1
-  const cardTone = index === 1 ? 'card-blue' : 'card-mint'
+  function getChoiceClass(option) {
+    if (!answered) {
+      return selected === option
+        ? 'i3-question-choice selected'
+        : 'i3-question-choice'
+    }
+
+    if (option === question.correctAnswer) {
+      return 'i3-question-choice correct'
+    }
+
+    if (
+      option === selected &&
+      option !== question.correctAnswer
+    ) {
+      return 'i3-question-choice wrong'
+    }
+
+    return 'i3-question-choice answered'
+  }
 
   return (
-    <LearningLayout activePage="practice">
-      <div className="practise-progress-head">
-        <h2>Consent Practice</h2>
-        <span>
-          Scenario {index + 1} of {questions.length}
-        </span>
-      </div>
+    <div className="i3-question-page">
+      <header className="i3-question-header">
+        <div className="i3-question-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-question-logo"
+          />
 
-      <div className="practise-progress-bar">
-        <div
-          className="practise-progress-fill"
-          style={{ width: `${((index + 1) / questions.length) * 100}%` }}
-        />
-      </div>
-
-      <p className="practise-topic">{question.topic}</p>
-
-      <section className={`practise-scenario-card ${cardTone}`}>
-        <span className="practise-scenario-dot" />
-        <PracticeIcon type={getTopicIcon(question.topic)} />
-
-        <h1>{question.scenario}</h1>
-        <p>Choose one of the two options below.</p>
-        <p className="practise-scenario-note">
-          Your choice is saved. Combined feedback appears after Scenario 3.
-        </p>
-
-        <div className="practise-choice-row">
-          {['A', 'B'].map((option) => (
-            <button
-              key={option}
-              className={
-                selected === option
-                  ? 'practise-choice selected'
-                  : 'practise-choice'
-              }
-              type="button"
-              onClick={() => handleSelect(option)}
-            >
-              {question.options[option]}
-            </button>
-          ))}
-
-          <button
-            className="practise-next"
-            type="button"
-            disabled={!selected}
-            onClick={handleNext}
-          >
-            {isLast ? 'View Feedback →' : 'Next Question →'}
-          </button>
+          <span>Consent Assistant</span>
         </div>
-      </section>
 
-      <p className="practise-footnote">
-        Feedback includes the meaning, privacy topic, practical tip and next
-        action.
-      </p>
-    </LearningLayout>
+        <button
+          type="button"
+          className="i3-question-back"
+          onClick={() =>
+            navigate('/privacy-learning/practice')
+          }
+        >
+          ← Leave Practice
+        </button>
+      </header>
+
+      <main className="i3-question-content">
+        <div className="i3-question-top">
+          <section>
+            <p className="i3-question-label">
+              PRIVACY PRACTICE
+            </p>
+
+            <h1>{topic.title}</h1>
+
+            <p className="i3-question-subtitle">
+              Test your understanding one question at a
+              time.
+            </p>
+          </section>
+
+          <div className="i3-question-analysis">
+            <AnalysisStatus />
+          </div>
+        </div>
+
+        <div className="i3-question-divider"></div>
+
+        <section className="i3-question-progress">
+          <div className="i3-question-progress-head">
+            <span>
+              Question {practiceState.currentIndex + 1}
+              {' '}of {questions.length}
+            </span>
+
+            <span>
+              {Math.round(progress)}% complete
+            </span>
+          </div>
+
+          <div className="i3-question-progress-bar">
+            <div
+              className="i3-question-progress-fill"
+              style={{
+                width: `${progress}%`,
+              }}
+            />
+          </div>
+        </section>
+
+        <div className="i3-question-layout">
+          <section className="i3-question-card">
+            <div className="i3-question-icon">
+              <PracticeIcon
+                type={getTopicIcon(topic.title)}
+              />
+            </div>
+
+            <p className="i3-question-small-label">
+              QUESTION
+            </p>
+
+            <h2>{question.question}</h2>
+
+            <p className="i3-question-instruction">
+              Choose the answer you think is correct.
+            </p>
+
+            <div className="i3-question-options">
+              {options.map((option, index) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={getChoiceClass(option)}
+                  disabled={answered}
+                  onClick={() =>
+                    handleSelect(option)
+                  }
+                >
+                  <span className="i3-choice-letter">
+                    {String.fromCharCode(
+                      65 + index,
+                    )}
+                  </span>
+
+                  <span>{option}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <aside className="i3-question-side">
+            {!answered && (
+              <section className="i3-question-help">
+                <h3>Take your time</h3>
+
+                <p>
+                  Read each option carefully and choose the
+                  answer that makes the most sense.
+                </p>
+              </section>
+            )}
+
+            {answered && (
+              <section
+                className={
+                  isCorrect
+                    ? 'i3-feedback-card correct'
+                    : 'i3-feedback-card wrong'
+                }
+              >
+                <div className="i3-feedback-title">
+                  <span>
+                    {isCorrect ? '✓' : '!'}
+                  </span>
+
+                  <h3>
+                    {isCorrect
+                      ? 'Correct'
+                      : 'Not quite'}
+                  </h3>
+                </div>
+
+                {!isCorrect && (
+                  <div className="i3-correct-answer">
+                    <strong>
+                      Correct answer
+                    </strong>
+
+                    <p>
+                      {question.correctAnswer}
+                    </p>
+                  </div>
+                )}
+
+                <div className="i3-feedback-explanation">
+                  <strong>Why?</strong>
+
+                  <p>
+                    {question.explanation}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="i3-question-next"
+                  onClick={handleNext}
+                >
+                  {isLast
+                    ? 'Finish Practice →'
+                    : 'Next Question →'}
+                </button>
+              </section>
+            )}
+          </aside>
+        </div>
+
+        <button
+          type="button"
+          className="i3-question-leave"
+          onClick={() =>
+            navigate('/privacy-learning/practice')
+          }
+        >
+          ← Leave Practice
+        </button>
+
+        <p className="i3-question-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
+
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-question-watermark"
+      />
+    </div>
   )
 }
 

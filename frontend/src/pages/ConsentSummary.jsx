@@ -1,14 +1,22 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import PolicyLayout from '../components/PolicyLayout'
-import ProgressSteps from '../components/ProgressSteps'
+import { loadAnalysisState } from '../utils/analysisState'
 import '../styles/consentSummary.css'
 
 function ConsentSummary() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const policyText = location.state?.policyText
-  const analysisResult = location.state?.analysisResult || {}
+  const savedAnalysis = loadAnalysisState()
+
+  const policyText =
+    location.state?.policyText ||
+    savedAnalysis.policyText ||
+    ''
+
+  const analysisResult =
+    location.state?.analysisResult ||
+    savedAnalysis.analysisResult ||
+    {}
 
   const dataCollection =
     analysisResult.data_collection?.data_collection ||
@@ -17,115 +25,230 @@ function ConsentSummary() {
 
   const summaryItems = [
     {
-      title: 'Data Collection',
+      title: 'What data is collected',
       value:
         dataCollection.summary ||
         'No information is available for this category.',
     },
     {
-      title: 'Purpose of Use',
+      title: 'Why it is used',
       value:
         analysisResult.purpose_of_use?.summary ||
         'No information is available for this category.',
     },
     {
-      title: 'Data Sharing',
+      title: 'Who it may be shared with',
       value:
         analysisResult.data_sharing?.summary ||
         'No information is available for this category.',
     },
     {
-      title: 'Data Retention',
+      title: 'How long it is kept',
       value:
         analysisResult.data_retention?.summary ||
         'No information is available for this category.',
     },
     {
-      title: 'User Control',
+      title: 'Your choices',
       value:
         analysisResult.user_control?.summary ||
         'No information is available for this category.',
     },
   ]
 
+  function goToExplanation() {
+    navigate('/explanation', {
+      state: {
+        policyText,
+        analysisResult,
+      },
+    })
+  }
+
+  function editInput() {
+    navigate('/privacy-assistant', {
+      state: {
+        policyText,
+      },
+    })
+  }
+
+  function startNewAnalysis() {
+    navigate('/privacy-assistant')
+  }
+
+  function goToLearning() {
+    navigate('/privacy-learning/learn')
+  }
+
   return (
-    <PolicyLayout activePage="analysis">
-      <section className="summary-heading">
-        <p className="summary-label">POLICY ASSISTANT</p>
+    <div className="i3-summary-page">
+      <header className="i3-summary-header">
+        <div className="i3-summary-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-summary-logo"
+          />
 
-        <h1>Consent Summary</h1>
-
-        <p>
-          A quick overview of the key privacy information found in the policy.
-        </p>
-      </section>
-
-      <ProgressSteps current={3} />
-
-      <section className="summary-card">
-        <div className="summary-card-heading">
-          <h2>Your privacy summary</h2>
-
-          <p>
-            Review the main privacy points before making your own decision.
-          </p>
+          <span>Consent Assistant</span>
         </div>
 
-        <div className="summary-items">
-          {summaryItems.map((item) => (
-            <div className="summary-item" key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.value}</p>
+        <button
+          type="button"
+          className="i3-summary-header-back"
+          onClick={goToExplanation}
+        >
+          ← Back
+        </button>
+      </header>
+
+      <main className="i3-summary-content">
+        <div className="i3-summary-top">
+          <section className="i3-summary-heading">
+            <p className="i3-summary-label">
+              YOUR PRIVACY SUMMARY
+            </p>
+
+            <h1>Consent summary</h1>
+
+            <p>
+              A plain-language summary based only on the
+              privacy text you submitted.
+            </p>
+          </section>
+
+          <aside className="i3-summary-learning">
+            <img
+              src="/status-bg-book.jpg"
+              alt=""
+              className="i3-summary-learning-background"
+            />
+
+            <img
+              src="/icon-question.jpg"
+              alt=""
+              className="i3-summary-question-icon"
+            />
+
+            <div className="i3-summary-learning-copy">
+              <span>PRIVACY LEARNING</span>
+
+              <h3>Learn more about privacy</h3>
+
+              <p>
+                Explore short lessons about key privacy
+                concepts.
+              </p>
             </div>
-          ))}
+
+            <button
+              type="button"
+              onClick={goToLearning}
+            >
+              Explore learning →
+            </button>
+          </aside>
         </div>
-      </section>
 
-      <section className="summary-message">
-        <h3>Your decision stays with you</h3>
+        <div className="i3-summary-main">
+          <section className="i3-summary-meaning">
+            <h2>What this policy means</h2>
 
-        <p>
-          This summary is provided to help you understand the privacy policy.
-          It does not tell you whether you should accept or reject it.
+            <div className="i3-summary-items">
+              {summaryItems.map((item) => (
+                <article
+                  className="i3-summary-item"
+                  key={item.title}
+                >
+                  <h3>{item.title}</h3>
+                  <p>{item.value}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <aside className="i3-summary-original">
+            <h2>Original policy excerpt</h2>
+
+            <p className="i3-summary-original-description">
+              Compare the explanation with the source text
+              whenever you want.
+            </p>
+
+            <div className="i3-summary-policy-text">
+              {policyText || 'No original policy text available.'}
+            </div>
+
+            <p className="i3-summary-source">
+              Source: text submitted by you
+            </p>
+
+            <button
+              type="button"
+              className="i3-summary-edit-original"
+              onClick={editInput}
+            >
+              Edit original input
+            </button>
+          </aside>
+        </div>
+
+        <div className="i3-summary-actions">
+          <div className="i3-summary-actions-left">
+            <button
+              type="button"
+              className="i3-summary-secondary"
+              onClick={editInput}
+            >
+              Edit input
+            </button>
+
+            <button
+              type="button"
+              className="i3-summary-primary"
+              onClick={startNewAnalysis}
+            >
+              Start new analysis
+            </button>
+
+            <button
+              type="button"
+              className="i3-summary-primary"
+              onClick={goToExplanation}
+            >
+              ← Back to explanation
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="i3-summary-dashboard"
+            onClick={() => navigate('/risk-dashboard')}
+          >
+            Go to dashboard →
+          </button>
+        </div>
+
+        <p className="i3-summary-decision-note">
+          This summary supports understanding; it does not
+          tell you whether to accept or reject.
         </p>
-      </section>
 
-      <div className="summary-actions">
-        <button
-          className="summary-back-button"
-          onClick={() =>
-            navigate('/explanation', {
-              state: {
-                policyText: policyText,
-                analysisResult: analysisResult,
-              },
-            })
-          }
-        >
-          Back to Explanation
-        </button>
+        <div className="i3-summary-footer-line"></div>
 
-        <button
-          className="summary-edit-button"
-          onClick={() =>
-            navigate('/privacy-assistant', {
-              state: {
-                policyText: policyText,
-              },
-            })
-          }
-        >
-          Edit Input
-        </button>
+        <p className="i3-summary-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
 
-        <button
-          className="new-analysis-button"
-          onClick={() => navigate('/privacy-assistant')}
-        >
-          Start New Analysis
-        </button>
-      </div>
-    </PolicyLayout>
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-summary-watermark"
+      />
+    </div>
   )
 }
 

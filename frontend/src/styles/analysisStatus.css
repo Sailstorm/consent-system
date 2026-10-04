@@ -1,0 +1,147 @@
+.analysis-status-card {
+  width: 100%;
+  min-height: 92px;
+
+  padding: 16px 18px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  border: 1px solid #cbdde4;
+  border-radius: 13px;
+
+  background: #f8fafb;
+  color: #172845;
+
+  box-sizing: border-box;
+}
+
+.analysis-status-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 27px;
+  font-weight: 700;
+
+  box-sizing: border-box;
+}
+
+.analysis-status-card.ready .analysis-status-icon {
+  border: 1px solid #71cbbf;
+
+  background: #effaf7;
+  color: #229889;
+}
+
+.analysis-status-card.failed .analysis-status-icon {
+  border: 1px solid #e5a0a0;
+
+  background: #fff4f4;
+  color: #c95b5b;
+}
+
+.analysis-status-card.analysing .analysis-status-icon {
+  border: none;
+
+  background: transparent;
+}
+
+.analysis-status-spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 3px dashed #3c9bb7;
+  border-radius: 50%;
+
+  box-sizing: border-box;
+
+  animation: analysis-status-spin 4s linear infinite;
+}
+
+.analysis-status-copy {
+  flex: 1;
+  min-width: 0;
+
+  text-align: left;
+}
+
+.analysis-status-copy h3 {
+  margin: 0 0 4px;
+
+  color: #172845;
+
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.analysis-status-copy p {
+  margin: 0;
+
+  color: #65758e;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.analysis-status-button {
+  min-width: 145px;
+  min-height: 46px;
+
+  flex-shrink: 0;
+
+  margin: 0;
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #3697b6;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+}
+
+.analysis-status-button:hover {
+  background: #318cab;
+}
+
+@keyframes analysis-status-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 650px) {
+  .analysis-status-card {
+    flex-wrap: wrap;
+  }
+
+  .analysis-status-copy {
+    min-width: calc(100% - 65px);
+  }
+
+  .analysis-status-button {
+    width: 100%;
+  }
+}

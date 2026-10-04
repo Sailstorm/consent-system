@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import PolicyLayout from './PolicyLayout'
+import { loadAnalysisState } from '../utils/analysisState'
 import '../styles/privacyDetail.css'
 
 function PrivacyDetail({
@@ -15,72 +15,214 @@ function PrivacyDetail({
   const navigate = useNavigate()
   const location = useLocation()
 
-  const policyText = location.state?.policyText
-  const analysisResult = location.state?.analysisResult
+  const savedAnalysis = loadAnalysisState()
+
+  const policyText =
+    location.state?.policyText ||
+    savedAnalysis.policyText ||
+    ''
+
+  const analysisResult =
+    location.state?.analysisResult ||
+    savedAnalysis.analysisResult ||
+    {}
+
+  const availableSections = sections.filter(
+    (section) =>
+      section.text &&
+      section.text.trim() !== '',
+  )
+
+  const whatWeFound =
+    availableSections[0]?.text ||
+    'No clear information was identified for this category.'
+
+  const displayStatus =
+    statusType === 'complete'
+      ? 'Clearly stated'
+      : statusType === 'partial'
+        ? 'Partly stated'
+        : 'Not clearly stated'
+
+  function goBack() {
+    navigate('/explanation', {
+      state: {
+        policyText,
+        analysisResult,
+      },
+    })
+  }
+
+  function goToSummary() {
+    navigate('/consent-summary', {
+      state: {
+        policyText,
+        analysisResult,
+      },
+    })
+  }
 
   return (
-    <PolicyLayout activePage="analysis">
-      <button
-        className="back-explanation"
-        onClick={() =>
-          navigate('/explanation', {
-            state: {
-              policyText: policyText,
-              analysisResult: analysisResult,
-            },
-          })
-        }
-      >
-        ← Back to Explanation
-      </button>
+    <div className="i3-detail-page">
+      <header className="i3-detail-header">
+        <div className="i3-detail-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-detail-logo"
+          />
 
-      <section className="detail-heading">
-        <p className="detail-label">POLICY ASSISTANT</p>
+          <span>Consent Assistant</span>
+        </div>
 
-        <h1>{title}</h1>
+        <button
+          type="button"
+          className="i3-detail-header-back"
+          onClick={goBack}
+        >
+          ← Back
+        </button>
+      </header>
 
-        <p>{subtitle}</p>
-      </section>
+      <main className="i3-detail-content">
+        <div className="i3-detail-heading-row">
+          <section className="i3-detail-heading">
+            <p className="i3-detail-label">
+              YOUR PRIVACY SUMMARY&nbsp; • &nbsp;DETAIL
+            </p>
 
-      <div className={`detail-status ${statusType}`}>
-        <span>{statusLabel}</span>
-        <strong>{statusText}</strong>
-      </div>
+            <h1>{title}</h1>
 
-      <div className="detail-grid">
-        <section className="detail-main-card">
-          <h2>What the policy says in simple terms</h2>
+            <p>{subtitle}</p>
+          </section>
 
-          <div className="detail-sections">
-            {sections.map((section) => (
-              <div className="detail-section" key={section.heading}>
-                <h3>{section.heading}</h3>
-                <p>{section.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+          <aside
+            className={`i3-detail-status ${statusType}`}
+          >
+            <span className="i3-detail-status-icon">
+              {statusType === 'complete'
+                ? '✓'
+                : statusType === 'partial'
+                  ? '◐'
+                  : '!'}
+            </span>
 
-        <section className="source-card">
-          <h2>Relevant source text</h2>
+            <div>
+              <h3>{displayStatus}</h3>
 
-          <div className="source-box">
-            <p style={{ whiteSpace: 'pre-wrap' }}>
-              {sourceText}
+              <p>
+                {statusText ||
+                  statusLabel}
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <div className="i3-detail-divider"></div>
+
+        <div className="i3-detail-top-cards">
+          <section className="i3-detail-found-card">
+            <p className="i3-detail-card-label">
+              WHAT WE FOUND
+            </p>
+
+            <h2>{whatWeFound}</h2>
+
+            <p>
+              This information was identified from the
+              privacy text you submitted.
+            </p>
+          </section>
+
+          <section className="i3-detail-identified-card">
+            <p className="i3-detail-card-label">
+              INFORMATION IDENTIFIED
+            </p>
+
+            <div className="i3-detail-identified-list">
+              {availableSections.map((section) => (
+                <div
+                  className="i3-detail-identified-item"
+                  key={section.heading}
+                >
+                  <span>✓</span>
+                  <p>{section.heading}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <section className="i3-detail-policy-card">
+          <p className="i3-detail-card-label">
+            WHAT THE POLICY SAYS
+          </p>
+
+          <h2>
+            Original text related to this category
+          </h2>
+
+          <div className="i3-detail-source-box">
+            <span className="i3-detail-source-line"></span>
+
+            <p>
+              {sourceText ||
+                'No related source text was identified.'}
             </p>
           </div>
-
-          <div className="interpretation-box">
-            <h3>Interpretation</h3>
-            <p>{interpretation}</p>
-          </div>
-
-          <button className="source-link">
-            Source: submitted privacy text
-          </button>
         </section>
-      </div>
-    </PolicyLayout>
+
+        <section className="i3-detail-meaning-card">
+          <img
+            src="/icon-info.jpg"
+            alt=""
+            className="i3-detail-info-icon"
+          />
+
+          <div>
+            <p className="i3-detail-card-label">
+              WHAT THIS MEANS
+            </p>
+
+            <p className="i3-detail-meaning-text">
+              {interpretation ||
+                'No additional interpretation is available.'}
+            </p>
+          </div>
+        </section>
+
+        <div className="i3-detail-actions">
+          <button
+            type="button"
+            className="i3-detail-back-button"
+            onClick={goBack}
+          >
+            ← Back to explanation
+          </button>
+
+          <button
+            type="button"
+            className="i3-detail-summary-button"
+            onClick={goToSummary}
+          >
+            View consent summary →
+          </button>
+        </div>
+
+        <div className="i3-detail-footer-line"></div>
+
+        <p className="i3-detail-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
+
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-detail-watermark"
+      />
+    </div>
   )
 }
 

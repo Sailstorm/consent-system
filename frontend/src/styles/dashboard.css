@@ -573,6 +573,96 @@
   line-height: 1.5;
 }
 
+.personal-breach-section {
+  margin-top: 26px;
+}
+
+.personal-breach-card {
+  min-height: 116px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.personal-breach-content {
+  flex: 1;
+}
+
+.personal-breach-content .dashboard-card-label {
+  margin-bottom: 5px;
+}
+
+.personal-breach-content h2 {
+  margin: 0 0 4px;
+  color: #142243;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.personal-breach-description {
+  margin: 0;
+  color: #687c9a;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.personal-breach-source {
+  margin: 4px 0 0;
+  color: #91a0b2;
+  font-size: 10px;
+}
+
+.personal-breach-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hibp-official-label {
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 9px;
+  background: #f2f8f6;
+  color: #528b7e;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.hibp-official-label span {
+  color: #32917e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hibp-check-button {
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 9px;
+  background: #3796b5;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hibp-check-button:hover {
+  background: #3188a5;
+}
+
+.hibp-check-button span {
+  font-size: 18px;
+  line-height: 1;
+}
+
 .dashboard-footer-text {
   margin: 18px 0 0;
   color: rgba(255, 255, 255, 0.88);
@@ -684,6 +774,17 @@
     flex-wrap: wrap;
   }
 
+  .personal-breach-card {
+    padding: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .personal-breach-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .dashboard-watermark {
     display: none;
   }
@@ -717,6 +818,15 @@
   }
 
   .breach-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .personal-breach-content h2 {
+    font-size: 20px;
+  }
+
+  .personal-breach-actions {
     align-items: flex-start;
     flex-direction: column;
   }

@@ -1,17 +1,33 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import PolicyLayout from '../components/PolicyLayout'
-import ProgressSteps from '../components/ProgressSteps'
+import {
+  loadAnalysisState,
+  saveAnalysisFailure,
+  saveAnalysisResult,
+  startAnalysis,
+} from '../utils/analysisState'
 import '../styles/processing.css'
 
-const AI_URL = import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'
+const AI_URL =
+  import.meta.env.VITE_AI_URL ??
+  'http://127.0.0.1:8000'
 
 function Processing() {
   const navigate = useNavigate()
   const location = useLocation()
   const started = useRef(false)
 
-  const policyText = location.state?.policyText
+  const inputType =
+    location.state?.inputType || 'text'
+
+  const policyText =
+    location.state?.policyText || ''
+
+  const policyUrl =
+    location.state?.policyUrl || ''
+
+  const pdfFile =
+    location.state?.pdfFile || null
 
   useEffect(() => {
     if (started.current) {
@@ -20,83 +36,246 @@ function Processing() {
 
     started.current = true
 
-    if (!policyText) {
-      navigate('/privacy-assistant')
-      return
-    }
-
     async function analysePolicy() {
+      let sourceValue = ''
+
+      if (inputType === 'text') {
+        if (!policyText) {
+          navigate('/privacy-assistant')
+          return
+        }
+
+        sourceValue = policyText
+      }
+
+      if (inputType === 'url') {
+        if (!policyUrl) {
+          navigate('/privacy-assistant')
+          return
+        }
+
+        sourceValue = policyUrl
+      }
+
+      if (inputType === 'pdf') {
+        if (!pdfFile) {
+          navigate('/privacy-assistant')
+          return
+        }
+
+        sourceValue = pdfFile.name
+      }
+
+      startAnalysis(sourceValue)
+
       try {
-        const response = await fetch(`${AI_URL}/analyze`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: policyText,
-          }),
-        })
+        let response
+
+        if (inputType === 'url') {
+          response = await fetch(
+            `${AI_URL}/analyze-url`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: policyUrl,
+              }),
+            },
+          )
+        } else if (inputType === 'pdf') {
+          const formData = new FormData()
+
+          formData.append('file', pdfFile)
+
+          response = await fetch(
+            `${AI_URL}/analyze-pdf`,
+            {
+              method: 'POST',
+              body: formData,
+            },
+          )
+        } else {
+          response = await fetch(
+            `${AI_URL}/analyze`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                text: policyText,
+              }),
+            },
+          )
+        }
 
         if (!response.ok) {
-          navigate('/analysis-failed')
+          saveAnalysisFailure(sourceValue)
           return
         }
 
         const data = await response.json()
 
-        navigate('/explanation', {
-          state: {
-            policyText: policyText,
-            analysisResult: data.results,
-          },
-        })
+        const analysedPolicyText =
+          data.policy_text ||
+          policyText ||
+          sourceValue
+
+        saveAnalysisResult(
+          analysedPolicyText,
+          data.results,
+        )
       } catch (error) {
         console.log(error)
-        navigate('/analysis-failed')
+
+        saveAnalysisFailure(sourceValue)
       }
     }
 
     analysePolicy()
-  }, [navigate, policyText])
+  }, [
+    inputType,
+    navigate,
+    pdfFile,
+    policyText,
+    policyUrl,
+  ])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const analysis = loadAnalysisState()
+
+      if (
+        analysis.status === 'ready' &&
+        analysis.analysisResult
+      ) {
+        navigate('/explanation', {
+          state: {
+            policyText: analysis.policyText,
+            analysisResult: analysis.analysisResult,
+          },
+        })
+
+        return
+      }
+
+      if (analysis.status === 'failed') {
+        navigate('/analysis-failed', {
+          state: {
+            policyText: analysis.policyText,
+          },
+        })
+      }
+    }, 500)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [navigate])
 
   return (
-    <PolicyLayout activePage="analysis">
-      <div className="processing-heading">
-        <h1>Analysing your privacy information</h1>
+    <div className="i3-processing-page">
+      <header className="i3-processing-header">
+        <div className="i3-processing-brand">
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="i3-processing-logo"
+          />
 
-        <p>
-          We are turning the text you submitted into a clearer explanation
-          and structured consent summary.
-        </p>
-      </div>
+          <span>Consent Assistant</span>
+        </div>
 
-      <ProgressSteps current={2} />
+        <button
+          type="button"
+          className="i3-processing-back"
+          onClick={() =>
+            navigate('/privacy-assistant')
+          }
+        >
+          ← Back
+        </button>
+      </header>
 
-      <section className="processing-card">
-        <div className="loading-circle"></div>
+      <main className="i3-processing-content">
+        <section className="i3-processing-heading">
+          <h1>Analysing your policy</h1>
 
-        <h2>Processing submitted text...</h2>
-
-        <p className="processing-main-text">
-          Checking for useful privacy information
-        </p>
-
-        <div className="processing-list">
           <p>
-            Identifying data collection, use, sharing, retention and user
-            control
+            We’re reviewing the privacy information in your
+            policy.
           </p>
+        </section>
 
-          <p>Preparing a plain-language explanation</p>
+        <div className="i3-processing-loader">
+          <div className="i3-processing-ring"></div>
+
+          <div className="i3-processing-logo-circle">
+            <img
+              src="/logo2.jpg"
+              alt=""
+            />
+          </div>
         </div>
 
-        <div className="processing-note">
-          Please wait a moment while the analysis is completed.
-          <br />
-          Your original text remains available for comparison.
-        </div>
-      </section>
-    </PolicyLayout>
+        <h2 className="i3-processing-reviewing">
+          Reviewing your policy...
+        </h2>
+
+        <p className="i3-processing-wait">
+          This may take a little while.
+        </p>
+
+        <section className="i3-processing-learning">
+          <img
+            src="/status-bg-book.jpg"
+            alt=""
+            className="i3-processing-learning-background"
+          />
+
+          <div className="i3-processing-book">
+             📖
+          </div>
+
+          <div className="i3-processing-learning-copy">
+            <span>WHILE YOU WAIT</span>
+
+            <h3>Learn more about privacy</h3>
+
+            <p>
+              Explore a short privacy lesson while your
+              policy is being analysed.
+            </p>
+
+            <small>
+              Your analysis will continue while you learn.
+            </small>
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate('/privacy-learning/learn')
+            }
+          >
+            Start a lesson
+          </button>
+        </section>
+
+        <p className="i3-processing-disclaimer">
+          Consent Assistant provides information to support
+          your review. It does not provide legal advice.
+        </p>
+      </main>
+
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="i3-processing-watermark"
+      />
+    </div>
   )
 }
 
