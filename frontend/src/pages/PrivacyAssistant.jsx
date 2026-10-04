@@ -4,6 +4,7 @@ import {
   loadDraftPolicy,
   saveDraftPolicy,
 } from '../utils/settings'
+import linkIcon from '../assets/link-icon.png'
 import '../styles/privacyAssistant.css'
 
 function PrivacyAssistant() {
@@ -189,7 +190,11 @@ function PrivacyAssistant() {
         {inputType === 'url' && (
           <section className="i3-url-card">
             <div className="i3-url-icon">
-              ↗
+              <img
+                src={linkIcon}
+                alt=""
+                className="i3-url-icon-image"
+              />
             </div>
 
             <h2>Paste Privacy Policy URL</h2>

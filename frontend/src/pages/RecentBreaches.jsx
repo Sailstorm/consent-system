@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/recentBreaches.css'
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const API_URL =
+  import.meta.env.VITE_API_URL ??
+  'http://localhost:3000'
 
 function RecentBreaches() {
   const navigate = useNavigate()
@@ -19,14 +21,15 @@ function RecentBreaches() {
         setError('')
 
         const response = await fetch(
-          `${API_URL}/api/breaches/latest?limit=12`
+          `${API_URL}/api/breaches/latest?limit=12`,
         )
 
         const data = await response.json()
 
         if (!response.ok) {
           throw new Error(
-            data.error || 'Unable to load breach information'
+            data.error ||
+              'Unable to load breach information',
           )
         }
 
@@ -34,8 +37,9 @@ function RecentBreaches() {
         setSource(data.source || null)
       } catch (err) {
         console.log(err)
+
         setError(
-          'Latest breach information is temporarily unavailable.'
+          'Latest breach information is temporarily unavailable.',
         )
       } finally {
         setLoading(false)
@@ -50,11 +54,14 @@ function RecentBreaches() {
       return 'Not available'
     }
 
-    return new Date(date).toLocaleDateString('en-AU', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
+    return new Date(date).toLocaleDateString(
+      'en-AU',
+      {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      },
+    )
   }
 
   function formatAccounts(value) {
@@ -78,7 +85,10 @@ function RecentBreaches() {
   }
 
   function formatDataClasses(dataClasses) {
-    if (!Array.isArray(dataClasses) || dataClasses.length === 0) {
+    if (
+      !Array.isArray(dataClasses) ||
+      dataClasses.length === 0
+    ) {
       return 'Not specified'
     }
 
@@ -89,9 +99,11 @@ function RecentBreaches() {
     <div className="recent-breaches-page">
       <header className="recent-breaches-header">
         <div className="recent-breaches-brand">
-          <div className="recent-breaches-logo">
-            <span>CA</span>
-          </div>
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="recent-breaches-logo"
+          />
 
           <span className="recent-breaches-brand-name">
             Consent Assistant
@@ -101,7 +113,9 @@ function RecentBreaches() {
         <button
           type="button"
           className="recent-breaches-back"
-          onClick={() => navigate('/risk-dashboard')}
+          onClick={() =>
+            navigate('/risk-dashboard')
+          }
         >
           <span>←</span>
           Back to dashboard
@@ -115,8 +129,9 @@ function RecentBreaches() {
           <h1>Recent data breaches</h1>
 
           <span>
-            See recently reported data breaches and what information
-            may have been exposed.
+            See recently reported data breaches
+            and what information may have been
+            exposed.
           </span>
         </section>
 
@@ -127,19 +142,24 @@ function RecentBreaches() {
                 LATEST BREACHES
               </p>
 
-              <h2>Recently reported breaches</h2>
+              <h2>
+                Recently reported breaches
+              </h2>
 
               <span>
-                The latest verified breach records available from our
-                data source.
+                The latest verified breach
+                records available from our data
+                source.
               </span>
             </div>
 
             <div className="recent-breaches-source">
               <div>
                 <span>Source:</span>
+
                 <strong>
-                  {source?.name || 'Have I Been Pwned'}
+                  {source?.name ||
+                    'Have I Been Pwned'}
                 </strong>
               </div>
 
@@ -161,69 +181,86 @@ function RecentBreaches() {
             </div>
           )}
 
-          {!loading && !error && breaches.length === 0 && (
-            <div className="recent-breaches-message">
-              No breach records are available.
-            </div>
-          )}
+          {!loading &&
+            !error &&
+            breaches.length === 0 && (
+              <div className="recent-breaches-message">
+                No breach records are available.
+              </div>
+            )}
 
-          {!loading && !error && breaches.length > 0 && (
-            <div className="recent-breaches-list">
-              {breaches.map((breach) => (
-                <article
-                  className="recent-breach-row"
-                  key={`${breach.name}-${breach.addedDate}`}
-                >
-                  <div className="recent-breach-name">
-                    <h3>{breach.title}</h3>
+          {!loading &&
+            !error &&
+            breaches.length > 0 && (
+              <div className="recent-breaches-list">
+                {breaches.map((breach) => (
+                  <article
+                    className="recent-breach-row"
+                    key={`${breach.name}-${breach.addedDate}`}
+                  >
+                    <div className="recent-breach-name">
+                      <h3>{breach.title}</h3>
 
-                    <p>
-                      {breach.domain || 'Domain not available'}
-                    </p>
-                  </div>
+                      <p>
+                        {breach.domain ||
+                          'Domain not available'}
+                      </p>
+                    </div>
 
-                  <div className="recent-breach-detail">
-                    <span>ACCOUNTS AFFECTED</span>
+                    <div className="recent-breach-detail">
+                      <span>
+                        ACCOUNTS AFFECTED
+                      </span>
 
-                    <strong>
-                      {formatAccounts(breach.affectedAccounts)}
-                    </strong>
-                  </div>
+                      <strong>
+                        {formatAccounts(
+                          breach.affectedAccounts,
+                        )}
+                      </strong>
+                    </div>
 
-                  <div className="recent-breach-detail">
-                    <span>BREACH DATE</span>
+                    <div className="recent-breach-detail">
+                      <span>BREACH DATE</span>
 
-                    <strong>
-                      {formatDate(breach.breachDate)}
-                    </strong>
-                  </div>
+                      <strong>
+                        {formatDate(
+                          breach.breachDate,
+                        )}
+                      </strong>
+                    </div>
 
-                  <div className="recent-breach-detail recent-breach-data">
-                    <span>DATA EXPOSED</span>
+                    <div className="recent-breach-detail recent-breach-data">
+                      <span>DATA EXPOSED</span>
 
-                    <strong>
-                      {formatDataClasses(breach.dataClasses)}
-                    </strong>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+                      <strong>
+                        {formatDataClasses(
+                          breach.dataClasses,
+                        )}
+                      </strong>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
         </section>
 
         <p className="recent-breaches-scroll-note">
-          More breach records can be viewed by scrolling.
+          More breach records can be viewed by
+          scrolling.
         </p>
 
         <p className="recent-breaches-footer">
-          Consent Assistant provides information to support your review.
-          It does not provide legal advice.
+          Consent Assistant provides information
+          to support your review. It does not
+          provide legal advice.
         </p>
       </main>
 
-      <div className="recent-breaches-watermark">
-        CA
-      </div>
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="recent-breaches-watermark"
+      />
     </div>
   )
 }

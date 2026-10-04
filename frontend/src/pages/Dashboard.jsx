@@ -139,9 +139,11 @@ function Dashboard() {
     <div className="privacy-dashboard-page">
       <header className="dashboard-header">
         <div className="dashboard-brand">
-          <div className="dashboard-logo">
-            <span>CA</span>
-          </div>
+          <img
+            src="/logo2.jpg"
+            alt="Consent Assistant"
+            className="dashboard-logo"
+          />
 
           <span className="dashboard-brand-name">
             Consent Assistant
@@ -445,9 +447,11 @@ function Dashboard() {
         </p>
       </main>
 
-      <div className="dashboard-watermark">
-        CA
-      </div>
+      <img
+        src="/ca-watermark.png"
+        alt=""
+        className="dashboard-watermark"
+      />
     </div>
   )
 }

@@ -4,57 +4,67 @@
   overflow: hidden;
   background: #3c8ca7;
   color: #142243;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Header - same style as Privacy Assistant */
+
 .dashboard-header {
-  height: 82px;
-  padding: 0 54px;
+  height: 70px;
+  padding: 0 38px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #2f7893;
+
+  background: #2b7189;
 }
 
 .dashboard-brand {
   display: flex;
   align-items: center;
-  gap: 18px;
-}
+  gap: 16px;
 
-.dashboard-logo {
-  width: 48px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  border: 4px solid #dcecf2;
-  border-radius: 50% 50% 46% 46%;
-  color: #3289a8;
+  color: #ffffff;
+
   font-size: 18px;
   font-weight: 700;
 }
 
-.dashboard-logo span {
-  margin-top: 1px;
+.dashboard-logo {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .dashboard-brand-name {
   color: #ffffff;
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .dashboard-back-button {
-  padding: 10px 18px;
+  min-width: 98px;
+  min-height: 40px;
+
+  padding: 0 16px;
+
   display: flex;
   align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 9px;
+
   background: transparent;
   color: #ffffff;
-  font-size: 16px;
+
+  font: inherit;
+  font-size: 14px;
+
   cursor: pointer;
 }
 
@@ -63,9 +73,11 @@
 }
 
 .dashboard-back-arrow {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
 }
+
+/* Main */
 
 .dashboard-main {
   position: relative;
@@ -100,6 +112,8 @@
   font-size: 18px;
   line-height: 1.5;
 }
+
+/* Top cards */
 
 .dashboard-top-grid {
   display: grid;
@@ -162,6 +176,8 @@
 .dashboard-error {
   color: #9c5f4b;
 }
+
+/* Breaches */
 
 .breach-preview-layout {
   display: grid;
@@ -281,6 +297,8 @@
   line-height: 1;
 }
 
+/* Learning */
+
 .learning-card-top {
   display: flex;
   align-items: flex-start;
@@ -312,7 +330,6 @@
 }
 
 .learning-progress-fill {
-  width: 40%;
   height: 100%;
   border-radius: 10px;
   background: #58a99b;
@@ -389,6 +406,8 @@
   font-size: 18px;
   line-height: 1;
 }
+
+/* Organisation */
 
 .organisation-section {
   margin-top: 26px;
@@ -573,6 +592,8 @@
   line-height: 1.5;
 }
 
+/* Personal breach */
+
 .personal-breach-section {
   margin-top: 26px;
 }
@@ -663,6 +684,8 @@
   line-height: 1;
 }
 
+/* Footer */
+
 .dashboard-footer-text {
   margin: 18px 0 0;
   color: rgba(255, 255, 255, 0.88);
@@ -670,17 +693,28 @@
   text-align: center;
 }
 
+/* Watermark - same as Privacy Assistant */
+
 .dashboard-watermark {
   position: absolute;
-  right: -8px;
-  bottom: -18px;
-  z-index: 1;
-  color: rgba(255, 255, 255, 0.09);
-  font-size: 96px;
-  font-weight: 700;
-  line-height: 1;
+
+  right: -42px;
+  bottom: -56px;
+
+  width: 300px;
+  height: 300px;
+
+  object-fit: contain;
+
+  opacity: 0.1;
+
+  pointer-events: none;
   user-select: none;
+
+  z-index: 1;
 }
+
+/* Responsive */
 
 @media (max-width: 1050px) {
   .dashboard-main {
@@ -702,8 +736,7 @@
 
 @media (max-width: 760px) {
   .dashboard-header {
-    height: auto;
-    padding: 18px 22px;
+    padding: 0 18px;
   }
 
   .dashboard-brand {
@@ -712,8 +745,7 @@
 
   .dashboard-logo {
     width: 40px;
-    height: 44px;
-    font-size: 15px;
+    height: 40px;
   }
 
   .dashboard-brand-name {
@@ -721,7 +753,9 @@
   }
 
   .dashboard-back-button {
-    padding: 8px 12px;
+    min-width: 88px;
+    min-height: 38px;
+    padding: 0 12px;
     font-size: 13px;
   }
 
@@ -792,7 +826,7 @@
 
 @media (max-width: 480px) {
   .dashboard-header {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .dashboard-brand-name {

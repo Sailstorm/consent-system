@@ -18,7 +18,7 @@
 }
 
 .homepage-logo {
-  width: 96px;
+  width: 150px;
   height: auto;
   margin-bottom: 30px;
 }
@@ -50,6 +50,7 @@
   width: 310px;
   height: 65px;
   margin-top: 2px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,17 +74,20 @@
   background: #3189a6;
 }
 
+/* Upload icon */
 .homepage-upload-icon {
   position: relative;
-  width: 28px;
+  width: 30px;
   height: 32px;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .upload-arrow {
   position: absolute;
-  top: -4px;
-  left: 7px;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
 
   color: #ffffff;
   font-size: 29px;
@@ -92,8 +96,9 @@
 
 .upload-line {
   position: absolute;
-  left: 1px;
+  left: 50%;
   bottom: 0;
+  transform: translateX(-50%);
 
   width: 24px;
   height: 9px;
