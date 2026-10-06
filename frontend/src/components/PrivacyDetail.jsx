@@ -44,6 +44,40 @@ function PrivacyDetail({
         ? 'Partly stated'
         : 'Not clearly stated'
 
+  const learningRoutes = {
+    'Data Collection':
+      '/privacy-learning/learn/data-collection',
+
+    'Purpose of Use':
+      '/privacy-learning/learn/purpose-of-use',
+
+    'Data Sharing':
+      '/privacy-learning/learn/data-sharing',
+
+    'Data Retention':
+      '/privacy-learning/learn/data-retention',
+
+    'User Control':
+      '/privacy-learning/learn/user-control',
+  }
+
+  const learningButtonText = {
+    'Data Collection':
+      'What is Data Collection? Learn more →',
+
+    'Purpose of Use':
+      'Why is your information used? Learn more →',
+
+    'Data Sharing':
+      'Who can your information be shared with? Learn more →',
+
+    'Data Retention':
+      'How long can your information be kept? Learn more →',
+
+    'User Control':
+      'What control do you have over your information? Learn more →',
+  }
+
   function goBack() {
     navigate('/explanation', {
       state: {
@@ -60,6 +94,17 @@ function PrivacyDetail({
         analysisResult,
       },
     })
+  }
+
+  function goToLearning() {
+    const learningRoute =
+      learningRoutes[title]
+
+    if (!learningRoute) {
+      return
+    }
+
+    navigate(learningRoute)
   }
 
   return (
@@ -96,26 +141,45 @@ function PrivacyDetail({
             <p>{subtitle}</p>
           </section>
 
-          <aside
-            className={`i3-detail-status ${statusType}`}
-          >
-            <span className="i3-detail-status-icon">
-              {statusType === 'complete'
-                ? '✓'
-                : statusType === 'partial'
-                  ? '◐'
-                  : '!'}
-            </span>
+          <div className="i3-detail-heading-actions">
+            <button
+              type="button"
+              className="i3-detail-learn-button"
+              onClick={goToLearning}
+            >
+              <img
+                src="/icon-question.jpg"
+                alt=""
+                className="i3-detail-learn-icon"
+              />
 
-            <div>
-              <h3>{displayStatus}</h3>
+              <span className="i3-detail-learn-copy">
+                {learningButtonText[title] ||
+                  'Learn more →'}
+              </span>
+            </button>
 
-              <p>
-                {statusText ||
-                  statusLabel}
-              </p>
-            </div>
-          </aside>
+            <aside
+              className={`i3-detail-status ${statusType}`}
+            >
+              <span className="i3-detail-status-icon">
+                {statusType === 'complete'
+                  ? '✓'
+                  : statusType === 'partial'
+                    ? '◐'
+                    : '!'}
+              </span>
+
+              <div>
+                <h3>{displayStatus}</h3>
+
+                <p>
+                  {statusText ||
+                    statusLabel}
+                </p>
+              </div>
+            </aside>
+          </div>
         </div>
 
         <div className="i3-detail-divider"></div>
@@ -146,6 +210,7 @@ function PrivacyDetail({
                   key={section.heading}
                 >
                   <span>✓</span>
+
                   <p>{section.heading}</p>
                 </div>
               ))}
