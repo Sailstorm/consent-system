@@ -9,7 +9,7 @@ function InvalidInput() {
       <header className="i3-invalid-header">
         <div className="i3-invalid-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-invalid-logo"
           />
@@ -40,7 +40,7 @@ function InvalidInput() {
 
         <section className="i3-invalid-card">
           <img
-            src="/error-icon.jpg"
+            src={`${import.meta.env.BASE_URL}error-icon.jpg`}
             alt=""
             className="i3-invalid-icon"
           />
@@ -78,7 +78,7 @@ function InvalidInput() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-invalid-watermark"
       />

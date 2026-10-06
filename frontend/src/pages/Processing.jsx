@@ -180,7 +180,7 @@ function Processing() {
       <header className="i3-processing-header">
         <div className="i3-processing-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-processing-logo"
           />
@@ -214,7 +214,7 @@ function Processing() {
 
           <div className="i3-processing-logo-circle">
             <img
-              src="/logo2.jpg"
+              src={`${import.meta.env.BASE_URL}logo2.jpg`}
               alt=""
             />
           </div>
@@ -230,7 +230,7 @@ function Processing() {
 
         <section className="i3-processing-learning">
           <img
-            src="/status-bg-book.jpg"
+            src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
             alt=""
             className="i3-processing-learning-background"
           />
@@ -271,7 +271,7 @@ function Processing() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-processing-watermark"
       />

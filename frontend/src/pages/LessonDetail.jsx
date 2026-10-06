@@ -39,7 +39,7 @@ function LessonDetail({ topic }) {
       <header className="i3-lesson-header">
         <div className="i3-lesson-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-lesson-logo"
           />
@@ -89,7 +89,7 @@ function LessonDetail({ topic }) {
 
         <section className="i3-lesson-card">
           <img
-            src="/lesson-meaning.jpg"
+            src={`${import.meta.env.BASE_URL}lesson-meaning.jpg`}
             alt=""
             className="i3-lesson-card-background"
           />
@@ -103,7 +103,7 @@ function LessonDetail({ topic }) {
 
         <section className="i3-lesson-card">
           <img
-            src="/lesson-example.jpg"
+            src={`${import.meta.env.BASE_URL}lesson-example.jpg`}
             alt=""
             className="i3-lesson-card-background"
           />
@@ -117,7 +117,7 @@ function LessonDetail({ topic }) {
 
         <section className="i3-lesson-card">
           <img
-            src="/lesson-importance.jpg"
+            src={`${import.meta.env.BASE_URL}lesson-importance.jpg`}
             alt=""
             className="i3-lesson-card-background"
           />
@@ -163,7 +163,7 @@ function LessonDetail({ topic }) {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-lesson-watermark"
       />

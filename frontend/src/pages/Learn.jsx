@@ -32,7 +32,7 @@ function Learn() {
       title: 'Data Collection',
       shortDescription:
         'Understand what information a service may ask you to provide.',
-      image: '/data-collection.jpg',
+      image: `${import.meta.env.BASE_URL}data-collection.jpg`,
       description:
         'Learn what information a service may collect about you and your activity.',
       meaning:
@@ -81,7 +81,7 @@ function Learn() {
       title: 'Purpose of Use',
       shortDescription:
         'Learn why an organisation may want to use your information.',
-      image: '/purpose-of-use.jpg',
+      image: `${import.meta.env.BASE_URL}purpose-of-use.jpg`,
       description:
         'Understand why an organisation wants to use your information.',
       meaning:
@@ -130,7 +130,7 @@ function Learn() {
       title: 'Data Sharing',
       shortDescription:
         'Understand who your information may be shared with.',
-      image: '/data-sharing.jpg',
+      image: `${import.meta.env.BASE_URL}data-sharing.jpg`,
       description:
         'Learn who else may receive or access your information.',
       meaning:
@@ -179,7 +179,7 @@ function Learn() {
       title: 'Data Retention',
       shortDescription:
         'Learn how long your information may be kept.',
-      image: '/data-retention.jpg',
+      image: `${import.meta.env.BASE_URL}data-retention.jpg`,
       description:
         'Learn how long your information may be stored and what happens to it later.',
       meaning:
@@ -228,7 +228,7 @@ function Learn() {
       title: 'User Control',
       shortDescription:
         'Understand the choices and controls that may be available to you.',
-      image: '/user-control.jpg',
+      image: `${import.meta.env.BASE_URL}user-control.jpg`,
       description:
         'Understand the choices you may have over your personal information.',
       meaning:
@@ -302,7 +302,7 @@ function Learn() {
       <header className="i3-learn-header">
         <div className="i3-learn-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-learn-logo"
           />
@@ -404,7 +404,7 @@ function Learn() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-learn-watermark"
       />

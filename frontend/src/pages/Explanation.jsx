@@ -206,7 +206,7 @@ function Explanation() {
       <header className="i3-explanation-header">
         <div className="i3-explanation-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-explanation-logo"
           />
@@ -247,13 +247,13 @@ function Explanation() {
 
           <aside className="i3-learning-option">
             <img
-              src="/status-bg-book.jpg"
+              src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
               alt=""
               className="i3-learning-option-background"
             />
 
             <img
-              src="/icon-question.jpg"
+              src={`${import.meta.env.BASE_URL}icon-question.jpg`}
               alt=""
               className="i3-learning-option-icon"
             />
@@ -381,7 +381,7 @@ function Explanation() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-explanation-watermark"
       />

@@ -112,7 +112,7 @@ function PrivacyDetail({
       <header className="i3-detail-header">
         <div className="i3-detail-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-detail-logo"
           />
@@ -148,7 +148,7 @@ function PrivacyDetail({
               onClick={goToLearning}
             >
               <img
-                src="/icon-question.jpg"
+                src={`${import.meta.env.BASE_URL}icon-question.jpg`}
                 alt=""
                 className="i3-detail-learn-icon"
               />
@@ -239,7 +239,7 @@ function PrivacyDetail({
 
         <section className="i3-detail-meaning-card">
           <img
-            src="/icon-info.jpg"
+            src={`${import.meta.env.BASE_URL}icon-info.jpg`}
             alt=""
             className="i3-detail-info-icon"
           />
@@ -283,7 +283,7 @@ function PrivacyDetail({
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-detail-watermark"
       />

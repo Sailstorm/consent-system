@@ -86,7 +86,7 @@ function ConsentSummary() {
       <header className="i3-summary-header">
         <div className="i3-summary-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-summary-logo"
           />
@@ -120,13 +120,13 @@ function ConsentSummary() {
 
           <aside className="i3-summary-learning">
             <img
-              src="/status-bg-book.jpg"
+              src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
               alt=""
               className="i3-summary-learning-background"
             />
 
             <img
-              src="/icon-question.jpg"
+              src={`${import.meta.env.BASE_URL}icon-question.jpg`}
               alt=""
               className="i3-summary-question-icon"
             />
@@ -244,7 +244,7 @@ function ConsentSummary() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-summary-watermark"
       />

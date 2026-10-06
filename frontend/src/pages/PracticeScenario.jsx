@@ -144,7 +144,7 @@ function PracticeScenario() {
       <header className="i3-question-header">
         <div className="i3-question-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-question-logo"
           />
@@ -331,7 +331,7 @@ function PracticeScenario() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-question-watermark"
       />

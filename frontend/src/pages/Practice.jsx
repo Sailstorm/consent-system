@@ -49,22 +49,22 @@ function Practice() {
 
   function getTopicImage(title) {
     if (title === 'Data Collection') {
-      return '/data-collection.jpg'
+      return `${import.meta.env.BASE_URL}data-collection.jpg`
     }
 
     if (title === 'Purpose of Use') {
-      return '/purpose-of-use.jpg'
+      return `${import.meta.env.BASE_URL}purpose-of-use.jpg`
     }
 
     if (title === 'Data Sharing') {
-      return '/data-sharing.jpg'
+      return `${import.meta.env.BASE_URL}data-sharing.jpg`
     }
 
     if (title === 'Data Retention') {
-      return '/data-retention.jpg'
+      return `${import.meta.env.BASE_URL}data-retention.jpg`
     }
 
-    return '/user-control.jpg'
+    return `${import.meta.env.BASE_URL}user-control.jpg`
   }
 
   return (
@@ -72,7 +72,7 @@ function Practice() {
       <header className="i3-practice-header">
         <div className="i3-practice-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-practice-logo"
           />
@@ -223,7 +223,7 @@ function Practice() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-practice-watermark"
       />

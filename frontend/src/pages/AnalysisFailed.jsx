@@ -38,7 +38,7 @@ function AnalysisFailed() {
       <header className="i3-failed-header">
         <div className="i3-failed-brand">
           <img
-            src="/logo2.jpg"
+            src={`${import.meta.env.BASE_URL}logo2.jpg`}
             alt="Consent Assistant"
             className="i3-failed-logo"
           />
@@ -68,7 +68,7 @@ function AnalysisFailed() {
 
         <section className="i3-failed-main-card">
           <img
-            src="/error-icon.jpg"
+            src={`${import.meta.env.BASE_URL}error-icon.jpg`}
             alt=""
             className="i3-failed-error-icon"
           />
@@ -100,13 +100,13 @@ function AnalysisFailed() {
 
         <section className="i3-failed-learning-card">
           <img
-            src="/status-bg-book.jpg"
+            src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
             alt=""
             className="i3-failed-learning-background"
           />
 
           <img
-            src="/icon-question.jpg"
+            src={`${import.meta.env.BASE_URL}icon-question.jpg`}
             alt=""
             className="i3-failed-question-icon"
           />
@@ -155,7 +155,7 @@ function AnalysisFailed() {
       </main>
 
       <img
-        src="/ca-watermark.png"
+        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
         alt=""
         className="i3-failed-watermark"
       />
