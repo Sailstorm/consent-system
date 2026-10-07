@@ -6,8 +6,11 @@ function DataSharing() {
 
   const analysisResult = location.state?.analysisResult || {}
 
-  const dataSharing = analysisResult.data_sharing || {}
-  const explanation = dataSharing.detailed_explanation || {}
+  const dataSharing =
+    analysisResult.data_sharing || {}
+
+  const explanation =
+    dataSharing.detailed_explanation || {}
 
   const sectionValues = [
     explanation.who_data_may_be_shared_with,
@@ -18,20 +21,24 @@ function DataSharing() {
     explanation.why_this_matters,
   ]
 
-  const foundCount = sectionValues.filter(Boolean).length
+  const foundCount =
+    sectionValues.filter(Boolean).length
 
   let statusType = 'missing'
-  let statusLabel = 'No information found'
-  let statusText = 'No data sharing information was identified'
+  let statusLabel = 'Not clearly stated'
+  let statusText =
+    'Data sharing details were not identified in the policy.'
 
   if (foundCount === sectionValues.length) {
     statusType = 'complete'
-    statusLabel = 'Complete information'
-    statusText = 'All data sharing details were identified'
+    statusLabel = 'Clearly stated'
+    statusText =
+      'All data sharing details are clearly stated.'
   } else if (foundCount > 0) {
     statusType = 'partial'
-    statusLabel = 'Partial information'
-    statusText = 'Some data sharing details are not clearly stated'
+    statusLabel = 'Partly stated'
+    statusText =
+      'Some data sharing details are not clearly stated.'
   }
 
   const sections = [
@@ -73,7 +80,8 @@ function DataSharing() {
     },
   ]
 
-  const evidence = dataSharing.evidence || []
+  const evidence =
+    dataSharing.evidence || []
 
   const sourceText =
     evidence

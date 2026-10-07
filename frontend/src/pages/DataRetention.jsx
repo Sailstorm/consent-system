@@ -6,8 +6,11 @@ function DataRetention() {
 
   const analysisResult = location.state?.analysisResult || {}
 
-  const dataRetention = analysisResult.data_retention || {}
-  const explanation = dataRetention.detailed_explanation || {}
+  const dataRetention =
+    analysisResult.data_retention || {}
+
+  const explanation =
+    dataRetention.detailed_explanation || {}
 
   const sectionValues = [
     explanation.what_is_retained,
@@ -17,20 +20,24 @@ function DataRetention() {
     explanation.why_this_matters,
   ]
 
-  const foundCount = sectionValues.filter(Boolean).length
+  const foundCount =
+    sectionValues.filter(Boolean).length
 
   let statusType = 'missing'
-  let statusLabel = 'No information found'
-  let statusText = 'No retention information was identified'
+  let statusLabel = 'Not clearly stated'
+  let statusText =
+    'Retention details were not identified in the policy.'
 
   if (foundCount === sectionValues.length) {
     statusType = 'complete'
-    statusLabel = 'Complete information'
-    statusText = 'All retention details were identified'
+    statusLabel = 'Clearly stated'
+    statusText =
+      'All retention details are clearly stated.'
   } else if (foundCount > 0) {
     statusType = 'partial'
-    statusLabel = 'Partial information'
-    statusText = 'Some retention details are not clearly stated'
+    statusLabel = 'Partly stated'
+    statusText =
+      'Some retention details are not clearly stated.'
   }
 
   const sections = [
@@ -66,7 +73,8 @@ function DataRetention() {
     },
   ]
 
-  const evidence = dataRetention.evidence || []
+  const evidence =
+    dataRetention.evidence || []
 
   const sourceText =
     evidence

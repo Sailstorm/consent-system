@@ -1,68 +1,52 @@
 .recent-breaches-page {
   position: relative;
+
   min-height: 100vh;
   overflow: hidden;
+
   background: #3c8ca7;
   color: #142243;
+
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Header - same style as Dashboard / Privacy Assistant */
+/* Back area */
 
-.recent-breaches-header {
-  height: 70px;
-  padding: 0 38px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #2b7189;
+.recent-breaches-back-row {
+  position: relative;
+  z-index: 2;
+
+  width: min(1120px, calc(100% - 64px));
+  margin: 0 auto;
+
+  padding-top: 14px;
 }
 
-.recent-breaches-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 700;
-}
+.recent-breaches-page-back {
+  min-width: 150px;
+  min-height: 38px;
 
-.recent-breaches-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.recent-breaches-brand-name {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.recent-breaches-back {
-  min-height: 40px;
   padding: 0 16px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9px;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+
   background: transparent;
   color: #ffffff;
+
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+
   cursor: pointer;
 }
 
-.recent-breaches-back:hover {
+.recent-breaches-page-back:hover {
   background: rgba(255, 255, 255, 0.08);
-}
-
-.recent-breaches-back span {
-  font-size: 18px;
-  line-height: 1;
 }
 
 /* Main */
@@ -70,9 +54,11 @@
 .recent-breaches-main {
   position: relative;
   z-index: 2;
+
   width: min(1120px, calc(100% - 64px));
   margin: 0 auto;
-  padding: 30px 0 28px;
+
+  padding: 12px 0 28px;
 }
 
 .recent-breaches-heading {
@@ -81,14 +67,18 @@
 
 .recent-breaches-heading > p {
   margin: 0 0 9px;
+
   color: #ffffff;
+
   font-size: 14px;
   font-weight: 600;
 }
 
 .recent-breaches-heading h1 {
   margin: 0 0 5px;
+
   color: #ffffff;
+
   font-size: 38px;
   line-height: 1.1;
   font-weight: 600;
@@ -96,6 +86,7 @@
 
 .recent-breaches-heading > span {
   color: rgba(255, 255, 255, 0.92);
+
   font-size: 17px;
   line-height: 1.5;
 }
@@ -104,7 +95,9 @@
 
 .recent-breaches-card {
   padding: 24px 26px 20px;
+
   background: #ffffff;
+
   border-radius: 16px;
 }
 
@@ -112,59 +105,143 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
   gap: 30px;
+}
+
+.recent-breaches-card-heading {
+  flex: 1;
 }
 
 .recent-breaches-label {
   margin: 0 0 5px;
+
   color: #2885a5;
+
   font-size: 12px;
   font-weight: 700;
 }
 
 .recent-breaches-card-top h2 {
   margin: 0 0 5px;
+
   color: #142243;
+
   font-size: 23px;
   line-height: 1.2;
   font-weight: 600;
 }
 
-.recent-breaches-card-top > div:first-child > span {
+.recent-breaches-card-heading > span {
   color: #6f8199;
+
   font-size: 14px;
   line-height: 1.45;
+}
+
+/* Search */
+
+.recent-breaches-search {
+  width: min(520px, 100%);
+
+  margin-top: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.recent-breaches-search input {
+  flex: 1;
+
+  min-width: 0;
+  height: 42px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d2dfe5;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #354b67;
+
+  font: inherit;
+  font-size: 13px;
+
+  box-sizing: border-box;
+}
+
+.recent-breaches-search input::placeholder {
+  color: #9aa9b9;
+}
+
+.recent-breaches-search input:focus {
+  outline: 2px solid rgba(54, 151, 182, 0.2);
+
+  border-color: #3697b6;
+}
+
+.recent-breaches-search button {
+  min-width: 100px;
+  height: 42px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #3697b6;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.recent-breaches-search button:hover {
+  background: #2f88a5;
 }
 
 /* Source box */
 
 .recent-breaches-source {
   min-width: 205px;
+
   padding: 12px 15px;
+
   border-radius: 10px;
+
   background: #f1f6f8;
 }
 
 .recent-breaches-source div {
   display: flex;
   align-items: center;
+
   gap: 6px;
 }
 
 .recent-breaches-source span {
   color: #8b9bae;
+
   font-size: 10px;
 }
 
 .recent-breaches-source strong {
   color: #2e7f9d;
+
   font-size: 11px;
   font-weight: 600;
 }
 
 .recent-breaches-source p {
   margin: 7px 0 0;
+
   color: #8a9bae;
+
   font-size: 10px;
 }
 
@@ -172,7 +249,9 @@
 
 .recent-breaches-divider {
   height: 1px;
+
   margin: 18px 0 4px;
+
   background: #dfe8ec;
 }
 
@@ -180,11 +259,15 @@
 
 .recent-breaches-message {
   min-height: 280px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   color: #75879f;
+
   font-size: 14px;
+
   text-align: center;
 }
 
@@ -201,10 +284,18 @@
 
 .recent-breach-row {
   padding: 19px 6px;
+
   display: grid;
-  grid-template-columns: 1.2fr 0.85fr 0.75fr 1.6fr;
+  grid-template-columns:
+    1.2fr
+    0.85fr
+    0.75fr
+    1.6fr;
+
   gap: 24px;
+
   align-items: center;
+
   border-bottom: 1px solid #e5ecef;
 }
 
@@ -216,15 +307,20 @@
 
 .recent-breach-name h3 {
   margin: 0 0 5px;
+
   color: #142243;
+
   font-size: 15px;
   font-weight: 600;
 }
 
 .recent-breach-name p {
   margin: 0;
+
   color: #8393a8;
+
   font-size: 11px;
+
   overflow-wrap: anywhere;
 }
 
@@ -233,17 +329,20 @@
 .recent-breach-detail {
   display: flex;
   flex-direction: column;
+
   gap: 6px;
 }
 
 .recent-breach-detail > span {
   color: #8fa0b4;
+
   font-size: 9px;
   font-weight: 700;
 }
 
 .recent-breach-detail > strong {
   color: #354b67;
+
   font-size: 12px;
   line-height: 1.45;
   font-weight: 500;
@@ -251,23 +350,119 @@
 
 .recent-breach-data strong {
   color: #4d6480;
+
   font-size: 11px;
   line-height: 1.55;
+}
+
+/* Pagination */
+
+.recent-breaches-pagination {
+  margin-top: 18px;
+  padding-top: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 22px;
+
+  border-top: 1px solid #e5ecef;
+}
+
+.recent-breaches-page-button {
+  min-width: 110px;
+  min-height: 38px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #3697b6;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.recent-breaches-page-button:hover:not(:disabled) {
+  background: #2f88a5;
+}
+
+.recent-breaches-page-button:disabled {
+  background: #d9e4e8;
+  color: #93a3ad;
+
+  cursor: not-allowed;
+}
+
+.recent-breaches-page-info {
+  min-width: 160px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  color: #536982;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+.recent-breaches-page-info input {
+  width: 52px;
+  height: 34px;
+
+  padding: 0 6px;
+
+  border: 1px solid #cbd8de;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #354b67;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+.recent-breaches-page-info input:focus {
+  outline: 2px solid rgba(54, 151, 182, 0.25);
+
+  border-color: #3697b6;
 }
 
 /* Notes */
 
 .recent-breaches-scroll-note {
   margin: 12px 0 0;
+
   color: rgba(255, 255, 255, 0.84);
+
   font-size: 11px;
+
   text-align: center;
 }
 
 .recent-breaches-footer {
   margin: 17px 0 0;
+
   color: rgba(255, 255, 255, 0.9);
+
   font-size: 13px;
+
   text-align: center;
 }
 
@@ -275,29 +470,43 @@
 
 .recent-breaches-watermark {
   position: absolute;
-  right: -8px;
-  bottom: -18px;
+
+  right: -42px;
+  bottom: -56px;
+
+  width: 300px;
+  height: 300px;
+
+  object-fit: contain;
+
+  opacity: 0.1;
+
+  pointer-events: none;
+
   z-index: 1;
-  color: rgba(255, 255, 255, 0.09);
-  font-size: 96px;
-  font-weight: 700;
-  line-height: 1;
-  user-select: none;
 }
 
 /* Tablet */
 
 @media (max-width: 950px) {
+  .recent-breaches-back-row,
   .recent-breaches-main {
-    width: min(880px, calc(100% - 48px));
+    width: min(
+      880px,
+      calc(100% - 48px)
+    );
   }
 
   .recent-breach-row {
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns:
+      1.2fr
+      1fr
+      1fr;
   }
 
   .recent-breach-data {
     grid-column: 1 / -1;
+
     padding-top: 3px;
   }
 }
@@ -305,33 +514,12 @@
 /* Mobile */
 
 @media (max-width: 720px) {
-  .recent-breaches-header {
-    height: 70px;
-    padding: 0 18px;
-  }
-
-  .recent-breaches-brand {
-    gap: 12px;
-  }
-
-  .recent-breaches-logo {
-    width: 40px;
-    height: 40px;
-  }
-
-  .recent-breaches-brand-name {
-    font-size: 18px;
-  }
-
-  .recent-breaches-back {
-    min-height: 40px;
-    padding: 0 12px;
-    font-size: 13px;
+  .recent-breaches-back-row {
+    width: calc(100% - 36px);
   }
 
   .recent-breaches-main {
     width: calc(100% - 32px);
-    padding-top: 22px;
   }
 
   .recent-breaches-heading h1 {
@@ -348,17 +536,25 @@
 
   .recent-breaches-card-top {
     flex-direction: column;
+
     gap: 15px;
   }
 
   .recent-breaches-source {
     width: 100%;
+
     box-sizing: border-box;
+  }
+
+  .recent-breaches-search {
+    width: 100%;
   }
 
   .recent-breach-row {
     padding: 17px 4px;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 18px;
   }
 
@@ -370,6 +566,16 @@
     grid-column: 1 / -1;
   }
 
+  .recent-breaches-pagination {
+    gap: 10px;
+  }
+
+  .recent-breaches-page-button {
+    min-width: 90px;
+
+    padding: 0 10px;
+  }
+
   .recent-breaches-watermark {
     display: none;
   }
@@ -378,16 +584,21 @@
 /* Small mobile */
 
 @media (max-width: 480px) {
-  .recent-breaches-brand-name {
-    display: none;
-  }
-
   .recent-breaches-heading h1 {
     font-size: 27px;
   }
 
   .recent-breaches-card-top h2 {
     font-size: 20px;
+  }
+
+  .recent-breaches-search {
+    flex-direction: column;
+  }
+
+  .recent-breaches-search input,
+  .recent-breaches-search button {
+    width: 100%;
   }
 
   .recent-breach-row {
@@ -397,5 +608,13 @@
   .recent-breach-name,
   .recent-breach-data {
     grid-column: auto;
+  }
+
+  .recent-breaches-pagination {
+    flex-direction: column;
+  }
+
+  .recent-breaches-page-button {
+    width: 100%;
   }
 }

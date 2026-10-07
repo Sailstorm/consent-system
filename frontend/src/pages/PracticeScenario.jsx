@@ -5,6 +5,7 @@ import {
   useParams,
 } from 'react-router-dom'
 import AnalysisStatus from '../components/AnalysisStatus'
+import PageHeader from '../components/PageHeader'
 import PracticeIcon from '../components/PracticeIcon'
 import {
   getCurrentQuestion,
@@ -141,27 +142,19 @@ function PracticeScenario() {
 
   return (
     <div className="i3-question-page">
-      <header className="i3-question-header">
-        <div className="i3-question-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-question-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-question-back-row">
         <button
           type="button"
-          className="i3-question-back"
+          className="i3-question-page-back"
           onClick={() =>
             navigate('/privacy-learning/practice')
           }
         >
           ← Leave Practice
         </button>
-      </header>
+      </div>
 
       <main className="i3-question-content">
         <div className="i3-question-top">
@@ -314,16 +307,7 @@ function PracticeScenario() {
           </aside>
         </div>
 
-        <button
-          type="button"
-          className="i3-question-leave"
-          onClick={() =>
-            navigate('/privacy-learning/practice')
-          }
-        >
-          ← Leave Practice
-        </button>
-
+         
         <p className="i3-question-disclaimer">
           Consent Assistant provides information to support
           your review. It does not provide legal advice.

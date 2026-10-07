@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import '../styles/analysisFailed.css'
 
 function AnalysisFailed() {
@@ -35,25 +36,17 @@ function AnalysisFailed() {
 
   return (
     <div className="i3-failed-page">
-      <header className="i3-failed-header">
-        <div className="i3-failed-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-failed-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-failed-back-row">
         <button
           type="button"
-          className="i3-failed-back"
+          className="i3-failed-page-back"
           onClick={editInput}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-failed-content">
         <section className="i3-failed-heading">

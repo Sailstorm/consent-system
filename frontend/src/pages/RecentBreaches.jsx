@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import '../styles/recentBreaches.css'
 
 const API_URL =
   import.meta.env.VITE_API_URL ??
   'http://localhost:3000'
+
+const PAGE_SIZE = 10
 
 function RecentBreaches() {
   const navigate = useNavigate()
@@ -14,14 +17,26 @@ function RecentBreaches() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageInput, setPageInput] = useState('1')
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalBreaches, setTotalBreaches] = useState(0)
+
+  const [searchInput, setSearchInput] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+
   useEffect(() => {
     async function loadBreaches() {
       try {
         setLoading(true)
         setError('')
 
+        const searchQuery = searchTerm
+          ? `&search=${encodeURIComponent(searchTerm)}`
+          : ''
+
         const response = await fetch(
-          `${API_URL}/api/breaches/latest?limit=12`,
+          `${API_URL}/api/breaches/latest?page=${currentPage}&pageSize=${PAGE_SIZE}${searchQuery}`,
         )
 
         const data = await response.json()
@@ -35,6 +50,13 @@ function RecentBreaches() {
 
         setBreaches(data.breaches || [])
         setSource(data.source || null)
+
+        const returnedPage = data.page || 1
+
+        setCurrentPage(returnedPage)
+        setPageInput(String(returnedPage))
+        setTotalPages(data.totalPages || 0)
+        setTotalBreaches(data.total || 0)
       } catch (err) {
         console.log(err)
 
@@ -47,7 +69,7 @@ function RecentBreaches() {
     }
 
     loadBreaches()
-  }, [])
+  }, [currentPage, searchTerm])
 
   function formatDate(date) {
     if (!date) {
@@ -95,32 +117,68 @@ function RecentBreaches() {
     return dataClasses.join(' · ')
   }
 
+  function handleSearch(event) {
+    event.preventDefault()
+
+    setCurrentPage(1)
+    setPageInput('1')
+    setSearchTerm(searchInput.trim())
+  }
+
+  function goToPreviousPage() {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  function goToNextPage() {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  function goToPage(event) {
+    event.preventDefault()
+
+    const page = Number.parseInt(pageInput, 10)
+
+    if (!Number.isInteger(page)) {
+      setPageInput(String(currentPage))
+      return
+    }
+
+    if (page < 1) {
+      setCurrentPage(1)
+      setPageInput('1')
+      return
+    }
+
+    if (page > totalPages) {
+      setCurrentPage(totalPages)
+      setPageInput(String(totalPages))
+      return
+    }
+
+    setCurrentPage(page)
+  }
+
+  function goBack() {
+    navigate('/risk-dashboard')
+  }
+
   return (
     <div className="recent-breaches-page">
-      <header className="recent-breaches-header">
-        <div className="recent-breaches-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="recent-breaches-logo"
-          />
+      <PageHeader />
 
-          <span className="recent-breaches-brand-name">
-            Consent Assistant
-          </span>
-        </div>
-
+      <div className="recent-breaches-back-row">
         <button
           type="button"
-          className="recent-breaches-back"
-          onClick={() =>
-            navigate('/risk-dashboard')
-          }
+          className="recent-breaches-page-back"
+          onClick={goBack}
         >
-          <span>←</span>
-          Back to dashboard
+          ← Back to dashboard
         </button>
-      </header>
+      </div>
 
       <main className="recent-breaches-main">
         <section className="recent-breaches-heading">
@@ -137,7 +195,7 @@ function RecentBreaches() {
 
         <section className="recent-breaches-card">
           <div className="recent-breaches-card-top">
-            <div>
+            <div className="recent-breaches-card-heading">
               <p className="recent-breaches-label">
                 LATEST BREACHES
               </p>
@@ -151,6 +209,25 @@ function RecentBreaches() {
                 records available from our data
                 source.
               </span>
+
+              <form
+                className="recent-breaches-search"
+                onSubmit={handleSearch}
+              >
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(event) =>
+                    setSearchInput(event.target.value)
+                  }
+                  placeholder="Enter company name"
+                  aria-label="Search company"
+                />
+
+                <button type="submit">
+                  Search
+                </button>
+              </form>
             </div>
 
             <div className="recent-breaches-source">
@@ -163,7 +240,13 @@ function RecentBreaches() {
                 </strong>
               </div>
 
-              <p>Up to 12 latest records</p>
+              <p>
+                {searchTerm
+                  ? `${totalBreaches} matching records`
+                  : totalBreaches > 0
+                    ? `${totalBreaches} records available`
+                    : 'Breach records'}
+              </p>
             </div>
           </div>
 
@@ -185,68 +268,116 @@ function RecentBreaches() {
             !error &&
             breaches.length === 0 && (
               <div className="recent-breaches-message">
-                No breach records are available.
+                {searchTerm
+                  ? `No breach records were found for "${searchTerm}".`
+                  : 'No breach records are available.'}
               </div>
             )}
 
           {!loading &&
             !error &&
             breaches.length > 0 && (
-              <div className="recent-breaches-list">
-                {breaches.map((breach) => (
-                  <article
-                    className="recent-breach-row"
-                    key={`${breach.name}-${breach.addedDate}`}
+              <>
+                <div className="recent-breaches-list">
+                  {breaches.map((breach) => (
+                    <article
+                      className="recent-breach-row"
+                      key={`${breach.name}-${breach.addedDate}`}
+                    >
+                      <div className="recent-breach-name">
+                        <h3>{breach.title}</h3>
+
+                        <p>
+                          {breach.domain ||
+                            'Domain not available'}
+                        </p>
+                      </div>
+
+                      <div className="recent-breach-detail">
+                        <span>
+                          ACCOUNTS AFFECTED
+                        </span>
+
+                        <strong>
+                          {formatAccounts(
+                            breach.affectedAccounts,
+                          )}
+                        </strong>
+                      </div>
+
+                      <div className="recent-breach-detail">
+                        <span>BREACH DATE</span>
+
+                        <strong>
+                          {formatDate(
+                            breach.breachDate,
+                          )}
+                        </strong>
+                      </div>
+
+                      <div className="recent-breach-detail recent-breach-data">
+                        <span>DATA EXPOSED</span>
+
+                        <strong>
+                          {formatDataClasses(
+                            breach.dataClasses,
+                          )}
+                        </strong>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <div className="recent-breaches-pagination">
+                  <button
+                    type="button"
+                    className="recent-breaches-page-button"
+                    onClick={goToPreviousPage}
+                    disabled={currentPage <= 1}
                   >
-                    <div className="recent-breach-name">
-                      <h3>{breach.title}</h3>
+                    ← Previous
+                  </button>
 
-                      <p>
-                        {breach.domain ||
-                          'Domain not available'}
-                      </p>
-                    </div>
+                  <form
+                    className="recent-breaches-page-info"
+                    onSubmit={goToPage}
+                  >
+                    <span>Page</span>
 
-                    <div className="recent-breach-detail">
-                      <span>
-                        ACCOUNTS AFFECTED
-                      </span>
+                    <input
+                      type="number"
+                      min="1"
+                      max={totalPages}
+                      value={pageInput}
+                      onChange={(event) =>
+                        setPageInput(event.target.value)
+                      }
+                      aria-label="Page number"
+                    />
 
-                      <strong>
-                        {formatAccounts(
-                          breach.affectedAccounts,
-                        )}
-                      </strong>
-                    </div>
+                    <span>
+                      of {totalPages}
+                    </span>
+                  </form>
 
-                    <div className="recent-breach-detail">
-                      <span>BREACH DATE</span>
-
-                      <strong>
-                        {formatDate(
-                          breach.breachDate,
-                        )}
-                      </strong>
-                    </div>
-
-                    <div className="recent-breach-detail recent-breach-data">
-                      <span>DATA EXPOSED</span>
-
-                      <strong>
-                        {formatDataClasses(
-                          breach.dataClasses,
-                        )}
-                      </strong>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                  <button
+                    type="button"
+                    className="recent-breaches-page-button"
+                    onClick={goToNextPage}
+                    disabled={
+                      currentPage >= totalPages
+                    }
+                  >
+                    Next →
+                  </button>
+                </div>
+              </>
             )}
         </section>
 
         <p className="recent-breaches-scroll-note">
-          More breach records can be viewed by
-          scrolling.
+          Showing up to {PAGE_SIZE} breach records
+          per page.
         </p>
 
         <p className="recent-breaches-footer">

@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { loadAnalysisState } from '../utils/analysisState'
+import PageHeader from './PageHeader'
 import '../styles/privacyDetail.css'
 
 function PrivacyDetail({
@@ -15,6 +17,9 @@ function PrivacyDetail({
   const navigate = useNavigate()
   const location = useLocation()
 
+  const [showSourceText, setShowSourceText] =
+    useState(false)
+
   const savedAnalysis = loadAnalysisState()
 
   const policyText =
@@ -27,14 +32,36 @@ function PrivacyDetail({
     savedAnalysis.analysisResult ||
     {}
 
-  const availableSections = sections.filter(
-    (section) =>
-      section.text &&
-      section.text.trim() !== '',
-  )
+  function isMissingSection(section) {
+    if (!section.text) {
+      return true
+    }
+
+    const text = section.text
+      .trim()
+      .toLowerCase()
+
+    return (
+      text === '' ||
+      text.includes(
+        'no information is available for thissection',
+      ) ||
+      text.includes(
+        'no information is available for this section',
+      ) ||
+      text.includes(
+        'no information was identified',
+      )
+    )
+  }
+
+  const identifiedSections =
+    sections.filter(
+      (section) => !isMissingSection(section),
+    )
 
   const whatWeFound =
-    availableSections[0]?.text ||
+    identifiedSections[0]?.text ||
     'No clear information was identified for this category.'
 
   const displayStatus =
@@ -43,6 +70,13 @@ function PrivacyDetail({
       : statusType === 'partial'
         ? 'Partly stated'
         : 'Not clearly stated'
+
+  const defaultStatusText =
+    statusType === 'complete'
+      ? `All ${title.toLowerCase()} details were identified.`
+      : statusType === 'partial'
+        ? `Some ${title.toLowerCase()} details are not clearly stated.`
+        : `No ${title.toLowerCase()} information was identified.`
 
   const learningRoutes = {
     'Data Collection':
@@ -107,27 +141,23 @@ function PrivacyDetail({
     navigate(learningRoute)
   }
 
+  function toggleSourceText() {
+    setShowSourceText(!showSourceText)
+  }
+
   return (
     <div className="i3-detail-page">
-      <header className="i3-detail-header">
-        <div className="i3-detail-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-detail-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-detail-back-row">
         <button
           type="button"
-          className="i3-detail-header-back"
+          className="i3-detail-page-back"
           onClick={goBack}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-detail-content">
         <div className="i3-detail-heading-row">
@@ -141,45 +171,27 @@ function PrivacyDetail({
             <p>{subtitle}</p>
           </section>
 
-          <div className="i3-detail-heading-actions">
-            <button
-              type="button"
-              className="i3-detail-learn-button"
-              onClick={goToLearning}
-            >
-              <img
-                src={`${import.meta.env.BASE_URL}icon-question.jpg`}
-                alt=""
-                className="i3-detail-learn-icon"
-              />
+          <aside
+            className={`i3-detail-status ${statusType}`}
+          >
+            <span className="i3-detail-status-icon">
+              {statusType === 'complete'
+                ? '✓'
+                : statusType === 'partial'
+                  ? '◐'
+                  : '!'}
+            </span>
 
-              <span className="i3-detail-learn-copy">
-                {learningButtonText[title] ||
-                  'Learn more →'}
-              </span>
-            </button>
+            <div>
+              <h3>{displayStatus}</h3>
 
-            <aside
-              className={`i3-detail-status ${statusType}`}
-            >
-              <span className="i3-detail-status-icon">
-                {statusType === 'complete'
-                  ? '✓'
-                  : statusType === 'partial'
-                    ? '◐'
-                    : '!'}
-              </span>
-
-              <div>
-                <h3>{displayStatus}</h3>
-
-                <p>
-                  {statusText ||
-                    statusLabel}
-                </p>
-              </div>
-            </aside>
-          </div>
+              <p>
+                {statusText ||
+                  statusLabel ||
+                  defaultStatusText}
+              </p>
+            </div>
+          </aside>
         </div>
 
         <div className="i3-detail-divider"></div>
@@ -204,38 +216,30 @@ function PrivacyDetail({
             </p>
 
             <div className="i3-detail-identified-list">
-              {availableSections.map((section) => (
-                <div
-                  className="i3-detail-identified-item"
-                  key={section.heading}
-                >
-                  <span>✓</span>
+              {sections.map((section) => {
+                const missing =
+                  isMissingSection(section)
 
-                  <p>{section.heading}</p>
-                </div>
-              ))}
+                return (
+                  <div
+                    className={
+                      missing
+                        ? 'i3-detail-identified-item missing'
+                        : 'i3-detail-identified-item identified'
+                    }
+                    key={section.heading}
+                  >
+                    <span>
+                      {missing ? '?' : '✓'}
+                    </span>
+
+                    <p>{section.heading}</p>
+                  </div>
+                )
+              })}
             </div>
           </section>
         </div>
-
-        <section className="i3-detail-policy-card">
-          <p className="i3-detail-card-label">
-            WHAT THE POLICY SAYS
-          </p>
-
-          <h2>
-            Original text related to this category
-          </h2>
-
-          <div className="i3-detail-source-box">
-            <span className="i3-detail-source-line"></span>
-
-            <p>
-              {sourceText ||
-                'No related source text was identified.'}
-            </p>
-          </div>
-        </section>
 
         <section className="i3-detail-meaning-card">
           <img
@@ -256,22 +260,78 @@ function PrivacyDetail({
           </div>
         </section>
 
-        <div className="i3-detail-actions">
-          <button
-            type="button"
-            className="i3-detail-back-button"
-            onClick={goBack}
-          >
-            ← Back to explanation
-          </button>
+        <section className="i3-detail-policy-card">
+          <div className="i3-detail-policy-heading">
+            <div>
+              <p className="i3-detail-card-label">
+                WHAT THE POLICY SAYS
+              </p>
 
-          <button
-            type="button"
-            className="i3-detail-summary-button"
-            onClick={goToSummary}
-          >
-            View consent summary →
-          </button>
+              <h2>
+                Original text related to this category
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              className="i3-detail-expand-button"
+              onClick={toggleSourceText}
+            >
+              {showSourceText
+                ? 'Collapse'
+                : 'Expand'}
+            </button>
+          </div>
+
+          {showSourceText && (
+            <div className="i3-detail-source-box">
+              <span className="i3-detail-source-line"></span>
+
+              <p>
+                {sourceText ||
+                  'No related source text was identified.'}
+              </p>
+            </div>
+          )}
+
+          {!showSourceText && (
+            <p className="i3-detail-source-collapsed">
+              Original source text is hidden.
+              Select Expand to view it.
+            </p>
+          )}
+        </section>
+
+        <div className="i3-detail-actions">
+          
+
+          <div className="i3-detail-right-actions">
+            {learningRoutes[title] && (
+              <button
+                type="button"
+                className="i3-detail-learn-button"
+                onClick={goToLearning}
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}icon-question.jpg`}
+                  alt=""
+                  className="i3-detail-learn-icon"
+                />
+
+                <span className="i3-detail-learn-copy">
+                  {learningButtonText[title]}
+                </span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="i3-detail-summary-button"
+              onClick={goToSummary}
+            >
+              View consent summary →
+            </button>
+          </div>
         </div>
 
         <div className="i3-detail-footer-line"></div>

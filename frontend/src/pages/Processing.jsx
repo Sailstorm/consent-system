@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import {
   loadAnalysisState,
   saveAnalysisFailure,
@@ -175,29 +176,23 @@ function Processing() {
     }
   }, [navigate])
 
+  function goBack() {
+    navigate('/privacy-assistant')
+  }
+
   return (
     <div className="i3-processing-page">
-      <header className="i3-processing-header">
-        <div className="i3-processing-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-processing-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-processing-back-row">
         <button
           type="button"
-          className="i3-processing-back"
-          onClick={() =>
-            navigate('/privacy-assistant')
-          }
+          className="i3-processing-page-back"
+          onClick={goBack}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-processing-content">
         <section className="i3-processing-heading">
@@ -236,7 +231,7 @@ function Processing() {
           />
 
           <div className="i3-processing-book">
-             📖
+            📖
           </div>
 
           <div className="i3-processing-learning-copy">

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import PageHeader from '../components/PageHeader'
+
 import {
   LEARNING_TOPICS,
   getCompletedTopicCount,
@@ -135,33 +137,23 @@ function Dashboard() {
     )
   }
 
+  function goBack() {
+    navigate('/')
+  }
+
   return (
     <div className="privacy-dashboard-page">
-      <header className="dashboard-header">
-        <div className="dashboard-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="dashboard-logo"
-          />
+      <PageHeader />
 
-          <span className="dashboard-brand-name">
-            Consent Assistant
-          </span>
-        </div>
-
+      <div className="dashboard-back-row">
         <button
           type="button"
-          className="dashboard-back-button"
-          onClick={() => navigate('/')}
+          className="dashboard-page-back"
+          onClick={goBack}
         >
-          <span className="dashboard-back-arrow">
-            ←
-          </span>
-
-          Back
+          ← Back
         </button>
-      </header>
+      </div>
 
       <main className="dashboard-main">
         <section className="dashboard-heading">
@@ -356,6 +348,7 @@ function Dashboard() {
                   (topic) => (
                     <div key={topic.id}>
                       <span>✓</span>
+
                       {topic.title}
                     </div>
                   ),

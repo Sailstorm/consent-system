@@ -1,0 +1,63 @@
+.ca-page-header {
+  width: 100%;
+  height: 70px;
+
+  padding: 0 38px;
+
+  display: flex;
+  align-items: center;
+
+  background: #2b7189;
+
+  box-sizing: border-box;
+}
+
+.ca-page-header-brand {
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  border: none;
+
+  background: transparent;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.ca-page-header-brand:hover {
+  opacity: 0.9;
+}
+
+.ca-page-header-logo {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 8px;
+
+  object-fit: contain;
+}
+
+@media (max-width: 650px) {
+  .ca-page-header {
+    padding: 0 18px;
+  }
+
+  .ca-page-header-brand {
+    gap: 12px;
+
+    font-size: 16px;
+  }
+
+  .ca-page-header-logo {
+    width: 40px;
+    height: 40px;
+  }
+}

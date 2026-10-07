@@ -1,16 +1,32 @@
-import GlobalHeader from './GlobalHeader'
+import { useNavigate } from 'react-router-dom'
+import PageHeader from './PageHeader'
 import GlobalFooter from './GlobalFooter'
 import LearningSidebar from './LearningSidebar'
 import '../styles/learningLayout.css'
 
 function LearningLayout({
   activePage = 'home',
-  headerActivePage = 'learning',
   children,
 }) {
+  const navigate = useNavigate()
+
+  function goBack() {
+    navigate('/')
+  }
+
   return (
     <div className="learning-layout-page">
-      <GlobalHeader activePage={headerActivePage} />
+      <PageHeader />
+
+      <div className="learning-layout-back-row">
+        <button
+          type="button"
+          className="learning-layout-back"
+          onClick={goBack}
+        >
+          ← Back
+        </button>
+      </div>
 
       <div className="learning-layout-body">
         <LearningSidebar activePage={activePage} />

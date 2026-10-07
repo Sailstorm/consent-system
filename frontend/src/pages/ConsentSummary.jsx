@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import { loadAnalysisState } from '../utils/analysisState'
 import '../styles/consentSummary.css'
 
@@ -81,27 +82,23 @@ function ConsentSummary() {
     navigate('/privacy-learning/learn')
   }
 
+  function goToDashboard() {
+    navigate('/risk-dashboard')
+  }
+
   return (
     <div className="i3-summary-page">
-      <header className="i3-summary-header">
-        <div className="i3-summary-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-summary-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-summary-back-row">
         <button
           type="button"
-          className="i3-summary-header-back"
+          className="i3-summary-page-back"
           onClick={goToExplanation}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-summary-content">
         <div className="i3-summary-top">
@@ -162,6 +159,7 @@ function ConsentSummary() {
                   key={item.title}
                 >
                   <h3>{item.title}</h3>
+
                   <p>{item.value}</p>
                 </article>
               ))}
@@ -177,7 +175,8 @@ function ConsentSummary() {
             </p>
 
             <div className="i3-summary-policy-text">
-              {policyText || 'No original policy text available.'}
+              {policyText ||
+                'No original policy text available.'}
             </div>
 
             <p className="i3-summary-source">
@@ -224,7 +223,7 @@ function ConsentSummary() {
           <button
             type="button"
             className="i3-summary-dashboard"
-            onClick={() => navigate('/risk-dashboard')}
+            onClick={goToDashboard}
           >
             Go to dashboard →
           </button>

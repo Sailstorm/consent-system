@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import {
   loadDraftPolicy,
   saveDraftPolicy,
@@ -111,6 +112,10 @@ function PrivacyAssistant() {
     }
   }
 
+  function goBack() {
+    navigate('/')
+  }
+
   const canAnalyse =
     (inputType === 'text' &&
       policyText.trim().length > 0) ||
@@ -120,25 +125,17 @@ function PrivacyAssistant() {
 
   return (
     <div className="i3-assistant-page">
-      <header className="i3-assistant-header">
-        <div className="i3-assistant-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-assistant-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-assistant-back-row">
         <button
           type="button"
-          className="i3-assistant-back"
-          onClick={() => navigate('/')}
+          className="i3-assistant-page-back"
+          onClick={goBack}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-assistant-content">
         <section className="i3-assistant-heading">

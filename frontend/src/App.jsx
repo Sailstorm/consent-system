@@ -4,7 +4,6 @@ import PasswordGate from './components/PasswordGate'
 
 import Homepage from './pages/Homepage'
 
-import PolicyExample from './pages/PolicyExample'
 import PrivacyAssistant from './pages/PrivacyAssistant'
 import InvalidInput from './pages/InvalidInput'
 import Processing from './pages/Processing'
@@ -26,12 +25,6 @@ import PracticeScenario from './pages/PracticeScenario'
 import Dashboard from './pages/Dashboard'
 import RecentBreaches from './pages/RecentBreaches'
 
-import Settings from './pages/Settings'
-import HelpPrivacy from './pages/HelpPrivacy'
-import Accessibility from './pages/Accessibility'
-import Privacy from './pages/Privacy'
-import DataSources from './pages/DataSources'
-
 function App() {
   return (
     <PasswordGate>
@@ -44,11 +37,6 @@ function App() {
           />
 
           {/* Privacy Policy Analysis */}
-          <Route
-            path="/policy-assistant/example"
-            element={<PolicyExample />}
-          />
-
           <Route
             path="/privacy-assistant"
             element={<PrivacyAssistant />}
@@ -146,32 +134,6 @@ function App() {
           <Route
             path="/risk-dashboard/breaches"
             element={<RecentBreaches />}
-          />
-
-          {/* Other Pages */}
-          <Route
-            path="/settings"
-            element={<Settings />}
-          />
-
-          <Route
-            path="/help-privacy"
-            element={<HelpPrivacy />}
-          />
-
-          <Route
-            path="/accessibility"
-            element={<Accessibility />}
-          />
-
-          <Route
-            path="/privacy"
-            element={<Privacy />}
-          />
-
-          <Route
-            path="/data-sources"
-            element={<DataSources />}
           />
         </Routes>
       </BrowserRouter>

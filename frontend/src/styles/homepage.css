@@ -1,31 +1,40 @@
 .homepage {
   width: 100%;
   min-height: 100vh;
+
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
+
   color: #102f53;
 }
 
 .homepage-hero {
-  min-height: 665px;
+  min-height: 100vh;
+
   padding-top: 64px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
   box-sizing: border-box;
+
   text-align: center;
 }
 
 .homepage-logo {
   width: 150px;
   height: auto;
+
   margin-bottom: 30px;
 }
 
 .homepage-hero h1 {
   margin: 0;
+
   color: #0d3157;
+
   font-size: 46px;
   line-height: 1.1;
   font-weight: 700;
@@ -34,14 +43,18 @@
 
 .homepage-tagline {
   margin: 10px 0 26px;
+
   color: #566f88;
+
   font-size: 25px;
   font-weight: 400;
 }
 
 .homepage-description {
   margin: 0 0 24px;
+
   color: #536e88;
+
   font-size: 20px;
   line-height: 1.35;
 }
@@ -49,11 +62,13 @@
 .homepage-upload-button {
   width: 310px;
   height: 65px;
+
   margin-top: 2px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 16px;
 
   border: 0;
@@ -75,29 +90,37 @@
 }
 
 /* Upload icon */
+
 .homepage-upload-icon {
   position: relative;
+
   width: 30px;
   height: 32px;
+
   display: inline-block;
   flex-shrink: 0;
 }
 
 .upload-arrow {
   position: absolute;
+
   top: -5px;
   left: 50%;
+
   transform: translateX(-50%);
 
   color: #ffffff;
+
   font-size: 29px;
   line-height: 1;
 }
 
 .upload-line {
   position: absolute;
+
   left: 50%;
   bottom: 0;
+
   transform: translateX(-50%);
 
   width: 24px;
@@ -110,255 +133,18 @@
 
 .homepage-upload-note {
   margin: 15px 0 0;
+
   color: #57718b;
+
   font-size: 16px;
 }
 
-.homepage-organisation {
-  width: 100%;
-  padding: 4px 0 42px;
-  box-sizing: border-box;
-}
-
-.homepage-organisation-content {
-  width: min(1020px, calc(100% - 70px));
-  margin: 0 auto;
-}
-
-.homepage-organisation-content h2 {
-  margin: 0;
-
-  color: #102f53;
-  font-size: 25px;
-  line-height: 1.2;
-  font-weight: 700;
-}
-
-.homepage-organisation-description {
-  margin: 6px 0 20px;
-
-  color: #57708a;
-  font-size: 14px;
-}
-
-.homepage-search-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 170px 155px;
-  gap: 18px;
-  align-items: stretch;
-}
-
-.homepage-search-input {
-  height: 56px;
-
-  display: flex;
-  align-items: center;
-
-  overflow: hidden;
-
-  border: 1px solid #b8cfdd;
-  border-radius: 9px;
-
-  background: rgba(255, 255, 255, 0.95);
-
-  box-shadow: 0 2px 7px rgba(50, 92, 116, 0.1);
-}
-
-.homepage-search-icon {
-  margin-left: 19px;
-  margin-right: 14px;
-
-  color: #30495e;
-  font-size: 27px;
-  line-height: 1;
-}
-
-.homepage-search-input input {
-  width: 100%;
-  height: 100%;
-
-  padding: 0 16px 0 0;
-
-  border: 0;
-  outline: 0;
-
-  background: transparent;
-
-  color: #294762;
-  font: inherit;
-  font-size: 14px;
-}
-
-.homepage-search-input input::placeholder {
-  color: #788da3;
-}
-
-.homepage-search-button {
-  height: 56px;
-
-  border: 0;
-  border-radius: 9px;
-
-  background: #0796bc;
-  color: #ffffff;
-
-  font-size: 15px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  box-shadow: 0 3px 8px rgba(0, 106, 142, 0.18);
-}
-
-.homepage-search-button:hover {
-  background: #0787a8;
-}
-
-.homepage-search-button:disabled {
-  opacity: 0.7;
-  cursor: default;
-}
-
-.homepage-source {
-  min-height: 56px;
-  padding-left: 30px;
-
-  display: flex;
-  align-items: center;
-  gap: 11px;
-
-  border-left: 1px solid #a6bdcc;
-}
-
-.homepage-source-main {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.homepage-source-main span {
-  color: #71859a;
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.homepage-source-main strong {
-  color: #183956;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.homepage-source p {
-  margin: 21px 0 0;
-
-  color: #72869b;
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-.homepage-asic-meta {
-  margin-top: 13px;
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  color: #526f89;
-  font-size: 11px;
-}
-
-.homepage-search-message {
-  margin: 15px 0 0;
-  padding: 10px 13px;
-
-  border-radius: 7px;
-
-  background: rgba(255, 255, 255, 0.88);
-
-  color: #63778e;
-  font-size: 12px;
-}
-
-.homepage-results {
-  margin-top: 20px;
-  padding: 18px 20px;
-
-  border-radius: 10px;
-
-  background: rgba(255, 255, 255, 0.94);
-
-  box-shadow: 0 3px 12px rgba(48, 84, 105, 0.1);
-}
-
-.homepage-results-heading {
-  margin-bottom: 12px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.homepage-results-heading h3 {
-  margin: 0;
-
-  color: #173653;
-  font-size: 16px;
-}
-
-.homepage-results-heading span {
-  color: #71879b;
-  font-size: 11px;
-}
-
-.homepage-table-wrap {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.homepage-table {
-  width: 100%;
-
-  border-collapse: collapse;
-
-  font-size: 11px;
-}
-
-.homepage-table th {
-  padding: 10px;
-
-  text-align: left;
-
-  background: #f2f7f9;
-
-  color: #667d93;
-  font-weight: 600;
-}
-
-.homepage-table td {
-  padding: 10px;
-
-  border-bottom: 1px solid #e2ebef;
-
-  color: #506a81;
-}
-
-.homepage-disclaimer {
-  margin: 14px 0 0;
-  padding: 11px 12px;
-
-  border-left: 3px solid #d5a14b;
-  border-radius: 4px;
-
-  background: #f7f8f6;
-
-  color: #6e7f91;
-  font-size: 11px;
-  line-height: 1.5;
+.homepage-dashboard-button {
+  margin-top: 18px;
 }
 
 @media (max-width: 900px) {
   .homepage-hero {
-    min-height: 620px;
     padding-left: 28px;
     padding-right: 28px;
   }
@@ -382,23 +168,6 @@
   .homepage-description br {
     display: none;
   }
-
-  .homepage-search-row {
-    grid-template-columns: 1fr 160px;
-  }
-
-  .homepage-source {
-    grid-column: 1 / -1;
-
-    padding: 13px 0 0;
-
-    border-left: 0;
-    border-top: 1px solid #a6bdcc;
-  }
-
-  .homepage-source p {
-    margin-top: 0;
-  }
 }
 
 @media (max-width: 600px) {
@@ -407,12 +176,12 @@
   }
 
   .homepage-hero {
-    min-height: 590px;
     padding-top: 45px;
   }
 
   .homepage-logo {
     width: 72px;
+
     margin-bottom: 22px;
   }
 
@@ -422,6 +191,7 @@
 
   .homepage-tagline {
     margin-bottom: 22px;
+
     font-size: 18px;
   }
 
@@ -432,30 +202,7 @@
   .homepage-upload-button {
     width: 260px;
     height: 58px;
+
     font-size: 20px;
-  }
-
-  .homepage-organisation-content {
-    width: calc(100% - 36px);
-  }
-
-  .homepage-organisation-content h2 {
-    font-size: 21px;
-  }
-
-  .homepage-search-row {
-    grid-template-columns: 1fr;
-  }
-
-  .homepage-search-button {
-    width: 100%;
-  }
-
-  .homepage-source {
-    grid-column: auto;
-  }
-
-  .homepage-asic-meta {
-    flex-wrap: wrap;
   }
 }

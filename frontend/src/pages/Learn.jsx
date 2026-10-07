@@ -6,10 +6,10 @@ import {
 } from 'react-router-dom'
 
 import AnalysisStatus from '../components/AnalysisStatus'
+import PageHeader from '../components/PageHeader'
 import LessonDetail from './LessonDetail'
 import LearningActivity from './LearningActivity'
 import { loadLearningProgress } from '../utils/learningProgress'
-
 import '../styles/learningHub.css'
 
 function Learn() {
@@ -17,9 +17,8 @@ function Learn() {
   const location = useLocation()
   const { topicId } = useParams()
 
-  const [completedTopics, setCompletedTopics] = useState(
-    loadLearningProgress,
-  )
+  const [completedTopics, setCompletedTopics] =
+    useState(loadLearningProgress)
 
   useEffect(() => {
     setCompletedTopics(loadLearningProgress())
@@ -299,27 +298,17 @@ function Learn() {
 
   return (
     <div className="i3-learn-page">
-      <header className="i3-learn-header">
-        <div className="i3-learn-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-learn-logo"
-          />
+      <PageHeader />
 
-          <span>
-            Consent Assistant
-          </span>
-        </div>
-
+      <div className="i3-learn-back-row">
         <button
           type="button"
-          className="i3-learn-back"
+          className="i3-learn-page-back"
           onClick={() => navigate('/')}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-learn-content">
         <div className="i3-learn-heading-row">
@@ -368,13 +357,9 @@ function Learn() {
               </span>
 
               <div className="i3-topic-copy">
-                <h2>
-                  {topic.title}
-                </h2>
+                <h2>{topic.title}</h2>
 
-                <p>
-                  {topic.shortDescription}
-                </p>
+                <p>{topic.shortDescription}</p>
               </div>
 
               {completedTopics.includes(topic.slug) && (

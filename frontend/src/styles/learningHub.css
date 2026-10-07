@@ -9,52 +9,46 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.i3-learn-header {
-  height: 70px;
-  padding: 0 38px;
+/* Back */
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.i3-learn-back-row {
+  position: relative;
+  z-index: 2;
 
-  background: #2b7189;
+  width: min(1100px, calc(100% - 72px));
+  margin: 0 auto;
+
+  padding-top: 14px;
 }
 
-.i3-learn-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.i3-learn-page-back {
+  min-width: 100px;
+  min-height: 38px;
 
-  color: #ffffff;
-
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.i3-learn-logo {
-  width: 44px;
-  height: 44px;
-
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.i3-learn-back {
-  min-width: 98px;
-  min-height: 40px;
   padding: 0 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
 
   background: transparent;
   color: #ffffff;
 
-  font-family: inherit;
-  font-size: 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
 }
+
+.i3-learn-page-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Main */
 
 .i3-learn-content {
   position: relative;
@@ -63,7 +57,7 @@
   width: min(1100px, calc(100% - 72px));
   margin: 0 auto;
 
-  padding: 28px 0 20px;
+  padding: 12px 0 20px;
 }
 
 .i3-learn-heading-row {
@@ -117,6 +111,8 @@
 
   background: rgba(255, 255, 255, 0.15);
 }
+
+/* Topic cards */
 
 .i3-topic-grid {
   width: 100%;
@@ -245,6 +241,8 @@
   font-weight: 700;
 }
 
+/* Note */
+
 .i3-learn-note {
   width: fit-content;
   max-width: 680px;
@@ -295,6 +293,8 @@
   font-size: 14px;
 }
 
+/* Watermark */
+
 .i3-learn-watermark {
   position: absolute;
 
@@ -311,6 +311,8 @@
   pointer-events: none;
   z-index: 1;
 }
+
+/* Responsive */
 
 @media (max-width: 1000px) {
   .i3-learn-heading-row {
@@ -332,8 +334,8 @@
 }
 
 @media (max-width: 700px) {
-  .i3-learn-header {
-    padding: 0 18px;
+  .i3-learn-back-row {
+    width: calc(100% - 36px);
   }
 
   .i3-learn-content {

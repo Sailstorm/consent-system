@@ -6,8 +6,11 @@ function UserControl() {
 
   const analysisResult = location.state?.analysisResult || {}
 
-  const userControl = analysisResult.user_control || {}
-  const explanation = userControl.detailed_explanation || {}
+  const userControl =
+    analysisResult.user_control || {}
+
+  const explanation =
+    userControl.detailed_explanation || {}
 
   const sectionValues = [
     explanation.what_you_can_control,
@@ -19,20 +22,24 @@ function UserControl() {
     explanation.why_this_matters,
   ]
 
-  const foundCount = sectionValues.filter(Boolean).length
+  const foundCount =
+    sectionValues.filter(Boolean).length
 
   let statusType = 'missing'
-  let statusLabel = 'No information found'
-  let statusText = 'No user control information was identified'
+  let statusLabel = 'Not clearly stated'
+  let statusText =
+    'User control details were not identified in the policy.'
 
   if (foundCount === sectionValues.length) {
     statusType = 'complete'
-    statusLabel = 'Complete information'
-    statusText = 'All user control details were identified'
+    statusLabel = 'Clearly stated'
+    statusText =
+      'All user control details are clearly stated.'
   } else if (foundCount > 0) {
     statusType = 'partial'
-    statusLabel = 'Partial information'
-    statusText = 'Some user control details are not clearly stated'
+    statusLabel = 'Partly stated'
+    statusText =
+      'Some user control details are not clearly stated.'
   }
 
   const sections = [
@@ -80,7 +87,8 @@ function UserControl() {
     },
   ]
 
-  const evidence = userControl.evidence || []
+  const evidence =
+    userControl.evidence || []
 
   const sourceText =
     evidence

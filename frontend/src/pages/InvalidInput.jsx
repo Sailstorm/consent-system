@@ -1,30 +1,27 @@
 import { useNavigate } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import '../styles/invalidInput.css'
 
 function InvalidInput() {
   const navigate = useNavigate()
 
+  function goBack() {
+    navigate('/privacy-assistant')
+  }
+
   return (
     <div className="i3-invalid-page">
-      <header className="i3-invalid-header">
-        <div className="i3-invalid-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-invalid-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-invalid-back-row">
         <button
           type="button"
-          className="i3-invalid-back"
-          onClick={() => navigate('/privacy-assistant')}
+          className="i3-invalid-page-back"
+          onClick={goBack}
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-invalid-content">
         <section className="i3-invalid-heading">
@@ -63,9 +60,7 @@ function InvalidInput() {
           <button
             type="button"
             className="i3-invalid-button"
-            onClick={() =>
-              navigate('/privacy-assistant')
-            }
+            onClick={goBack}
           >
             Back to input
           </button>

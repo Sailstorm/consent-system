@@ -10,53 +10,46 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.i3-failed-header {
-  height: 70px;
-  padding: 0 38px;
+/* Back area */
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.i3-failed-back-row {
+  position: relative;
+  z-index: 2;
 
-  background: #2b7189;
+  width: min(1070px, calc(100% - 72px));
+  margin: 0 auto;
+
+  padding-top: 14px;
 }
 
-.i3-failed-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  color: #ffffff;
-
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.i3-failed-logo {
-  width: 44px;
-  height: 44px;
-
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.i3-failed-back {
-  min-width: 98px;
-  min-height: 40px;
+.i3-failed-page-back {
+  min-width: 100px;
+  min-height: 38px;
 
   padding: 0 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
 
   background: transparent;
   color: #ffffff;
 
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
 }
+
+.i3-failed-page-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Content */
 
 .i3-failed-content {
   position: relative;
@@ -65,10 +58,12 @@
   width: min(900px, calc(100% - 40px));
   margin: 0 auto;
 
-  padding: 30px 0 18px;
+  padding: 12px 0 18px;
 
   text-align: center;
 }
+
+/* Heading */
 
 .i3-failed-heading > p {
   margin: 0 0 9px;
@@ -143,6 +138,7 @@
 
   display: flex;
   justify-content: center;
+
   gap: 14px;
 }
 
@@ -300,6 +296,10 @@
   cursor: pointer;
 }
 
+.i3-failed-learning-card button:hover {
+  background: #318cab;
+}
+
 /* Continue card */
 
 .i3-failed-dashboard-card {
@@ -383,6 +383,8 @@
   font-size: 12px;
 }
 
+/* Watermark */
+
 .i3-failed-watermark {
   position: absolute;
 
@@ -401,13 +403,28 @@
   z-index: 1;
 }
 
+/* Mobile */
+
 @media (max-width: 700px) {
-  .i3-failed-header {
-    padding: 0 18px;
+  .i3-failed-back-row {
+    width: calc(100% - 36px);
+  }
+
+  .i3-failed-content {
+    width: calc(100% - 30px);
   }
 
   .i3-failed-heading h1 {
     font-size: 34px;
+  }
+
+  .i3-failed-main-actions {
+    flex-direction: column;
+  }
+
+  .i3-failed-retry,
+  .i3-failed-edit {
+    width: 100%;
   }
 
   .i3-failed-learning-card {

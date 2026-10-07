@@ -7,21 +7,11 @@ function PolicySidebar({ activePage = 'analysis' }) {
   return (
     <aside className="policy-sidebar">
       <div className="policy-sidebar-content">
-        <p className="policy-sidebar-title">POLICY ASSISTANT</p>
+        <p className="policy-sidebar-title">
+          POLICY ASSISTANT
+        </p>
 
         <nav className="policy-sidebar-nav">
-          <button
-            className={
-              activePage === 'example'
-                ? 'policy-sidebar-item active'
-                : 'policy-sidebar-item'
-            }
-            type="button"
-            onClick={() => navigate('/policy-assistant/example')}
-          >
-            Example
-          </button>
-
           <button
             className={
               activePage === 'analysis'
@@ -29,7 +19,9 @@ function PolicySidebar({ activePage = 'analysis' }) {
                 : 'policy-sidebar-item'
             }
             type="button"
-            onClick={() => navigate('/privacy-assistant')}
+            onClick={() =>
+              navigate('/privacy-assistant')
+            }
           >
             Privacy Policy Analysis
           </button>

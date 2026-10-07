@@ -4,59 +4,52 @@
   min-height: 100vh;
   overflow: hidden;
 
-  background: #347f99;
+  background: #388ba8;
   color: #ffffff;
 
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.i3-processing-header {
-  height: 70px;
-  padding: 0 38px;
+/* Back area directly under the header */
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.i3-processing-back-row {
+  position: relative;
+  z-index: 2;
 
-  background: #2b7189;
+  width: min(1070px, calc(100% - 72px));
+  margin: 0 auto;
+
+  padding-top: 14px;
 }
 
-.i3-processing-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  color: #ffffff;
-
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.i3-processing-logo {
-  width: 44px;
-  height: 44px;
-
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.i3-processing-back {
-  min-width: 98px;
-  min-height: 40px;
+.i3-processing-page-back {
+  min-width: 100px;
+  min-height: 38px;
 
   padding: 0 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
 
   background: transparent;
   color: #ffffff;
 
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
 }
+
+.i3-processing-page-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Main content */
 
 .i3-processing-content {
   position: relative;
@@ -65,10 +58,12 @@
   width: min(650px, calc(100% - 40px));
   margin: 0 auto;
 
-  padding: 34px 0 24px;
+  padding: 12px 0 24px;
 
   text-align: center;
 }
+
+/* Heading */
 
 .i3-processing-heading h1 {
   margin: 0 0 10px;
@@ -87,7 +82,7 @@
   font-size: 15px;
 }
 
-/* loading */
+/* Loading */
 
 .i3-processing-loader {
   position: relative;
@@ -166,7 +161,7 @@
   font-size: 15px;
 }
 
-/* learning card */
+/* Learning card */
 
 .i3-processing-learning {
   position: relative;
@@ -294,6 +289,12 @@
   cursor: pointer;
 }
 
+.i3-processing-learning button:hover {
+  background: #318cab;
+}
+
+/* Footer */
+
 .i3-processing-disclaimer {
   margin: 38px 0 0;
 
@@ -301,6 +302,8 @@
 
   font-size: 12px;
 }
+
+/* Watermark */
 
 .i3-processing-watermark {
   position: absolute;
@@ -321,8 +324,12 @@
 }
 
 @media (max-width: 650px) {
-  .i3-processing-header {
-    padding: 0 18px;
+  .i3-processing-back-row {
+    width: calc(100% - 36px);
+  }
+
+  .i3-processing-content {
+    width: calc(100% - 30px);
   }
 
   .i3-processing-heading h1 {

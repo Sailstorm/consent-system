@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import AnalysisStatus from '../components/AnalysisStatus'
+import PageHeader from '../components/PageHeader'
 
 import {
   practiceTopics,
@@ -36,27 +37,19 @@ function LessonDetail({ topic }) {
 
   return (
     <div className="i3-lesson-page">
-      <header className="i3-lesson-header">
-        <div className="i3-lesson-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}logo2.jpg`}
-            alt="Consent Assistant"
-            className="i3-lesson-logo"
-          />
+      <PageHeader />
 
-          <span>Consent Assistant</span>
-        </div>
-
+      <div className="i3-lesson-back-row">
         <button
           type="button"
-          className="i3-lesson-header-back"
+          className="i3-lesson-page-back"
           onClick={() =>
             navigate('/privacy-learning/learn')
           }
         >
           ← Back
         </button>
-      </header>
+      </div>
 
       <main className="i3-lesson-content">
         <div className="i3-lesson-heading-row">

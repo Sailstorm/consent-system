@@ -10,53 +10,46 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.i3-invalid-header {
-  height: 70px;
-  padding: 0 38px;
+/* Back area */
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.i3-invalid-back-row {
+  position: relative;
+  z-index: 2;
 
-  background: #2b7189;
+  width: min(1070px, calc(100% - 72px));
+  margin: 0 auto;
+
+  padding-top: 14px;
 }
 
-.i3-invalid-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  color: #ffffff;
-
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.i3-invalid-logo {
-  width: 44px;
-  height: 44px;
-
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.i3-invalid-back {
-  min-width: 98px;
-  min-height: 40px;
+.i3-invalid-page-back {
+  min-width: 100px;
+  min-height: 38px;
 
   padding: 0 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
 
   background: transparent;
   color: #ffffff;
 
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
 }
+
+.i3-invalid-page-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Main content */
 
 .i3-invalid-content {
   position: relative;
@@ -65,10 +58,12 @@
   width: min(820px, calc(100% - 40px));
   margin: 0 auto;
 
-  padding: 42px 0 24px;
+  padding: 12px 0 24px;
 
   text-align: center;
 }
+
+/* Heading */
 
 .i3-invalid-heading > p {
   margin: 0 0 10px;
@@ -94,6 +89,8 @@
   font-size: 17px;
   line-height: 1.5;
 }
+
+/* Card */
 
 .i3-invalid-card {
   width: 720px;
@@ -183,6 +180,8 @@
   background: #318cab;
 }
 
+/* Disclaimer */
+
 .i3-invalid-disclaimer {
   margin: 36px 0 0;
 
@@ -190,6 +189,8 @@
 
   font-size: 12px;
 }
+
+/* Watermark */
 
 .i3-invalid-watermark {
   position: absolute;
@@ -209,9 +210,11 @@
   z-index: 1;
 }
 
+/* Mobile */
+
 @media (max-width: 650px) {
-  .i3-invalid-header {
-    padding: 0 18px;
+  .i3-invalid-back-row {
+    width: calc(100% - 36px);
   }
 
   .i3-invalid-content {
@@ -228,6 +231,7 @@
 
   .i3-invalid-card {
     padding: 28px 22px;
+
     min-height: 0;
   }
 

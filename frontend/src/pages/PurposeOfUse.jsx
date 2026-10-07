@@ -6,8 +6,11 @@ function PurposeOfUse() {
 
   const analysisResult = location.state?.analysisResult || {}
 
-  const purposeOfUse = analysisResult.purpose_of_use || {}
-  const explanation = purposeOfUse.detailed_explanation || {}
+  const purposeOfUse =
+    analysisResult.purpose_of_use || {}
+
+  const explanation =
+    purposeOfUse.detailed_explanation || {}
 
   const sectionValues = [
     explanation.why_data_is_used,
@@ -17,20 +20,24 @@ function PurposeOfUse() {
     explanation.why_this_matters,
   ]
 
-  const foundCount = sectionValues.filter(Boolean).length
+  const foundCount =
+    sectionValues.filter(Boolean).length
 
   let statusType = 'missing'
-  let statusLabel = 'No information found'
-  let statusText = 'No purpose information was identified'
+  let statusLabel = 'Not clearly stated'
+  let statusText =
+    'Purpose details were not identified in the policy.'
 
   if (foundCount === sectionValues.length) {
     statusType = 'complete'
-    statusLabel = 'Complete information'
-    statusText = 'All purpose details were identified'
+    statusLabel = 'Clearly stated'
+    statusText =
+      'All purpose details are clearly stated.'
   } else if (foundCount > 0) {
     statusType = 'partial'
-    statusLabel = 'Partial information'
-    statusText = 'Some purpose details are not clearly stated'
+    statusLabel = 'Partly stated'
+    statusText =
+      'Some purpose details are not clearly stated.'
   }
 
   const sections = [
@@ -66,7 +73,8 @@ function PurposeOfUse() {
     },
   ]
 
-  const evidence = purposeOfUse.evidence || []
+  const evidence =
+    purposeOfUse.evidence || []
 
   const sourceText =
     evidence
