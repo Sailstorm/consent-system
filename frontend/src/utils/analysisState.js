@@ -61,3 +61,15 @@ export function saveAnalysisFailure(policyText) {
     analysisResult: null,
   })
 }
+
+// Remove the stored policy text, results and any unsent draft from this tab
+// (security plan F-07). sessionStorage already clears when the tab closes;
+// this lets someone on a shared computer clear it straight away.
+export function clearAnalysisState() {
+  try {
+    sessionStorage.removeItem(ANALYSIS_KEY)
+    sessionStorage.removeItem('consent-assistant-draft')
+  } catch {
+    // Ignore storage errors.
+  }
+}
