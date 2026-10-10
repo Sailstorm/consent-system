@@ -2,7 +2,22 @@ from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 
-from .config import STAGE1_THRESHOLDS
+import os
+
+from .config import (
+    STAGE1_LOCAL_DIR,
+    STAGE1_MODEL_ID,
+    STAGE1_MODEL_REVISION,
+    STAGE1_THRESHOLDS,
+)
+from .limits import (
+    ANALYSES_PER_HOUR,
+    ANALYSES_PER_MINUTE,
+    MAX_CONCURRENT_ANALYSES,
+    AnalysisLimiter,
+    AnalysisLimitMiddleware,
+)
+from .ai.text_safety import normalise_policy_text
 from .ai.pipeline import analyze_policy
 from .ai.stage1_classifier import load_stage1_model
 from openai import (
@@ -27,29 +42,52 @@ from .ai.url_extractor import (
 from .ai.pdf_extractor import (
     MAX_PDF_BYTES,
     PdfExtractionError,
-    extract_policy_from_pdf,
+    extract_policy_from_pdf_isolated,
 )
 
 logger = logging.getLogger("uvicorn.error")
 
 
-STAGE1_MODEL_ID = "Meiyao-AI-25379/consent-assistant-deberta-stage1"
+app = FastAPI(
+    # No interactive API docs on a public, unauthenticated-by-default service.
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
-app = FastAPI()
+# Production is same-origin through Caddy; CORS only matters for local
+# development, where the Vite dev server calls this service directly.
+# No credentials are ever needed (security plan A-03).
+cors_origins = [
+    origin.strip()
+    for origin in os.environ.get(
+        "CORS_ORIGIN",
+        "http://localhost:5173,http://127.0.0.1:5173",
+    ).split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=cors_origins,
+    allow_credentials=False,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
+
+app.add_middleware(
+    AnalysisLimitMiddleware,
+    limiter=AnalysisLimiter(
+        per_minute=ANALYSES_PER_MINUTE,
+        per_hour=ANALYSES_PER_HOUR,
+        max_concurrent=MAX_CONCURRENT_ANALYSES,
+    ),
 )
 
 stage1_model, stage1_tokenizer = load_stage1_model(
-    STAGE1_MODEL_ID
+    STAGE1_MODEL_ID,
+    revision=STAGE1_MODEL_REVISION,
+    local_dir=STAGE1_LOCAL_DIR,
 )
 
 stage2_client = create_stage2_client()
@@ -61,7 +99,9 @@ class PolicyRequest(BaseModel):
     @field_validator("text")
     @classmethod
     def validate_text(cls, value: str) -> str:
-        value = value.strip()
+        # Strip invisible characters and fold lookalike letters before
+        # anything else sees the text (security plan M-03).
+        value = normalise_policy_text(value).strip()
 
         if not value:
             raise ValueError("Policy text must not be empty.")
@@ -157,13 +197,12 @@ def analyze_url(request: PolicyUrlRequest):
         ) from exc
 
     # Reuse the existing analysis function and its exception handling.
-    result = analyze(
-        PolicyRequest(text=extracted["text"])
-    )
+    policy = PolicyRequest(text=extracted["text"])
+    result = analyze(policy)
 
     return {
         **result,
-        "policy_text": extracted["text"],
+        "policy_text": policy.text,
         "source": {
             "type": "url",
             "submitted_url": extracted["source_url"],
@@ -208,7 +247,7 @@ def analyze_pdf(file: UploadFile = File(...)):
             )
 
         try:
-            extracted = extract_policy_from_pdf(pdf_bytes)
+            extracted = extract_policy_from_pdf_isolated(pdf_bytes)
         except PdfExtractionError as exc:
             logger.warning(
                 "PDF extraction failed: status=%d",
@@ -224,13 +263,12 @@ def analyze_pdf(file: UploadFile = File(...)):
         file.file.close()
 
     # Reuse the existing pipeline and NVIDIA error handling.
-    result = analyze(
-        PolicyRequest(text=extracted["text"])
-    )
+    policy = PolicyRequest(text=extracted["text"])
+    result = analyze(policy)
 
     return {
         **result,
-        "policy_text": extracted["text"],
+        "policy_text": policy.text,
         "source": {
             "type": "pdf",
             "filename": filename,
