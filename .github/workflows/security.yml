@@ -1,0 +1,110 @@
+# Security checks on every push and pull request (security plan B2, F-04,
+# S-03): tests for all three services, dependency audits, a secret scan of
+# the full git history, and an infrastructure/Dockerfile misconfiguration
+# scan. Previously these only ran by hand, once per iteration.
+name: Security checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: consent_app
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: consent_assistant
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U consent_app -d consent_assistant"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      OWNER_URL: postgresql://consent_app:ci-only-password@localhost:5432/consent_assistant
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=high
+      - name: Create schema and the API's read-only role
+        run: |
+          psql "$OWNER_URL" -v ON_ERROR_STOP=1 -f ../database/init.sql
+          psql "$OWNER_URL" -v ON_ERROR_STOP=1 -v reader_password=ci-reader -f ../database/roles.sql
+      - name: Load OAIC reference data
+        run: DATABASE_URL="$OWNER_URL" npm run import:oaic
+      - name: Tests (connected as the read-only role, like production)
+        run: DATABASE_URL=postgresql://consent_reader:ci-reader@localhost:5432/consent_assistant npm test
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+
+  developed-ai:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dependency audit
+        run: |
+          pip install pip-audit
+          pip-audit -r developed_ai/requirements.txt
+      - name: Security control tests (no torch needed)
+        run: |
+          pip install -r developed_ai/requirements-dev.txt \
+            "pypdf>=6,<7" "fastapi>=0.100,<1" "pydantic>=2,<3" starlette
+          python -m pytest developed_ai/tests -q
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks (full history)
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz \
+            | tar -xz gitleaks
+          ./gitleaks git . --config .gitleaks.toml --redact --no-banner
+
+  infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: trivy config scan (Dockerfiles, compose, Terraform)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: config
+          severity: HIGH,CRITICAL
+          # Reported but not blocking: egress to 0.0.0.0/0 on 80/443 is a
+          # deliberate, documented trade-off (security plan N-04).
+          exit-code: "0"
