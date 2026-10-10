@@ -17,10 +17,41 @@ services:
   frontend:
     build:
       context: ../app-stable/frontend
+      # Built with THIS checkout's Dockerfile (non-root nginx, security
+      # plan N-02) rather than the frozen ref's own, same approach as
+      # frontend-archive below. The stable ref supports VITE_BASE_PATH, so
+      # the generic Dockerfile builds it unchanged.
+      dockerfile: ../../app/frontend/Dockerfile
+
+  # Production-only settings for the shared services.
+  backend:
+    environment:
+      NODE_ENV: production
+      # The API only reads, so it connects as the read-only role created by
+      # database/roles.sql (security plan D-03). The importers, run by
+      # user_data.sh.tpl, override this with the owner role.
+      DATABASE_URL: postgresql://consent_reader:${DB_READER_PASSWORD}@db:5432/consent_assistant
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      # Server-side site gate (security plan F-06).
+      GATE_PASSWORD: ${GATE_PASSWORD}
+      GATE_SECRET: ${GATE_SECRET}
+
+  developed_ai:
+    environment:
+      CORS_ORIGIN: ${CORS_ORIGIN}
 
   # Active Development: this checkout (iteration 2 in progress), served
   # under /underdevelopment/.
   frontend-dev:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     build:
       context: ./frontend
       args:
@@ -43,6 +74,15 @@ services:
   # from the archive ref itself (iteration-1-archived patches
   # BrowserRouter basename="/version1/" onto iteration-1).
   frontend-archive:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     build:
       context: ../app-archive/frontend
       dockerfile: ../../app/infra/frontend-archive/Dockerfile
@@ -52,6 +92,15 @@ services:
   # automatically (HTTP-01 on :80, which it also uses to redirect to
   # HTTPS) and persists it in the caddy-data volume across rebuilds.
   router:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     build: ./infra/router
     restart: unless-stopped
     ports:

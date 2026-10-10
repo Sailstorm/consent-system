@@ -1,5 +1,25 @@
+# Shared container settings (security plan N-02, L-01):
+# - rotate logs so a noisy service can't fill the disk
+# - drop every Linux capability and block privilege escalation; none of the
+#   app services need either (they run as non-root users, see each
+#   Dockerfile). Postgres is excluded: its entrypoint needs to switch users.
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+x-hardening: &hardening
+  <<: *logging
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 services:
   db:
+    <<: *logging
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -14,8 +34,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    # Only on the internal database network: the AI service, frontends and
+    # router can't reach Postgres at all, and the database has no route to
+    # the internet (security plan D-02, TB3).
+    networks:
+      - database
 
   backend:
+    <<: *hardening
     build: ./backend
     restart: unless-stopped
     environment:
@@ -25,8 +51,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - default
+      - database
 
   developed_ai:
+    <<: *hardening
     build:
       context: .
       dockerfile: developed_ai/Dockerfile
@@ -36,16 +66,17 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
     networks:
       default:
-        # The URL versioning pipeline's frozen "live root" build (the
-        # stable git worktree, see docker-compose.prod.yml) has its own
-        # nginx.conf baked in from whatever commit it's pinned to, which
-        # may still hardcode the old "ai-model" hostname from before this
-        # service was renamed. This alias keeps that historical build
+        # The archived iteration-1 build (/version1/, see
+        # docker-compose.prod.yml) has its own nginx.conf baked in from
+        # that frozen ref, which still proxies to the old "ai-model"
+        # hostname from before this service was renamed - nginx won't even
+        # start if that name doesn't resolve. This alias keeps that build
         # working without editing the frozen snapshot.
         aliases:
           - ai-model
 
   frontend:
+    <<: *hardening
     build:
       context: ./frontend
       args:
@@ -55,6 +86,10 @@ services:
     depends_on:
       - backend
       - developed_ai
+
+networks:
+  database:
+    internal: true
 
 volumes:
   db-data:

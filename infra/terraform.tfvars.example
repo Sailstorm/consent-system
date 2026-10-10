@@ -1,2 +1,4 @@
 nvidia_api_key = "replace-with-your-nvidia-api-key"
 db_password  = "replace-with-a-long-random-password"
+site_password  = "replace-with-a-new-site-password"
+# alert_email  = "team@example.com"
