@@ -5,17 +5,35 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pool } from "./db.js";
 import { breachesRouter } from "./routes/breaches.js";
+import { gateRouter } from "./routes/gate.js";
+import { rateLimit } from "./lib/rate-limit.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
 app.disable("x-powered-by");
+
+// Production is same-origin through Caddy, so CORS only matters for local
+// development (Vite on :5173 calling this API on :3000). Never fall back to
+// a localhost origin in production (Iteration 2 report, finding N8).
+const corsOrigin =
+  process.env.CORS_ORIGIN ||
+  (process.env.NODE_ENV === "production" ? false : "http://localhost:5173");
+app.use(cors({ origin: corsOrigin }));
+app.use(express.json({ limit: "100kb" }));
+
+// The gate's check endpoint runs on every page and asset request, so it
+// sits outside the general API limit (it has no side effects).
+app.use("/api/gate", gateRouter);
+
 app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  "/api",
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 120,
+    message: "Too many requests. Please wait a minute and try again.",
   }),
 );
-app.use(express.json({ limit: "1mb" }));
 
 function isIsoDate(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);

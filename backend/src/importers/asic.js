@@ -11,13 +11,18 @@ const argumentsList = process.argv.slice(2);
 const limitFlagIndex = process.argv.indexOf("--limit");
 const limit =
   limitFlagIndex >= 0 ? Number(process.argv[limitFlagIndex + 1]) : Number.POSITIVE_INFINITY;
+const allowShrink = process.argv.includes("--allow-shrink");
+// Refuse a load that would shrink the table by more than this (security
+// plan S-01): a truncated or partial download must not silently replace
+// the whole catalogue. Override with --allow-shrink after checking.
+const MAX_SHRINK_RATIO = 0.8;
 let filePath = null;
 
 for (let index = 0; index < argumentsList.length; index += 1) {
   const argument = argumentsList[index];
   if (argument === "--limit") {
     index += 1;
-  } else if (argument !== "--latest" && !argument.startsWith("--")) {
+  } else if (!argument.startsWith("--")) {
     filePath = argument;
     break;
   }
@@ -133,6 +138,11 @@ let input;
 try {
   input = await resolveInput();
   await client.query("BEGIN");
+  const previousResult = await client.query(
+    "SELECT COUNT(*)::INTEGER AS count FROM organisations WHERE source_id = $1",
+    [sourceId],
+  );
+  const previousRecords = previousResult.rows[0].count;
   await client.query("DELETE FROM organisations WHERE source_id = $1", [sourceId]);
 
   const parser = input.stream.pipe(
@@ -182,6 +192,19 @@ try {
   if (parsedRecords === 0) {
     throw new Error(
       "No ASIC records were recognised. Check that this is the tab-delimited Business Names file and inspect its headers.",
+    );
+  }
+
+  if (
+    !allowShrink &&
+    limit === Number.POSITIVE_INFINITY &&
+    previousRecords > 0 &&
+    importedRecords < previousRecords * MAX_SHRINK_RATIO
+  ) {
+    throw new Error(
+      `Refusing to replace ${previousRecords} ASIC records with ${importedRecords}: ` +
+        "the new load is more than 20% smaller, which usually means a truncated download. " +
+        "Re-run with --allow-shrink if the drop is genuine.",
     );
   }
 

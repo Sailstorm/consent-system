@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Consent Assistant</title>
+    <link rel="stylesheet" href="/api/gate/gate.css" />
+    <script src="/api/gate/gate.js" defer></script>
+  </head>
+  <body>
+    <main class="password-gate">
+      <div class="password-card">
+        <p class="password-label">Consent Assistant</p>
+        <h1>Welcome</h1>
+        <p class="password-subtitle">Enter the password to access this site.</p>
+        <form id="gate-form">
+          <label class="visually-hidden" for="gate-password">Password</label>
+          <input id="gate-password" type="password" placeholder="Enter password" autocomplete="current-password" required autofocus />
+          <p class="password-error" id="gate-error" role="alert" hidden></p>
+          <button type="submit">Enter site &rarr;</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
