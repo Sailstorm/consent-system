@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
-import { loadAnalysisState } from '../utils/analysisState'
+import {
+  clearAnalysisState,
+  loadAnalysisState,
+} from '../utils/analysisState'
 import '../styles/consentSummary.css'
 
 function ConsentSummary() {
@@ -75,7 +78,13 @@ function ConsentSummary() {
   }
 
   function startNewAnalysis() {
+    clearAnalysisState()
     navigate('/privacy-assistant')
+  }
+
+  function clearAnalysis() {
+    clearAnalysisState()
+    navigate('/privacy-assistant', { replace: true })
   }
 
   function goToLearning() {
@@ -209,6 +218,15 @@ function ConsentSummary() {
               onClick={startNewAnalysis}
             >
               Start new analysis
+            </button>
+
+            <button
+              type="button"
+              className="i3-summary-secondary"
+              onClick={clearAnalysis}
+              title="Remove this policy and its summary from this browser tab"
+            >
+              Clear my analysis
             </button>
 
             <button

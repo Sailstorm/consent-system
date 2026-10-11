@@ -26,17 +26,23 @@ numpy>=1.26,<3
 # Read the local model.safetensors weights.
 safetensors>=0.8.0,<1
 
+# Build-time download of the pinned Stage 1 model (scripts/fetch_stage1_model.py).
+# Already a transformers dependency; listed because we import it directly.
+huggingface_hub
+
 # DeBERTa SentencePiece tokenizer and conversion support
 sentencepiece>=0.1.91,!=0.1.92,<1
-protobuf
+protobuf>=5,<8
 # Required by Stage 2's apply_chat_template().
 jinja2>=3.1.0,<4
 
-openai
+# Bounded so a new major release can't change behaviour between builds
+# without anyone noticing (security plan F-04).
+openai>=3,<4
 
 # Download public policy pages and extract main text
 urllib3>=2.2,<3
-certifi
+certifi>=2024.2.2
 trafilatura>=2.2,<3
 
 # PDF text extraction and multipart file uploads

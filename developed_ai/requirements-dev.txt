@@ -1,0 +1,2 @@
+# Test-only dependencies. torch isn't needed for developed_ai/tests.
+pytest>=8,<10

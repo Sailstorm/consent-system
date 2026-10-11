@@ -1,4 +1,5 @@
 import logging
+import re
 import time
 import uuid
 
@@ -12,6 +13,34 @@ from .stage2_summarizer import generate_all_summaries
 
 
 logger = logging.getLogger("uvicorn.error")
+
+_WHITESPACE = re.compile(r"\s+")
+
+
+def _collapse(text):
+    return _WHITESPACE.sub(" ", text).strip()
+
+
+def _drop_evidence_not_in_policy(ir, policy_text, policy_id):
+    source = _collapse(policy_text)
+
+    for category, entry in ir["categories"].items():
+        kept = [
+            item for item in entry["evidence"]
+            if _collapse(item["text"]) in source
+        ]
+
+        dropped = len(entry["evidence"]) - len(kept)
+        if dropped:
+            logger.warning(
+                "[%s] %s: dropped %d evidence item(s) not found verbatim "
+                "in the submitted text.",
+                policy_id,
+                category,
+                dropped,
+            )
+
+        entry["evidence"] = kept
 
 
 def analyze_policy(
@@ -66,6 +95,12 @@ def analyze_policy(
     )
 
     
+    # Every excerpt shown to the user as "source text" must be a literal
+    # part of what they submitted (security plan M-02, KPI "output
+    # grounding"). Evidence comes from our own segmenter, so a mismatch
+    # means a bug, and the excerpt is dropped rather than shown.
+    _drop_evidence_not_in_policy(ir, policy_text, policy_id)
+
     # 4. ues NVIDIA API to generate summary
     stage2_started_at = time.perf_counter()
 

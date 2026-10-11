@@ -1,3 +1,5 @@
+import os
+
 import torch
 from transformers import (
     AutoTokenizer,
@@ -12,15 +14,23 @@ CATEGORIES = [
     "user_control"
 ]
 
-def load_stage1_model(model_path):
+def load_stage1_model(model_path, revision=None, local_dir=None):
+    """
+    Prefer the verified copy baked into the image (local_dir), loaded with
+    local_files_only so a missing file fails loudly instead of quietly
+    fetching from the Hub. Otherwise download the pinned revision.
+    """
 
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_path
-    )
+    if local_dir and os.path.isdir(local_dir):
+        source = {"pretrained_model_name_or_path": local_dir, "local_files_only": True}
+    else:
+        if not revision:
+            raise ValueError("A pinned model revision is required.")
+        source = {"pretrained_model_name_or_path": model_path, "revision": revision}
 
-    model = AutoModelForSequenceClassification.from_pretrained(
-        model_path
-    )
+    tokenizer = AutoTokenizer.from_pretrained(**source)
+
+    model = AutoModelForSequenceClassification.from_pretrained(**source)
 
     device = torch.device(
         "cuda" if torch.cuda.is_available() else "cpu"

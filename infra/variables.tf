@@ -46,9 +46,21 @@ variable "acme_email" {
 }
 
 variable "cors_origin" {
-  description = "Allowed CORS origin for the backend/AI API. Same-origin requests via nginx aren't affected by this."
+  description = "Allowed CORS origin for the backend/AI API. Empty means the site's own https://domain_name, which is all production needs (the frontend calls the APIs same-origin). Never a localhost origin in production (Iteration 2 report, finding N8)."
   type        = string
-  default     = "http://localhost:5173"
+  default     = ""
+}
+
+variable "alert_email" {
+  description = "Optional address for CloudWatch alarm emails (AWS sends a confirmation link first). Empty disables email; the auto-recover and reboot actions still run."
+  type        = string
+  default     = ""
+}
+
+variable "site_password" {
+  description = "Password for the server-side site gate (security plan F-06). Choose a new one: the old client-side password is public in the git history."
+  type        = string
+  sensitive   = true
 }
 
 variable "nvidia_api_key" {

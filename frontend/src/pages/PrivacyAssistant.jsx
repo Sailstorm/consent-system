@@ -305,6 +305,13 @@ function PrivacyAssistant() {
         </p>
 
         <p className="i3-assistant-disclaimer">
+          The policy text, the page at your link, or your PDF is
+          sent to our AI service and to NVIDIA's AI platform (outside
+          Australia) to create your summary. We don&apos;t store it.
+          Please remove any personal details before uploading.
+        </p>
+
+        <p className="i3-assistant-disclaimer">
           Consent Assistant provides information to support
           your review. It does not provide legal advice.
         </p>

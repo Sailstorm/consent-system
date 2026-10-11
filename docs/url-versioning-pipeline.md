@@ -7,7 +7,7 @@ To move to a real domain later, change `domain_name`.
 
 | URL | Role | Source |
 |-----|------|--------|
-| https://52-64-225-116.sslip.io/ | **The LIVE Root** | `stable_ref`, currently git tag `iteration-2.1`. Always the last **complete** iteration. Password protected through `PasswordGate`. |
+| https://52-64-225-116.sslip.io/ | **The LIVE Root** | `stable_ref`, currently git tag `iteration-2.1`. Always the last **complete** iteration. |
 | https://52-64-225-116.sslip.io/underdevelopment/ | **Active Development** | `main` HEAD, the iteration currently in progress. |
 | https://52-64-225-116.sslip.io/version1/ | **The Archive** | `archive_ref`, currently git tag `iteration-1-archived`. Iteration 1, frozen. |
 
@@ -72,6 +72,18 @@ Local dev (`docker compose up --build`) is untouched. It only builds the one
   `vite build --base=/version1/` so asset URLs resolve under the prefix. The
   `iteration-1-archived` tag supplies the matching React Router basename.
   Without the basename, no route under `/version1/` matches at all.
+- **Which Dockerfile:** all three builds use a Dockerfile from the current
+  checkout, not the frozen ref's own. The live root uses
+  `frontend/Dockerfile` (via `dockerfile:` in `docker-compose.prod.yml`) and
+  the archive uses `infra/frontend-archive/Dockerfile`, so security fixes
+  (non-root nginx, current nginx version) reach the frozen builds too.
+
+## Access control
+
+Caddy puts every path (all three versions and the APIs) behind the
+server-side site gate: `forward_auth` to `backend:3000/api/gate/check`,
+which returns 204 for a valid signed cookie or the login page (401)
+otherwise. See "Site access" in the README.
 
 ## Cutover runbook: when the next iteration launches
 

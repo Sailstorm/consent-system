@@ -9,6 +9,45 @@
 {$DOMAIN} {
 	encode gzip
 
+	# Security response headers for every version and the APIs (security
+	# plan F-05, F-03; Iteration 1/2 findings 3 and 4). Set here once so the
+	# frozen live-root and archive builds get them too. `defer` applies them
+	# after the upstream response, which also lets the Server and Via
+	# removals take out nginx's version banner and Caddy's own Via.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		-Server
+		-Via
+		defer
+	}
+
+	# Request size limits, enforced before anything is buffered upstream
+	# (security plan A-07). PDF uploads get 10 MiB plus multipart overhead;
+	# everything else (pasted text is capped at 100,000 characters) 1 MB.
+	@pdf_upload path /analyze-pdf
+	request_body @pdf_upload {
+		max_size 11MB
+	}
+	@not_pdf_upload not path /analyze-pdf
+	request_body @not_pdf_upload {
+		max_size 1MB
+	}
+
+	# Server-side site gate (security plan F-06). Every request except the
+	# gate's own endpoints and login assets must carry a valid signed
+	# cookie; the backend answers 204 or returns its login page (401),
+	# which Caddy passes straight back to the browser.
+	@gated not path /api/gate/*
+	forward_auth @gated backend:3000 {
+		uri /api/gate/check
+	}
+
 	# Shared backend/developed_ai, same for every version (paths kept as-is,
 	# matching how the frontend builds call them: /api/..., /analyze).
 	handle /api/* {

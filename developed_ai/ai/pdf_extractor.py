@@ -230,3 +230,89 @@ def extract_policy_from_pdf(pdf_bytes):
         "character_count": len(text),
         "extraction_seconds": round(elapsed, 2),
     }
+
+# ------------------------------------------------------------------
+# Isolated extraction (security plan A-07)
+# ------------------------------------------------------------------
+# pypdf runs on untrusted files and has a history of parser denial-of-
+# service bugs (deep nesting, huge content streams, decompression bombs).
+# Parsing in the request thread would let one crafted upload pin a CPU and
+# its memory indefinitely. Instead each upload is parsed in a short-lived
+# child process with a wall-clock limit and an address-space cap; if
+# either is hit, the child is killed and the user gets a clean error.
+
+PARSE_TIMEOUT_SECONDS = 30
+PARSE_MEMORY_LIMIT_BYTES = 1024 * 1024 * 1024
+
+
+def _isolated_worker(pdf_bytes, connection):
+    try:
+        import resource
+
+        resource.setrlimit(
+            resource.RLIMIT_AS,
+            (PARSE_MEMORY_LIMIT_BYTES, PARSE_MEMORY_LIMIT_BYTES),
+        )
+    except (ImportError, ValueError, OSError):
+        # Not available on every platform (e.g. macOS dev machines);
+        # the wall-clock limit below still applies.
+        pass
+
+    try:
+        connection.send(("ok", extract_policy_from_pdf(pdf_bytes)))
+    except PdfExtractionError as exc:
+        connection.send(("error", str(exc), exc.status_code))
+    except MemoryError:
+        connection.send(("error", "The PDF needs too much memory to read.", 422))
+    except Exception:
+        connection.send(("error", "The PDF could not be read.", 422))
+    finally:
+        connection.close()
+
+
+def extract_policy_from_pdf_isolated(
+    pdf_bytes,
+    timeout=PARSE_TIMEOUT_SECONDS,
+):
+    import multiprocessing
+
+    # "spawn" starts a clean interpreter rather than forking this one,
+    # which holds the loaded torch model and its threads.
+    context = multiprocessing.get_context("spawn")
+    parent, child = context.Pipe(duplex=False)
+    process = context.Process(
+        target=_isolated_worker,
+        args=(pdf_bytes, child),
+        daemon=True,
+    )
+    process.start()
+    child.close()
+
+    try:
+        if not parent.poll(timeout):
+            raise PdfExtractionError(
+                "The PDF took too long to read. Please paste the "
+                "policy text instead.",
+                status_code=422,
+            )
+
+        try:
+            message = parent.recv()
+        except EOFError as exc:
+            # The child died without answering, e.g. it hit the memory cap.
+            raise PdfExtractionError(
+                "The PDF could not be read safely. Please paste the "
+                "policy text instead.",
+                status_code=422,
+            ) from exc
+
+        if message[0] == "ok":
+            return message[1]
+
+        raise PdfExtractionError(message[1], status_code=message[2])
+
+    finally:
+        parent.close()
+        if process.is_alive():
+            process.kill()
+        process.join(timeout=5)

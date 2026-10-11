@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import PasswordGate from './components/PasswordGate'
 
 import Homepage from './pages/Homepage'
 
@@ -27,117 +26,115 @@ import RecentBreaches from './pages/RecentBreaches'
 
 function App() {
   return (
-    <PasswordGate>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <Routes>
-          {/* Home */}
-          <Route
-            path="/"
-            element={<Homepage />}
-          />
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Routes>
+        {/* Home */}
+        <Route
+          path="/"
+          element={<Homepage />}
+        />
 
-          {/* Privacy Policy Analysis */}
-          <Route
-            path="/privacy-assistant"
-            element={<PrivacyAssistant />}
-          />
+        {/* Privacy Policy Analysis */}
+        <Route
+          path="/privacy-assistant"
+          element={<PrivacyAssistant />}
+        />
 
-          <Route
-            path="/invalid-input"
-            element={<InvalidInput />}
-          />
+        <Route
+          path="/invalid-input"
+          element={<InvalidInput />}
+        />
 
-          <Route
-            path="/processing"
-            element={<Processing />}
-          />
+        <Route
+          path="/processing"
+          element={<Processing />}
+        />
 
-          <Route
-            path="/analysis-failed"
-            element={<AnalysisFailed />}
-          />
+        <Route
+          path="/analysis-failed"
+          element={<AnalysisFailed />}
+        />
 
-          <Route
-            path="/explanation"
-            element={<Explanation />}
-          />
+        <Route
+          path="/explanation"
+          element={<Explanation />}
+        />
 
-          <Route
-            path="/consent-summary"
-            element={<ConsentSummary />}
-          />
+        <Route
+          path="/consent-summary"
+          element={<ConsentSummary />}
+        />
 
-          {/* Privacy Detail */}
-          <Route
-            path="/data-collection"
-            element={<DataCollection />}
-          />
+        {/* Privacy Detail */}
+        <Route
+          path="/data-collection"
+          element={<DataCollection />}
+        />
 
-          <Route
-            path="/purpose-of-use"
-            element={<PurposeOfUse />}
-          />
+        <Route
+          path="/purpose-of-use"
+          element={<PurposeOfUse />}
+        />
 
-          <Route
-            path="/data-sharing"
-            element={<DataSharing />}
-          />
+        <Route
+          path="/data-sharing"
+          element={<DataSharing />}
+        />
 
-          <Route
-            path="/data-retention"
-            element={<DataRetention />}
-          />
+        <Route
+          path="/data-retention"
+          element={<DataRetention />}
+        />
 
-          <Route
-            path="/user-control"
-            element={<UserControl />}
-          />
+        <Route
+          path="/user-control"
+          element={<UserControl />}
+        />
 
-          <Route
-            path="/source-decision"
-            element={<SourceDecision />}
-          />
+        <Route
+          path="/source-decision"
+          element={<SourceDecision />}
+        />
 
-          {/* Privacy Learning */}
-          <Route
-            path="/privacy-learning"
-            element={<Learn />}
-          />
+        {/* Privacy Learning */}
+        <Route
+          path="/privacy-learning"
+          element={<Learn />}
+        />
 
-          <Route
-            path="/privacy-learning/learn"
-            element={<Learn />}
-          />
+        <Route
+          path="/privacy-learning/learn"
+          element={<Learn />}
+        />
 
-          <Route
-            path="/privacy-learning/learn/:topicId"
-            element={<Learn />}
-          />
+        <Route
+          path="/privacy-learning/learn/:topicId"
+          element={<Learn />}
+        />
 
-          {/* Practice */}
-          <Route
-            path="/privacy-learning/practice"
-            element={<Practice />}
-          />
+        {/* Practice */}
+        <Route
+          path="/privacy-learning/practice"
+          element={<Practice />}
+        />
 
-          <Route
-            path="/privacy-learning/practice/:topicId/question"
-            element={<PracticeScenario />}
-          />
+        <Route
+          path="/privacy-learning/practice/:topicId/question"
+          element={<PracticeScenario />}
+        />
 
-          {/* Risk Dashboard */}
-          <Route
-            path="/risk-dashboard"
-            element={<Dashboard />}
-          />
+        {/* Risk Dashboard */}
+        <Route
+          path="/risk-dashboard"
+          element={<Dashboard />}
+        />
 
-          <Route
-            path="/risk-dashboard/breaches"
-            element={<RecentBreaches />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </PasswordGate>
+        <Route
+          path="/risk-dashboard/breaches"
+          element={<RecentBreaches />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

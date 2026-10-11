@@ -25,7 +25,12 @@ COPY . .
 
 RUN npx vite build --base=/version1/
 
-FROM nginx:1.27-alpine
+# Unprivileged nginx, same as frontend/Dockerfile (security plan N-02).
+FROM nginxinc/nginx-unprivileged:1.29-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# The image already runs as nginx (uid 101); stated explicitly so it can't
+# silently change and so scanners can verify it.
+USER 101
