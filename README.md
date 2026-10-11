@@ -9,9 +9,10 @@ its own URL path:
 
 | URL | Role | What it serves |
 |-----|------|----------------|
-| https://52-64-225-116.sslip.io/ | **Live root** | The last *complete* iteration, currently git tag `iteration-2.1`. |
+| https://52-64-225-116.sslip.io/ | **Live root** | The last *complete* iteration, currently git tag `iteration-3`. |
 | https://52-64-225-116.sslip.io/underdevelopment/ | **Active development** | `main` HEAD, the iteration currently in progress. |
 | https://52-64-225-116.sslip.io/version1/ | **Archive** | Iteration 1, frozen (git tag `iteration-1-archived`). |
+| https://52-64-225-116.sslip.io/version2/ | **Archive** | Iteration 2, frozen (git tag `iteration-2.1`). |
 
 All three share the same backend (`/api/*`), AI service (`/analyze`) and
 database. Only the frontend differs between them.
@@ -26,9 +27,9 @@ set from `site_password` in `infra/terraform.tfvars`) and is never sent to
 the browser. This replaced the old client-side `PasswordGate`, whose
 password was readable in the public JavaScript bundle.
 
-The frozen `iteration-2.1` build still contains that old client-side gate,
-so the live root asks for its old password once more after the server-side
-login until the next cutover.
+The frozen `iteration-2.1` build (the `/version2/` archive) still contains
+that old client-side gate, so that archive asks for its old password once
+more after the server-side login. The live root no longer does.
 
 ### Versioning logic
 

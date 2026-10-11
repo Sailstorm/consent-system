@@ -24,13 +24,19 @@ variable "repo_url" {
 variable "stable_ref" {
   description = "Git ref (tag/branch) for the last complete iteration, served at the live root. See docs/url-versioning-pipeline.md."
   type        = string
-  default     = "iteration-2.1"
+  default     = "iteration-3"
 }
 
 variable "archive_ref" {
   description = "Git ref (tag/branch) for a retired iteration, served at /version1/. iteration-1-archived, not iteration-1 itself: that code predates this project's sub-path support, and without a basename React Router can't match any route under /version1/ at all. See docs/url-versioning-pipeline.md."
   type        = string
   default     = "iteration-1-archived"
+}
+
+variable "archive2_ref" {
+  description = "Git ref for Iteration 2, retired at the Iteration 3 cutover and served at /version2/. It already supports VITE_BASE_PATH, so it's built unpatched with the base path set. See docs/url-versioning-pipeline.md."
+  type        = string
+  default     = "iteration-2.1"
 }
 
 variable "domain_name" {
