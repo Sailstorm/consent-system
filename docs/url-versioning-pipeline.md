@@ -7,11 +7,12 @@ To move to a real domain later, change `domain_name`.
 
 | URL | Role | Source |
 |-----|------|--------|
-| https://52-64-225-116.sslip.io/ | **The LIVE Root** | `stable_ref`, currently git tag `iteration-2.1`. Always the last **complete** iteration. |
+| https://52-64-225-116.sslip.io/ | **The LIVE Root** | `stable_ref`, currently git tag `iteration-3`. Always the last **complete** iteration. |
 | https://52-64-225-116.sslip.io/underdevelopment/ | **Active Development** | `main` HEAD, the iteration currently in progress. |
 | https://52-64-225-116.sslip.io/version1/ | **The Archive** | `archive_ref`, currently git tag `iteration-1-archived`. Iteration 1, frozen. |
+| https://52-64-225-116.sslip.io/version2/ | **The Archive** | `archive2_ref`, currently git tag `iteration-2.1`. Iteration 2, frozen. |
 
-`stable_ref` and `archive_ref` are Terraform variables in
+`stable_ref`, `archive_ref` and `archive2_ref` are Terraform variables in
 `infra/variables.tf`.
 
 All three paths, plus `/api/` and `/analyze`, are served on ports 80/443 by
@@ -26,6 +27,7 @@ checkouts on the host:
 | `/opt/app` | `main` HEAD (clone) | `frontend-dev` | `/underdevelopment/` |
 | `/opt/app-stable` | `git worktree` at `stable_ref` | `frontend` | `/` |
 | `/opt/app-archive` | `git worktree` at `archive_ref` | `frontend-archive` | `/version1/` |
+| `/opt/app-archive-2` | `git worktree` at `archive2_ref` | `frontend-archive-2` | `/version2/` |
 
 The router strips the prefix (`handle_path`) before forwarding to
 `frontend-dev` and `frontend-archive`, so each container serves its own
@@ -38,7 +40,8 @@ The router strips the prefix (`handle_path`) before forwarding to
 | `iteration-1` | `08e176a` | End of Iteration 1 (original boundary). |
 | `iteration-1-archived` | `9a2f28e` | `iteration-1` plus one patch: `BrowserRouter basename="/version1/"`, so it can be served from the archive path. This is what `/version1/` serves. |
 | `iteration-2` | `f81cbde` | Iteration 2 launch. This was the live root at the first cutover. |
-| `iteration-2.1` | `5c37441` | Patch cutover that brought post-launch fixes (evidence-based source text, Stage 1 evidence cap) to the live root. This is the current live root. |
+| `iteration-2.1` | `5c37441` | Patch cutover that brought post-launch fixes (evidence-based source text, Stage 1 evidence cap) to the live root. Retired at the Iteration 3 cutover; this is what `/version2/` serves. Its header logo uses an absolute `/logo-mark.svg`, so that one image is fetched from the live root. |
+| `iteration-3` | `6dd2e72` | Iteration 3 launch (URL and PDF analysis, breach dashboard, security hardening). This is the current live root. |
 
 ## TLS
 

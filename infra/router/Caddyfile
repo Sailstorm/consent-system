@@ -78,6 +78,13 @@
 		reverse_proxy frontend-archive:80
 	}
 
+	# The Archive, part 2: iteration-2.1, retired at the iteration-3
+	# cutover. Built with VITE_BASE_PATH=/version2/, so its assets and
+	# routes already live under the prefix.
+	handle_path /version2/* {
+		reverse_proxy frontend-archive-2:80
+	}
+
 	# The LIVE Root: always the last complete iteration.
 	handle {
 		reverse_proxy frontend:80

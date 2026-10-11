@@ -35,17 +35,18 @@ if [ ! -f /swapfile ]; then
   echo '/swapfile none swap sw 0 0' >> /etc/fstab
 fi
 
-rm -rf /opt/app /opt/app-stable /opt/app-archive
+rm -rf /opt/app /opt/app-stable /opt/app-archive /opt/app-archive-2
 git clone ${repo_url} /opt/app
 cd /opt/app
 
 # URL versioning pipeline (docs/url-versioning-pipeline.md): /opt/app tracks
 # the active-development ref (Iteration N+1 in progress) and is served under
 # /underdevelopment/. A second worktree checked out at the stable ref (last
-# complete iteration) is served at the live root, and a third at the
-# archive ref (a retired iteration) is served under /version1/.
+# complete iteration) is served at the live root, and the retired
+# iterations are served under /version1/ and /version2/.
 git worktree add /opt/app-stable ${stable_ref}
 git worktree add /opt/app-archive ${archive_ref}
+git worktree add /opt/app-archive-2 ${archive2_ref}
 
 # Secrets section: tracing OFF. With `set -x` on, bash prints every
 # assignment, so the values below used to end up in plain text in

@@ -40,7 +40,7 @@ services:
     environment:
       CORS_ORIGIN: ${CORS_ORIGIN}
 
-  # Active Development: this checkout (iteration 2 in progress), served
+  # Active Development: this checkout (the iteration in progress), served
   # under /underdevelopment/.
   frontend-dev:
     logging:
@@ -88,6 +88,29 @@ services:
       dockerfile: ../../app/infra/frontend-archive/Dockerfile
     restart: unless-stopped
 
+  # The Archive, part 2: Iteration 2, retired at the Iteration 3 cutover,
+  # served under /version2/. That ref already supports VITE_BASE_PATH, so it
+  # builds unpatched with this checkout's frontend Dockerfile (non-root
+  # nginx), like the live root above.
+  frontend-archive-2:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    build:
+      context: ../app-archive-2/frontend
+      dockerfile: ../../app/frontend/Dockerfile
+      args:
+        VITE_API_URL: ""
+        VITE_AI_URL: ""
+        VITE_BASE_PATH: "/version2/"
+    restart: unless-stopped
+
   # Terminates TLS. Caddy requests/renews a Let's Encrypt cert for $DOMAIN
   # automatically (HTTP-01 on :80, which it also uses to redirect to
   # HTTPS) and persists it in the caddy-data volume across rebuilds.
@@ -116,6 +139,7 @@ services:
       - frontend
       - frontend-dev
       - frontend-archive
+      - frontend-archive-2
       - backend
       - developed_ai
 
