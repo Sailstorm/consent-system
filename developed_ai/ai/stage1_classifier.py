@@ -6,6 +6,10 @@ from transformers import (
     AutoModelForSequenceClassification
 )
 
+import logging
+
+logger = logging.getLogger("uvicorn.error")
+
 CATEGORIES = [
     "data_collection",
     "purpose_of_use",
@@ -82,6 +86,23 @@ def predict_segments(
     for segment in segments:
 
         text = segment["text"]
+
+        input_token_count = len(
+            tokenizer.encode(
+                text,
+                add_special_tokens=True,
+                truncation=False,
+            )
+        )
+
+        if input_token_count > max_length:
+            logger.warning(
+                "Stage 1 input will be truncated: "
+                "segment_id=%s tokens=%d max_length=%d",
+                segment["segment_id"],
+                input_token_count,
+                max_length,
+            )
 
         # ---------------------------------------------
         # Tokenize

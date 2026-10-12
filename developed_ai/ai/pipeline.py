@@ -3,7 +3,7 @@ import re
 import time
 import uuid
 
-from .segmenter import segment_policy
+from .input_guard import segment_policy_with_guard
 from .stage1_classifier import predict_segments
 from .intermediate_representation import (
     build_intermediate_representation,
@@ -56,10 +56,20 @@ def analyze_policy(
     logger.info("[%s] Analysis started.", policy_id)
 
     # 1. segment
-    segments = segment_policy(
-        policy_text,
-        tokenizer=stage1_tokenizer,
-    )
+    segments, input_warnings = segment_policy_with_guard(
+    policy_text,
+    tokenizer=stage1_tokenizer,
+)
+
+    if input_warnings:
+        logger.warning(
+            "[%s] Input guard flagged %d segment(s).",
+            policy_id,
+            sum(
+                bool(segment.get("instruction_like"))
+                for segment in segments
+            ),
+        )
 
     if not segments:
         raise ValueError(
@@ -135,6 +145,7 @@ def analyze_policy(
     }
 
     return {
-        "policy_id": policy_id,
-        "results": results,
+    "policy_id": policy_id,
+    "results": results,
+    "warnings": input_warnings,
     }
