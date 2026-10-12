@@ -1,432 +1,153 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  loadSettings,
-  truncateForDetailLevel,
-} from '../utils/settings'
-import { loadAnalysisState } from '../utils/analysisState'
-import PageHeader from '../components/PageHeader'
-import '../styles/explanation.css'
+import { Link } from 'react-router-dom'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import NoAnalysis from '../components/NoAnalysis'
+import { CardLink, Disclaimer, StatusBadge, Stepper } from '../components/ui'
+import { CATEGORIES, describeCategory, STATUS } from '../utils/categories'
+import { useAnalysis, useMarkSeen } from '../utils/useAnalysis'
+import '../styles/pages/results.css'
 
 function Explanation() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { policyText, analysisResult, hasResult } = useAnalysis()
+  useMarkSeen(hasResult)
 
-  const savedAnalysis = loadAnalysisState()
-
-  const policyText =
-    location.state?.policyText ||
-    savedAnalysis.policyText ||
-    ''
-
-  const analysisResult =
-    location.state?.analysisResult ||
-    savedAnalysis.analysisResult ||
-    {}
-
-  const detailLevel =
-    loadSettings().detailLevel
-
-  const dataCollection =
-    analysisResult.data_collection?.data_collection ||
-    analysisResult.data_collection ||
-    {}
-
-  const getStatus = (
-    values,
-    completeText,
-    partialText,
-    missingText,
-  ) => {
-    const foundCount =
-      values.filter(Boolean).length
-
-    if (foundCount === values.length) {
-      return {
-        label: 'Clearly stated',
-        description: completeText,
-        type: 'complete',
-      }
-    }
-
-    if (foundCount > 0) {
-      return {
-        label: 'Partly stated',
-        description: partialText,
-        type: 'partial',
-      }
-    }
-
-    return {
-      label: 'Not clearly stated',
-      description: missingText,
-      type: 'missing',
-    }
+  if (!hasResult) {
+    return (
+      <Layout narrow>
+        <NoAnalysis />
+      </Layout>
+    )
   }
 
-  const collectionExplanation =
-    dataCollection.detailed_explanation || {}
-
-  const purposeExplanation =
-    analysisResult.purpose_of_use
-      ?.detailed_explanation || {}
-
-  const sharingExplanation =
-    analysisResult.data_sharing
-      ?.detailed_explanation || {}
-
-  const retentionExplanation =
-    analysisResult.data_retention
-      ?.detailed_explanation || {}
-
-  const controlExplanation =
-    analysisResult.user_control
-      ?.detailed_explanation || {}
-
-  const collectionStatus = getStatus(
-    [
-      collectionExplanation.what_data_is_collected,
-      collectionExplanation.how_it_is_collected,
-      collectionExplanation.when_collection_happens,
-      collectionExplanation.required_or_optional,
-      collectionExplanation.what_is_not_confirmed,
-      collectionExplanation.why_this_matters,
-    ],
-    'All collection details are clearly stated.',
-    'Some collection details are not clearly stated.',
-    'Collection details were not identified in the policy.',
-  )
-
-  const purposeStatus = getStatus(
-    [
-      purposeExplanation.why_data_is_used,
-      purposeExplanation.data_and_purpose,
-      purposeExplanation.unspecified_purposes,
-      purposeExplanation.additional_uses,
-      purposeExplanation.why_this_matters,
-    ],
-    'All purpose details are clearly stated.',
-    'Some purpose details are not clearly stated.',
-    'Purpose details were not identified in the policy.',
-  )
-
-  const sharingStatus = getStatus(
-    [
-      sharingExplanation.who_data_may_be_shared_with,
-      sharingExplanation.why_sharing_may_happen,
-      sharingExplanation.named_organisations,
-      sharingExplanation.what_data_is_shared,
-      sharingExplanation.user_control,
-      sharingExplanation.why_this_matters,
-    ],
-    'All data sharing details are clearly stated.',
-    'Some data sharing details are not clearly stated.',
-    'Data sharing details were not identified in the policy.',
-  )
-
-  const retentionStatus = getStatus(
-    [
-      retentionExplanation.what_is_retained,
-      retentionExplanation.how_long_data_is_kept,
-      retentionExplanation.why_data_is_retained,
-      retentionExplanation.deletion_condition,
-      retentionExplanation.why_this_matters,
-    ],
-    'All retention details are clearly stated.',
-    'Some retention details are not clearly stated.',
-    'Retention details were not identified in the policy.',
-  )
-
-  const controlStatus = getStatus(
-    [
-      controlExplanation.what_you_can_control,
-      controlExplanation.how_to_use_these_controls,
-      controlExplanation.access_and_correction,
-      controlExplanation.deletion,
-      controlExplanation.consent_or_opt_out,
-      controlExplanation.limitations,
-      controlExplanation.why_this_matters,
-    ],
-    'All user control details are clearly stated.',
-    'Some user control details are not clearly stated.',
-    'User control details were not identified in the policy.',
-  )
-
-  const categories = [
-    {
-      title: 'Data Collection',
-      text: truncateForDetailLevel(
-        dataCollection.summary ||
-          'No information is available for this category.',
-        detailLevel,
-      ),
-      status: collectionStatus.label,
-      statusText: collectionStatus.description,
-      statusType: collectionStatus.type,
-      path: '/data-collection',
-    },
-    {
-      title: 'Purpose of Use',
-      text: truncateForDetailLevel(
-        analysisResult.purpose_of_use
-          ?.summary ||
-          'No information is available for this category.',
-        detailLevel,
-      ),
-      status: purposeStatus.label,
-      statusText: purposeStatus.description,
-      statusType: purposeStatus.type,
-      path: '/purpose-of-use',
-    },
-    {
-      title: 'Data Sharing',
-      text: truncateForDetailLevel(
-        analysisResult.data_sharing
-          ?.summary ||
-          'No information is available for this category.',
-        detailLevel,
-      ),
-      status: sharingStatus.label,
-      statusText: sharingStatus.description,
-      statusType: sharingStatus.type,
-      path: '/data-sharing',
-    },
-    {
-      title: 'Data Retention',
-      text: truncateForDetailLevel(
-        analysisResult.data_retention
-          ?.summary ||
-          'No information is available for this category.',
-        detailLevel,
-      ),
-      status: retentionStatus.label,
-      statusText: retentionStatus.description,
-      statusType: retentionStatus.type,
-      path: '/data-retention',
-    },
-    {
-      title: 'User Control',
-      text: truncateForDetailLevel(
-        analysisResult.user_control
-          ?.summary ||
-          'No information is available for this category.',
-        detailLevel,
-      ),
-      status: controlStatus.label,
-      statusText: controlStatus.description,
-      statusType: controlStatus.type,
-      path: '/user-control',
-    },
-  ]
-
-  function openCategory(path) {
-    navigate(path, {
-      state: {
-        policyText,
-        analysisResult,
-      },
-    })
-  }
-
-  function goToLearning() {
-    navigate('/privacy-learning/learn')
-  }
-
-  function goToSummary() {
-    navigate('/consent-summary', {
-      state: {
-        policyText,
-        analysisResult,
-      },
-    })
-  }
-
-  function goBack() {
-    navigate('/privacy-assistant', {
-      state: {
-        policyText,
-      },
-    })
-  }
+  const navState = { policyText, analysisResult }
+  const answers = CATEGORIES.map((category) => describeCategory(category, analysisResult))
 
   return (
-    <div className="i3-explanation-page">
-      <PageHeader />
+    <Layout narrow>
+      <Stepper current={2} />
 
-      <div className="i3-explanation-back-row">
-        <button
-          type="button"
-          className="i3-explanation-page-back"
-          onClick={goBack}
-        >
-          ← Back
-        </button>
+      <header className="page-head">
+        <p className="eyebrow">Your policy, explained</p>
+        <h1>Here&apos;s what this policy says</h1>
+        <p className="lead">
+          Five plain answers about your personal information. Open any answer
+          to read more and see the policy&apos;s own words.
+        </p>
+      </header>
+
+      <nav className="glance" aria-label="The five answers at a glance">
+        {answers.map((answer, index) => (
+          <a
+            key={answer.key}
+            href={`#answer-${answer.key}`}
+            className={`glance__item glance__item--${answer.status}`}
+            style={{ '--i': index }}
+          >
+            <span className="glance__icon">
+              <Icon name={answer.icon} />
+            </span>
+            <span className="glance__q">{answer.question}</span>
+            <span className="glance__status">
+              <Icon name={STATUS[answer.status].icon} />
+              {STATUS[answer.status].label}
+            </span>
+          </a>
+        ))}
+      </nav>
+
+      <div className="notice status-key">
+        <Icon name="info" />
+        <p>
+          <strong>About these labels</strong>
+          They show how clearly the policy explains each point. They don&apos;t
+          say whether the policy is good or bad. That decision is yours.
+        </p>
       </div>
 
-      <main className="i3-explanation-content">
-        <div className="i3-explanation-top">
-          <section className="i3-explanation-heading">
-            <p className="i3-explanation-label">
-              YOUR PRIVACY SUMMARY
-            </p>
-
-            <h1>Explanation</h1>
-
-            <p>
-              The key privacy points from your submitted
-              text, organised into five consistent
-              categories.
-            </p>
-          </section>
-
-          <aside className="i3-learning-option">
-            <img
-              src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
-              alt=""
-              className="i3-learning-option-background"
-            />
-
-            <img
-              src={`${import.meta.env.BASE_URL}icon-question.jpg`}
-              alt=""
-              className="i3-learning-option-icon"
-            />
-
-            <div className="i3-learning-option-copy">
-              <span>LEARNING OPTION</span>
-
-              <h3>Learn more about privacy</h3>
-
-              <p>
-                Explore short privacy lessons.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={goToLearning}
-            >
-              Explore learning →
-            </button>
-          </aside>
-        </div>
-
-        <section className="i3-category-grid">
-          {categories.map((category) => (
-            <button
-              type="button"
-              key={category.title}
-              className={`i3-category-card ${category.statusType}`}
-              onClick={() =>
-                openCategory(category.path)
-              }
-            >
-              <div className="i3-category-copy">
-                <h2>{category.title}</h2>
-                <p>{category.text}</p>
-              </div>
-
-              <div
-                className={`i3-category-status ${category.statusType}`}
-              >
-                <span className="i3-category-status-icon">
-                  {category.statusType === 'complete'
-                    ? '✓'
-                    : category.statusType === 'partial'
-                      ? '◐'
-                      : '!'}
-                </span>
-
-                <div className="i3-category-status-copy">
-                  <strong>
-                    {category.status}
-                  </strong>
-
-                  <p>
-                    {category.statusText}
-                  </p>
-                </div>
-              </div>
-
-              <span className="i3-category-arrow">
-                ›
+      <div className="answers">
+        {answers.map((answer) => (
+          <article
+            key={answer.key}
+            id={`answer-${answer.key}`}
+            className="answer card"
+            data-reveal
+          >
+            <header className="answer__head">
+              <span className="icon-tile">
+                <Icon name={answer.icon} />
               </span>
-            </button>
-          ))}
+              <div className="answer__titles">
+                <p className="answer__topic">{answer.title}</p>
+                <h2>{answer.question}</h2>
+              </div>
+              <StatusBadge status={answer.status} />
+            </header>
 
-          <button
-            type="button"
-            className="i3-category-card source"
-            onClick={() =>
-              openCategory('/source-decision')
-            }
-          >
-            <div className="i3-source-icon">
-              i
+            <p className="answer__summary">
+              {answer.summary || 'The policy doesn’t give a clear answer to this question.'}
+            </p>
+
+            <div className="answer__foot">
+              <span className="answer__count muted">
+                Answers {answer.found} of {answer.points.length} things we look for
+              </span>
+              <CardLinkInline to={answer.path} state={navState}>
+                Read more about {answer.title.toLowerCase()}
+              </CardLinkInline>
             </div>
+          </article>
+        ))}
+      </div>
 
-            <div className="i3-category-copy">
-              <h2>Source &amp; decision</h2>
-
-              <p>
-                See the sources used and how the summary
-                was generated.
-              </p>
-            </div>
-
-            <span className="i3-category-arrow">
-              ›
-            </span>
-          </button>
-        </section>
-
-        <section className="i3-explanation-note">
-          <div className="i3-explanation-note-icon">
-            i
-          </div>
-
+      <CardLink to="/source-decision" state={navState} className="source-link" cta="Read how this works">
+        <div className="source-link__body">
+          <span className="icon-tile">
+            <Icon name="question" />
+          </span>
           <div>
-            <h3>
-              No recommendation is made for you.
-            </h3>
-
-            <p>
-              These statuses describe how clearly
-              information appears in the submitted policy.
-              They do not indicate whether the policy is
-              safe or unsafe.
+            <h2>Where does this explanation come from?</h2>
+            <p className="muted">
+              How we read the policy, what we can and can&apos;t do, and the
+              full text you gave us.
             </p>
           </div>
-        </section>
-
-        <div className="i3-explanation-actions">
-          <button
-            type="button"
-            className="i3-summary-button"
-            onClick={goToSummary}
-          >
-            View consent summary →
-          </button>
-
-          <div className="i3-summary-ready">
-            <span>✓</span>
-            Consent summary ready
-          </div>
         </div>
+      </CardLink>
 
-        <div className="i3-explanation-footer-line"></div>
+      <section className="next-step" data-reveal>
+        <div>
+          <h2>Next: your one-page summary</h2>
+          <p className="muted">
+            All five answers on one page, ready to print or keep open while you
+            decide.
+          </p>
+        </div>
+        <CardLinkButton to="/consent-summary" state={navState}>
+          See my summary
+        </CardLinkButton>
+      </section>
 
-        <p className="i3-explanation-disclaimer">
-          Consent Assistant provides information to support
-          your review. It does not provide legal advice.
-        </p>
-      </main>
+      <Disclaimer />
+    </Layout>
+  )
+}
 
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="i3-explanation-watermark"
-      />
-    </div>
+// Links that carry the analysis along in navigation state.
+function CardLinkInline({ to, state, children }) {
+  return (
+    <Link to={to} state={state} className="answer__more">
+      {children}
+      <Icon name="arrow-right" />
+    </Link>
+  )
+}
+
+function CardLinkButton({ to, state, children }) {
+  return (
+    <Link to={to} state={state} className="btn btn--primary btn--large">
+      {children}
+      <Icon name="arrow-right" />
+    </Link>
   )
 }
 

@@ -1,0 +1,166 @@
+/*
+  Consent Assistant design tokens.
+
+  Built for older readers: text starts at 20px, body colours meet WCAG AAA
+  (7:1) contrast, and every status is shown with an icon and words as well
+  as colour. Text size, calm motion and dark background are set by
+  utils/settings.js as classes on <html>.
+*/
+
+:root {
+  /* Colour: light (default), from the Consent Assistant logo:
+     ocean blue #2E7C9E, sky blue #7EC4DE, charcoal #2B2F33, off-white
+     #FBFBFC. Text and buttons use a deeper shade of the ocean blue so they
+     reach 7:1 contrast; the logo blue itself is kept for the shield and
+     accents. */
+  --paper: #f5f8fa;
+  --surface: #ffffff;
+  --surface-2: #eaf1f5;
+  --ink: #2b2f33;
+  --ink-2: #444b52;
+  --line: #d5dee5;
+  --line-strong: #6b747d;
+
+  --brand: #18536b;
+  --brand-hover: #123f52;
+  --brand-tint: #e3f0f6;
+  --on-brand: #fbfbfc;
+
+  /* The logo's own colours (primary version on light backgrounds) */
+  --logo: #2e7c9e;
+  --logo-ink: #fbfbfc;
+
+  /* Highlighter: the logo's sky blue */
+  --marker: #9ed3e7;
+  --marker-soft: #e2f2f8;
+  --on-marker: #2b2f33;
+
+  /* Inverted panels (tip, captions, next step): charcoal like the dark icon */
+  --invert-bg: #2b2f33;
+  --invert-ink: #fbfbfc;
+  --invert-muted: #cdd3d8;
+  --invert-accent: #98d1e6;
+
+  --ok: #155a2b;
+  --ok-bg: #e0f2e4;
+  --part: #723c00;
+  --part-bg: #ffefd6;
+  --miss: #8c1d15;
+  --miss-bg: #fbe7e5;
+
+  /* Alert: "look out for this" warnings in lessons (brick red, 7.4:1) */
+  --alert: #a61f15;
+  --on-alert: #ffffff;
+  --alert-soft: #fdecea;
+
+  --shadow-1: 0 1px 2px rgb(43 47 51 / 0.06), 0 2px 6px rgb(43 47 51 / 0.05);
+  --shadow-2: 0 2px 4px rgb(43 47 51 / 0.06), 0 12px 28px rgb(43 47 51 / 0.1);
+
+  /* Type */
+  --font-sans: 'Atkinson Hyperlegible Next Variable', 'Atkinson Hyperlegible Next',
+    'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Atkinson Hyperlegible Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-small: 1rem;
+  --fs-body: 1.125rem;
+  --fs-lead: 1.3125rem;
+  --fs-h3: 1.4375rem;
+  --fs-h2: clamp(1.75rem, 1.45rem + 1.1vw, 2.25rem);
+  --fs-h1: clamp(2.25rem, 1.7rem + 2.2vw, 3.25rem);
+  --fs-display: clamp(2.6rem, 1.6rem + 4vw, 4.5rem);
+
+  /* Space and shape */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --measure: 40rem;
+  --page-max: 72rem;
+  --radius-s: 10px;
+  --radius: 16px;
+  --radius-l: 24px;
+  --target: 3.25rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 560ms;
+  --dur-4: 900ms;
+
+  color-scheme: light;
+}
+
+/* Colour: dark background (chosen in Display settings). Charcoal, with the
+   reversed logo (sky blue shield, charcoal letters). */
+:root.night-theme {
+  --paper: #1f2225;
+  --surface: #2b2f33;
+  --surface-2: #353a3f;
+  --ink: #fbfbfc;
+  --ink-2: #cbd1d6;
+  --line: #40464c;
+  --line-strong: #8a939b;
+
+  --brand: #a3d7ea;
+  --brand-hover: #c4e6f2;
+  --brand-tint: #1d3a46;
+  --on-brand: #1f2225;
+
+  --logo: #7ec4de;
+  --logo-ink: #2b2f33;
+
+  --marker: #7ec4de;
+  --marker-soft: #1d3a46;
+  --on-marker: #1f2225;
+
+  --invert-bg: #3a4046;
+  --invert-ink: #fbfbfc;
+  --invert-muted: #d6dbdf;
+  --invert-accent: #b4def0;
+
+  --ok: #93e2a8;
+  --ok-bg: #19301f;
+  --part: #ffc56e;
+  --part-bg: #3a2c14;
+  --miss: #ffaba3;
+  --miss-bg: #3d1c19;
+
+  --alert: #ffab9f;
+  --on-alert: #1f2225;
+  --alert-soft: #3d1c19;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-2: 0 2px 4px rgb(0 0 0 / 0.3), 0 12px 28px rgb(0 0 0 / 0.35);
+
+  color-scheme: dark;
+}
+
+/* Text size (A / A+ / A++ in Display settings) */
+:root,
+:root.text-size-small {
+  font-size: 100%;
+}
+
+:root.text-size-medium {
+  font-size: 112.5%;
+}
+
+:root.text-size-large {
+  font-size: 131.25%;
+}
+
+/* Calm motion: chosen in Display settings or set by the operating system */
+:root.reduced-motion {
+  --dur-1: 1ms;
+  --dur-2: 1ms;
+  --dur-3: 1ms;
+  --dur-4: 1ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 1ms;
+    --dur-2: 1ms;
+    --dur-3: 1ms;
+    --dur-4: 1ms;
+  }
+}

@@ -1,31 +1,31 @@
 export const LEARNING_TOPICS = [
   {
     id: 'data-collection',
-    title: 'Data Collection',
+    title: 'Data collection',
     nextHint:
       'Learn what information a service may collect about you, then try a practice scenario.',
   },
   {
     id: 'purpose-of-use',
-    title: 'Purpose of Use',
+    title: 'Purpose of use',
     nextHint:
       'Learn why an organisation wants to use your information, then try a practice scenario.',
   },
   {
     id: 'data-sharing',
-    title: 'Data Sharing',
+    title: 'Data sharing',
     nextHint:
       'Learn who else may receive your information, then try a practice scenario.',
   },
   {
     id: 'data-retention',
-    title: 'Data Retention',
+    title: 'Data retention',
     nextHint:
       'Learn how long organisations may keep information, then try the final practice scenario.',
   },
   {
     id: 'user-control',
-    title: 'User Control',
+    title: 'Your choices',
     nextHint:
       'Learn the choices you may have over your information, then try a practice scenario.',
   },

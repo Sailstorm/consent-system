@@ -1,0 +1,381 @@
+/* The magnifier: the site's signature illustration */
+
+@property --cx {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 120px;
+}
+
+@property --cy {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 120px;
+}
+
+.mag-wrap {
+  position: relative;
+}
+
+.mag-stage {
+  --lens: 168px;
+  --zoom: 2.15;
+  --cycle: 13s;
+  --play: running;
+  --cx: var(--s1x, 120px);
+  --cy: var(--s1y, 120px);
+}
+
+.mag-stage.is-ready {
+  animation: mag-scan var(--cycle) var(--ease-in-out) infinite;
+  animation-play-state: var(--play);
+}
+
+.mag-stage.is-paused {
+  --play: paused;
+}
+
+@keyframes mag-scan {
+  0%,
+  27% {
+    --cx: var(--s1x);
+    --cy: var(--s1y);
+  }
+
+  36%,
+  60% {
+    --cx: var(--s2x);
+    --cy: var(--s2y);
+  }
+
+  69%,
+  92% {
+    --cx: var(--s3x);
+    --cy: var(--s3y);
+  }
+
+  100% {
+    --cx: var(--s1x);
+    --cy: var(--s1y);
+  }
+}
+
+.magnifier {
+  position: relative;
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  border: 1px solid var(--line);
+  transform: rotate(-1.2deg);
+}
+
+/* The policy's small print: deliberately tiny, like the real thing */
+.mag-doc {
+  position: relative;
+  padding: 26px 28px 30px;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.75;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+.mag-doc p + p {
+  margin-top: 9px;
+}
+
+.mag-doc b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.mag-doc__title {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.mag-doc__meta {
+  margin-top: 2px !important;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.mag-doc mark {
+  background: none;
+  color: inherit;
+}
+
+/* The lens */
+.mag-lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--lens);
+  height: var(--lens);
+  transform: translate(
+    calc(var(--cx) - var(--lens) / 2),
+    calc(var(--cy) - var(--lens) / 2)
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-3) ease;
+}
+
+.is-ready .mag-lens {
+  opacity: 1;
+}
+
+.mag-lens__view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 5px var(--ink),
+    0 0 0 9px color-mix(in srgb, var(--ink) 18%, transparent),
+    0 18px 30px rgb(43 47 51 / 0.28),
+    inset 0 0 18px rgb(43 47 51 / 0.12);
+}
+
+/* Glass glint */
+.mag-lens__view::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 24%,
+    rgb(255 255 255 / 0.55),
+    rgb(255 255 255 / 0) 34%
+  );
+}
+
+.mag-doc--zoomed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  transform: translate(
+      calc(var(--lens) / 2 - var(--cx) * var(--zoom)),
+      calc(var(--lens) / 2 - var(--cy) * var(--zoom))
+    )
+    scale(var(--zoom));
+  color: var(--ink);
+}
+
+/* Inside the lens, the phrases that matter are highlighted */
+.mag-doc--zoomed mark {
+  padding: 0 1px;
+  border-radius: 2px;
+  background: var(--marker);
+  color: var(--on-marker);
+  font-weight: 700;
+}
+
+.mag-lens__handle {
+  position: absolute;
+  top: 86%;
+  left: 86%;
+  width: 22px;
+  height: 78px;
+  border-radius: 11px;
+  background: linear-gradient(90deg, #45494e, var(--ink) 60%);
+  transform: rotate(-45deg);
+  transform-origin: top center;
+  box-shadow: 0 10px 18px rgb(43 47 51 / 0.25);
+}
+
+.night-theme .mag-lens__handle {
+  background: linear-gradient(90deg, #8a939b, #c3c9cf 60%);
+}
+
+/* Captions in sync with the lens */
+.mag-captions {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.25rem;
+  width: min(100%, 26rem);
+  margin: -2.25rem 0 0 auto;
+  padding: 1rem 1.25rem 1.125rem;
+  border-radius: var(--radius);
+  background: var(--invert-bg);
+  color: var(--invert-ink);
+  box-shadow: var(--shadow-2);
+  transform: rotate(0.8deg);
+}
+
+.mag-captions__label {
+  color: var(--invert-accent);
+  font-size: var(--fs-small);
+  font-weight: 750;
+}
+
+.mag-captions__stack {
+  display: grid;
+}
+
+.mag-caption {
+  grid-area: 1 / 1;
+  font-size: var(--fs-lead);
+  font-weight: 650;
+  line-height: 1.35;
+  opacity: 0;
+}
+
+.mag-caption--1 {
+  opacity: 1;
+}
+
+.is-ready .mag-caption {
+  animation: var(--cycle) linear infinite both;
+  animation-play-state: var(--play);
+}
+
+.is-ready .mag-caption--1 {
+  animation-name: caption-1;
+}
+
+.is-ready .mag-caption--2 {
+  animation-name: caption-2;
+}
+
+.is-ready .mag-caption--3 {
+  animation-name: caption-3;
+}
+
+@keyframes caption-1 {
+  0%,
+  29% {
+    opacity: 1;
+    transform: none;
+  }
+
+  33%,
+  95% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  99%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes caption-2 {
+  0%,
+  29% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  33%,
+  62% {
+    opacity: 1;
+    transform: none;
+  }
+
+  66%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes caption-3 {
+  0%,
+  62% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  66%,
+  95% {
+    opacity: 1;
+    transform: none;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.mag-pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-top: 0.875rem;
+  padding: 0.375rem 0.875rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.mag-pause:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.mag-pause svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Calm motion: hold the lens on the first phrase, show its caption */
+:root.reduced-motion .mag-stage,
+:root.reduced-motion .mag-caption {
+  animation: none !important;
+}
+
+:root.reduced-motion .mag-caption--1 {
+  opacity: 1;
+}
+
+:root.reduced-motion .mag-pause {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mag-stage,
+  .mag-caption {
+    animation: none !important;
+  }
+
+  .mag-caption--1 {
+    opacity: 1;
+  }
+
+  .mag-pause {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .mag-stage {
+    --lens: 132px;
+    --zoom: 2;
+  }
+
+  .mag-doc {
+    padding: 20px 20px 24px;
+    font-size: 9.5px;
+  }
+
+  .mag-captions {
+    margin-top: -1.5rem;
+  }
+}

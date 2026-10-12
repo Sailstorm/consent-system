@@ -1,325 +1,253 @@
-import { useEffect, useState } from 'react'
-import {
-  Navigate,
-  useNavigate,
-  useParams,
-} from 'react-router-dom'
-import AnalysisStatus from '../components/AnalysisStatus'
-import PageHeader from '../components/PageHeader'
-import PracticeIcon from '../components/PracticeIcon'
+import { useEffect, useRef, useState } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import { BackLink } from '../components/ui'
+import { getLesson } from '../data/lessons'
 import {
   getCurrentQuestion,
   getSessionQuestions,
   getShuffledOptions,
   getTopicBySlug,
-  getTopicIcon,
   isAnswerCorrect,
   loadPracticeState,
   moveToNextQuestion,
   savePracticeChoice,
 } from '../utils/practice'
-import '../styles/practice.css'
+import '../styles/pages/learn.css'
 
-function PracticeScenario() {
-  const navigate = useNavigate()
-  const { topicId } = useParams()
+const LETTERS = ['A', 'B', 'C', 'D', 'E']
 
-  const topic = getTopicBySlug(topicId)
+// One question. Keyed by question id, so each new question starts fresh.
+function Question({ question, savedChoice, isLast, autoFocus, onChoose, onNext }) {
+  const [selected, setSelected] = useState(savedChoice)
+  const [options] = useState(() => getShuffledOptions(question))
+  const feedbackRef = useRef(null)
+  const questionRef = useRef(null)
 
-  const [practiceState, setPracticeState] =
-    useState(loadPracticeState)
+  const answered = Boolean(selected)
+  const isCorrect = answered && isAnswerCorrect(question, selected)
 
-  const question =
-    getCurrentQuestion(practiceState)
-
-  const questions =
-    getSessionQuestions(practiceState)
-
-  const savedChoice = question
-    ? practiceState.choices[question.id] || ''
-    : ''
-
-  const [selected, setSelected] =
-    useState(savedChoice)
-
-  const [answered, setAnswered] =
-    useState(Boolean(savedChoice))
-
-  const [options, setOptions] = useState(() =>
-    getShuffledOptions(question),
-  )
-
+  // Move focus to the new question, so screen readers announce it.
   useEffect(() => {
-    if (!question) {
-      return
+    if (autoFocus) {
+      questionRef.current?.focus({ preventScroll: true })
     }
+  }, [autoFocus])
 
-    const choice =
-      practiceState.choices[question.id] || ''
-
-    setSelected(choice)
-    setAnswered(Boolean(choice))
-    setOptions(getShuffledOptions(question))
-  }, [question?.id])
-
-  if (
-    !topic ||
-    !question ||
-    practiceState.selectedTopic !== topic.key
-  ) {
-    return (
-      <Navigate
-        to="/privacy-learning/practice"
-        replace
-      />
-    )
-  }
-
-  const isCorrect =
-    answered &&
-    isAnswerCorrect(question, selected)
-
-  const isLast =
-    practiceState.currentIndex >=
-    questions.length - 1
-
-  const progress =
-    ((practiceState.currentIndex + 1) /
-      questions.length) *
-    100
-
-  function handleSelect(option) {
+  function choose(option) {
     if (answered) {
       return
     }
 
-    const updatedState = savePracticeChoice(
-      question.id,
-      option,
-    )
-
     setSelected(option)
-    setAnswered(true)
-    setPracticeState(updatedState)
+    onChoose(option)
+    requestAnimationFrame(() => feedbackRef.current?.focus({ preventScroll: true }))
+    setTimeout(() => {
+      feedbackRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }, 120)
   }
 
-  function handleNext() {
+  function optionState(option) {
     if (!answered) {
-      return
-    }
-
-    const updatedState =
-      moveToNextQuestion()
-
-    if (isLast) {
-      navigate('/privacy-learning/practice')
-      return
-    }
-
-    setPracticeState(updatedState)
-  }
-
-  function getChoiceClass(option) {
-    if (!answered) {
-      return selected === option
-        ? 'i3-question-choice selected'
-        : 'i3-question-choice'
+      return ''
     }
 
     if (option === question.correctAnswer) {
-      return 'i3-question-choice correct'
+      return 'is-correct'
     }
 
-    if (
-      option === selected &&
-      option !== question.correctAnswer
-    ) {
-      return 'i3-question-choice wrong'
-    }
-
-    return 'i3-question-choice answered'
+    return option === selected ? 'is-wrong' : 'is-other'
   }
 
   return (
-    <div className="i3-question-page">
-      <PageHeader />
+    <section className="quiz">
+      <h1 className="quiz__question" ref={questionRef} tabIndex={-1}>
+        {question.question}
+      </h1>
 
-      <div className="i3-question-back-row">
-        <button
-          type="button"
-          className="i3-question-page-back"
-          onClick={() =>
-            navigate('/privacy-learning/practice')
-          }
+      <p className="muted quiz__hint">
+        {answered ? 'Your answer is marked below.' : 'Choose the answer you think is best.'}
+      </p>
+
+      <ul className="options" role="list">
+        {options.map((option, index) => {
+          const state = optionState(option)
+
+          return (
+            <li key={option} style={{ '--i': index }}>
+              <button
+                type="button"
+                className={`option ${state}`}
+                onClick={() => choose(option)}
+                aria-disabled={answered}
+                aria-pressed={option === selected}
+              >
+                <span className="option__letter" aria-hidden="true">
+                  {state === 'is-correct' ? (
+                    <Icon name="check" />
+                  ) : state === 'is-wrong' ? (
+                    <Icon name="close" />
+                  ) : (
+                    LETTERS[index]
+                  )}
+                </span>
+                <span className="option__text">{option}</span>
+                {state === 'is-correct' && <span className="visually-hidden"> (right answer)</span>}
+                {state === 'is-wrong' && (
+                  <span className="visually-hidden"> (your answer, not right)</span>
+                )}
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+
+      {answered && (
+        <div
+          className={`feedback ${isCorrect ? 'feedback--right' : 'feedback--wrong'}`}
+          ref={feedbackRef}
+          tabIndex={-1}
+          role="status"
         >
-          ← Leave Practice
-        </button>
-      </div>
+          <h2 className="feedback__title">
+            <Icon name={isCorrect ? 'check-circle' : 'info'} />
+            {isCorrect ? 'That’s right' : 'Not quite'}
+          </h2>
 
-      <main className="i3-question-content">
-        <div className="i3-question-top">
-          <section>
-            <p className="i3-question-label">
-              PRIVACY PRACTICE
+          {!isCorrect && (
+            <p className="feedback__answer">
+              <strong>The best answer is:</strong> {question.correctAnswer}
             </p>
+          )}
 
-            <h1>{topic.title}</h1>
+          <p>
+            <strong>Why: </strong>
+            {question.explanation}
+          </p>
 
-            <p className="i3-question-subtitle">
-              Test your understanding one question at a
-              time.
-            </p>
-          </section>
-
-          <div className="i3-question-analysis">
-            <AnalysisStatus />
-          </div>
+          <button type="button" className="btn btn--primary btn--large" onClick={onNext}>
+            {isLast ? 'Finish' : 'Next question'}
+            <Icon name="arrow-right" />
+          </button>
         </div>
+      )}
+    </section>
+  )
+}
 
-        <div className="i3-question-divider"></div>
+function PracticeScenario() {
+  const { topicId } = useParams()
+  const topic = getTopicBySlug(topicId)
 
-        <section className="i3-question-progress">
-          <div className="i3-question-progress-head">
-            <span>
-              Question {practiceState.currentIndex + 1}
-              {' '}of {questions.length}
-            </span>
+  const [practiceState, setPracticeState] = useState(loadPracticeState)
+  const [finished, setFinished] = useState(false)
+  const [moved, setMoved] = useState(false)
 
-            <span>
-              {Math.round(progress)}% complete
-            </span>
-          </div>
+  const question = getCurrentQuestion(practiceState)
+  const questions = getSessionQuestions(practiceState)
 
-          <div className="i3-question-progress-bar">
-            <div
-              className="i3-question-progress-fill"
-              style={{
-                width: `${progress}%`,
-              }}
-            />
+  if (!topic || (!finished && (!question || practiceState.selectedTopic !== topic.key))) {
+    return <Navigate to="/privacy-learning/practice" replace />
+  }
+
+  const lesson = getLesson(topic.slug)
+
+  if (finished) {
+    const right = questions.filter((item) =>
+      isAnswerCorrect(item, practiceState.choices[item.id]),
+    ).length
+
+    return (
+      <Layout narrow>
+        <section className="practice-finished">
+          <span className="practice-finished__badge">
+            <Icon name="star" />
+          </span>
+          <p className="eyebrow">{topic.title}</p>
+          <h1>You answered every question</h1>
+          <p className="lead">
+            {right} of {questions.length} were right first time. Every
+            question you answered, right or wrong, helps you spot these things
+            in real policies.
+          </p>
+
+          <div className="btn-row">
+            <Link to="/privacy-learning/practice" className="btn btn--primary btn--large">
+              Practise another topic
+              <Icon name="arrow-right" />
+            </Link>
+            <Link to={`/privacy-learning/learn/${topic.slug}`} className="btn btn--large">
+              Read the lesson again
+            </Link>
           </div>
         </section>
+      </Layout>
+    )
+  }
 
-        <div className="i3-question-layout">
-          <section className="i3-question-card">
-            <div className="i3-question-icon">
-              <PracticeIcon
-                type={getTopicIcon(topic.title)}
-              />
-            </div>
+  const isLast = practiceState.currentIndex >= questions.length - 1
+  const answeredHere = Boolean(practiceState.choices[question.id])
 
-            <p className="i3-question-small-label">
-              QUESTION
-            </p>
+  function next() {
+    const updated = moveToNextQuestion()
+    setPracticeState(updated)
 
-            <h2>{question.question}</h2>
+    if (isLast) {
+      setFinished(true)
+      return
+    }
 
-            <p className="i3-question-instruction">
-              Choose the answer you think is correct.
-            </p>
+    setMoved(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
-            <div className="i3-question-options">
-              {options.map((option, index) => (
-                <button
-                  key={option}
-                  type="button"
-                  className={getChoiceClass(option)}
-                  disabled={answered}
-                  onClick={() =>
-                    handleSelect(option)
-                  }
-                >
-                  <span className="i3-choice-letter">
-                    {String.fromCharCode(
-                      65 + index,
-                    )}
-                  </span>
+  return (
+    <Layout narrow>
+      <BackLink to="/privacy-learning/practice">Stop for now (your place is saved)</BackLink>
 
-                  <span>{option}</span>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <aside className="i3-question-side">
-            {!answered && (
-              <section className="i3-question-help">
-                <h3>Take your time</h3>
-
-                <p>
-                  Read each option carefully and choose the
-                  answer that makes the most sense.
-                </p>
-              </section>
-            )}
-
-            {answered && (
-              <section
-                className={
-                  isCorrect
-                    ? 'i3-feedback-card correct'
-                    : 'i3-feedback-card wrong'
-                }
-              >
-                <div className="i3-feedback-title">
-                  <span>
-                    {isCorrect ? '✓' : '!'}
-                  </span>
-
-                  <h3>
-                    {isCorrect
-                      ? 'Correct'
-                      : 'Not quite'}
-                  </h3>
-                </div>
-
-                {!isCorrect && (
-                  <div className="i3-correct-answer">
-                    <strong>
-                      Correct answer
-                    </strong>
-
-                    <p>
-                      {question.correctAnswer}
-                    </p>
-                  </div>
-                )}
-
-                <div className="i3-feedback-explanation">
-                  <strong>Why?</strong>
-
-                  <p>
-                    {question.explanation}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  className="i3-question-next"
-                  onClick={handleNext}
-                >
-                  {isLast
-                    ? 'Finish Practice →'
-                    : 'Next Question →'}
-                </button>
-              </section>
-            )}
-          </aside>
+      <div className="quiz-progress">
+        <div className="quiz-progress__text">
+          <span className="eyebrow">{topic.title}</span>
+          <span className="muted">
+            Question <strong>{practiceState.currentIndex + 1}</strong> of {questions.length}
+          </span>
         </div>
+        <div
+          className="meter"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={questions.length}
+          aria-valuenow={practiceState.currentIndex}
+          aria-label="Questions answered"
+        >
+          <div
+            className="meter__fill"
+            style={{ width: `${(practiceState.currentIndex / questions.length) * 100}%` }}
+          />
+        </div>
+      </div>
 
-         
-        <p className="i3-question-disclaimer">
-          Consent Assistant provides information to support
-          your review. It does not provide legal advice.
-        </p>
-      </main>
-
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="i3-question-watermark"
+      <Question
+        key={question.id}
+        question={question}
+        savedChoice={practiceState.choices[question.id] || ''}
+        isLast={isLast}
+        autoFocus={moved}
+        onChoose={(option) => setPracticeState(savePracticeChoice(question.id, option))}
+        onNext={next}
       />
-    </div>
+
+      {lesson && !answeredHere && (
+        <p className="quiz__lesson muted">
+          Not sure?{' '}
+          <Link to={`/privacy-learning/learn/${lesson.slug}`}>
+            Read the lesson on {lesson.title.toLowerCase()}
+          </Link>
+          . Your place here is saved.
+        </p>
+      )}
+    </Layout>
   )
 }
 

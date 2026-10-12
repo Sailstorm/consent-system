@@ -4,6 +4,7 @@ const DRAFT_KEY = 'consent-assistant-draft'
 export const defaultSettings = {
   textSize: 'medium',
   nightTheme: false,
+  reducedMotion: false,
   keepSession: true,
   detailLevel: 'summary',
 }
@@ -22,7 +23,11 @@ export function loadSettings() {
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+  } catch {
+    // Ignore storage errors in private browsing; the change still applies.
+  }
   applySettings(settings)
 }
 
@@ -42,6 +47,10 @@ export function applySettings(settings = loadSettings()) {
 
   if (settings.nightTheme) {
     root.classList.add('night-theme')
+  }
+
+  if (settings.reducedMotion) {
+    root.classList.add('reduced-motion')
   }
 }
 
