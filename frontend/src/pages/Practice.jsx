@@ -1,226 +1,127 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import AnalysisStatus from '../components/AnalysisStatus'
-import PageHeader from '../components/PageHeader'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import { BackLink } from '../components/ui'
+import { getLesson } from '../data/lessons'
 import {
+  getSessionQuestions,
   getTopicPracticeStatus,
+  getTopicQuestions,
   loadPracticeState,
   practiceTopics,
   resumeTopicPractice,
   startTopicPractice,
 } from '../utils/practice'
-import '../styles/practice.css'
+import '../styles/pages/learn.css'
 
 function Practice() {
   const navigate = useNavigate()
+  const state = loadPracticeState()
 
-  const [practiceState, setPracticeState] =
-    useState(loadPracticeState)
-
-  function openTopic(topic) {
-    navigate(
-      `/privacy-learning/practice/${topic.slug}/question`,
-    )
+  function open(topic) {
+    navigate(`/privacy-learning/practice/${topic.slug}/question`)
   }
 
-  function startTopic(topic) {
-    const state =
-      startTopicPractice(topic.key)
-
-    if (!state) {
-      return
+  function start(topic) {
+    if (startTopicPractice(topic.key)) {
+      open(topic)
     }
-
-    setPracticeState(state)
-    openTopic(topic)
   }
 
-  function continueTopic(topic) {
-    const state =
-      resumeTopicPractice(topic.key)
-
-    if (!state) {
-      startTopic(topic)
-      return
+  function resume(topic) {
+    if (resumeTopicPractice(topic.key)) {
+      open(topic)
+    } else {
+      start(topic)
     }
-
-    setPracticeState(state)
-    openTopic(topic)
-  }
-
-  function getTopicImage(title) {
-    if (title === 'Data Collection') {
-      return `${import.meta.env.BASE_URL}data-collection.jpg`
-    }
-
-    if (title === 'Purpose of Use') {
-      return `${import.meta.env.BASE_URL}purpose-of-use.jpg`
-    }
-
-    if (title === 'Data Sharing') {
-      return `${import.meta.env.BASE_URL}data-sharing.jpg`
-    }
-
-    if (title === 'Data Retention') {
-      return `${import.meta.env.BASE_URL}data-retention.jpg`
-    }
-
-    return `${import.meta.env.BASE_URL}user-control.jpg`
   }
 
   return (
-    <div className="i3-practice-page">
-      <PageHeader />
+    <Layout narrow>
+      <BackLink to="/privacy-learning">All lessons</BackLink>
 
-      <div className="i3-practice-back-row">
-        <button
-          type="button"
-          className="i3-practice-page-back"
-          onClick={() =>
-            navigate('/privacy-learning/learn')
-          }
-        >
-          ← Back
-        </button>
-      </div>
-
-      <main className="i3-practice-content">
-        <div className="i3-practice-heading-row">
-          <section className="i3-practice-heading">
-            <p>PRIVACY PRACTICE</p>
-
-            <h1>Choose a topic to practise</h1>
-
-            <span>
-              Answer one question at a time and receive
-              feedback after each answer.
-            </span>
-          </section>
-
-          <div className="i3-practice-analysis">
-            <AnalysisStatus />
-          </div>
-        </div>
-
-        <div className="i3-practice-divider"></div>
-
-        <section className="i3-practice-topic-grid">
-          {practiceTopics.map((topic) => {
-            const status =
-              getTopicPracticeStatus(
-                topic.key,
-                practiceState,
-              )
-
-            return (
-              <article
-                className="i3-practice-topic-card"
-                key={topic.key}
-              >
-                <img
-                  src={getTopicImage(topic.title)}
-                  alt=""
-                  className="i3-practice-topic-background"
-                />
-
-                <div className="i3-practice-topic-copy">
-                  <h2>{topic.title}</h2>
-
-                  <p>
-                    Practise questions about{' '}
-                    {topic.title.toLowerCase()}.
-                  </p>
-                </div>
-
-                <div className="i3-practice-topic-actions">
-                  {status === 'not_started' && (
-                    <button
-                      type="button"
-                      className="i3-practice-primary"
-                      onClick={() =>
-                        startTopic(topic)
-                      }
-                    >
-                      Start Practice →
-                    </button>
-                  )}
-
-                  {status === 'in_progress' && (
-                    <>
-                      <button
-                        type="button"
-                        className="i3-practice-primary"
-                        onClick={() =>
-                          continueTopic(topic)
-                        }
-                      >
-                        Continue Practice →
-                      </button>
-
-                      <button
-                        type="button"
-                        className="i3-practice-secondary"
-                        onClick={() =>
-                          startTopic(topic)
-                        }
-                      >
-                        Start New
-                      </button>
-                    </>
-                  )}
-
-                  {status === 'completed' && (
-                    <button
-                      type="button"
-                      className="i3-practice-primary"
-                      onClick={() =>
-                        startTopic(topic)
-                      }
-                    >
-                      Practice Again →
-                    </button>
-                  )}
-                </div>
-
-                {status === 'completed' && (
-                  <span className="i3-practice-completed">
-                    ✓
-                  </span>
-                )}
-              </article>
-            )
-          })}
-        </section>
-
-        <section className="i3-practice-info">
-          <span className="i3-practice-info-icon">
-            i
-          </span>
-
-          <div>
-            <h3>How practice works</h3>
-
-            <p>
-              Questions are shown one at a time. After you
-              choose an answer, you will see whether it is
-              correct and read a short explanation. You can
-              leave at any time and continue later.
-            </p>
-          </div>
-        </section>
-
-        <p className="i3-practice-disclaimer">
-          Consent Assistant provides information to support
-          your review. It does not provide legal advice.
+      <header className="page-head">
+        <p className="eyebrow">Practice</p>
+        <h1>Practise with everyday situations</h1>
+        <p className="lead">
+          One question at a time. After each answer you&apos;ll see the right
+          one and why. You can stop at any time and carry on later.
         </p>
-      </main>
+      </header>
 
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="i3-practice-watermark"
-      />
-    </div>
+      <ul className="practice-list">
+        {practiceTopics.map((topic, index) => {
+          const status = getTopicPracticeStatus(topic.key, state)
+          const lesson = getLesson(topic.slug)
+          const total = getTopicQuestions(topic.key).length
+          const inSession = state.selectedTopic === topic.key
+          const answered = inSession ? state.completedQuestionIds.length : 0
+          const sessionTotal = inSession ? getSessionQuestions(state).length : total
+
+          return (
+            <li key={topic.key} className="practice-item card" data-reveal style={{ '--i': index }}>
+              <span className="icon-tile">
+                <Icon name={lesson?.icon || 'question'} />
+              </span>
+
+              <div className="practice-item__text">
+                <h2>{topic.title}</h2>
+                <p className="muted">
+                  {status === 'in_progress' &&
+                    `You’ve answered ${answered} of ${sessionTotal} questions.`}
+                  {status === 'completed' && (
+                    <span className="practice-item__done">
+                      <Icon name="check-circle" />
+                      You&apos;ve answered every question.
+                    </span>
+                  )}
+                  {status === 'not_started' && `${total} questions`}
+                </p>
+
+                {status === 'in_progress' && (
+                  <div
+                    className="meter practice-item__meter"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={sessionTotal}
+                    aria-valuenow={answered}
+                    aria-label={`${topic.title} questions answered`}
+                  >
+                    <div
+                      className="meter__fill"
+                      style={{ width: `${(answered / Math.max(1, sessionTotal)) * 100}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="practice-item__actions">
+                {status === 'in_progress' ? (
+                  <>
+                    <button type="button" className="btn btn--primary" onClick={() => resume(topic)}>
+                      Carry on
+                      <Icon name="arrow-right" />
+                    </button>
+                    <button type="button" className="btn btn--quiet" onClick={() => start(topic)}>
+                      Start again
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className={status === 'completed' ? 'btn' : 'btn btn--primary'}
+                    onClick={() => start(topic)}
+                  >
+                    {status === 'completed' ? 'Practise again' : 'Start'}
+                    <Icon name="arrow-right" />
+                  </button>
+                )}
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    </Layout>
   )
 }
 

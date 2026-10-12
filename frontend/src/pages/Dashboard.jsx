@@ -1,451 +1,204 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-import PageHeader from '../components/PageHeader'
-
+import { Link } from 'react-router-dom'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import BreachCard from '../components/BreachCard'
+import { CardLink } from '../components/ui'
+import { API_URL, HIBP_URL } from '../utils/breaches'
 import {
-  LEARNING_TOPICS,
   getCompletedTopicCount,
   getNextLearningTopic,
-  isTopicCompleted,
+  LEARNING_TOPICS,
 } from '../utils/learningProgress'
+import '../styles/pages/breaches.css'
 
-import '../styles/dashboard.css'
-
-const API_URL =
-  import.meta.env.VITE_API_URL ??
-  'http://localhost:3000'
+const IF_AFFECTED = [
+  {
+    icon: 'lock',
+    title: 'Change your password',
+    text: 'Change it for that company, and anywhere else you use the same password.',
+  },
+  {
+    icon: 'mail',
+    title: 'Watch for scams',
+    text: 'Be careful with emails, texts or calls that mention the company or ask you to act quickly.',
+  },
+  {
+    icon: 'people',
+    title: 'Get free help',
+    text: 'IDCARE is Australia’s free identity and cyber support service.',
+    link: { href: 'https://www.idcare.org/', label: 'Visit IDCARE' },
+  },
+]
 
 function Dashboard() {
-  const navigate = useNavigate()
+  const [breaches, setBreaches] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const [latestBreaches, setLatestBreaches] =
-    useState([])
-
-  const [breachesLoading, setBreachesLoading] =
-    useState(true)
-
-  const [breachesError, setBreachesError] =
-    useState('')
-
-  const completedTopics =
-    getCompletedTopicCount()
-
-  const nextTopic =
-    getNextLearningTopic()
-
-  const completedLearningTopics =
-    LEARNING_TOPICS.filter((topic) =>
-      isTopicCompleted(topic.id),
-    )
-
-  const learningPercent =
-    LEARNING_TOPICS.length > 0
-      ? Math.round(
-          (completedTopics /
-            LEARNING_TOPICS.length) *
-            100,
-        )
-      : 0
+  const lessonsDone = getCompletedTopicCount()
+  const nextTopic = getNextLearningTopic()
 
   useEffect(() => {
-    async function loadLatestBreaches() {
+    let active = true
+
+    async function load() {
       try {
-        setBreachesLoading(true)
-        setBreachesError('')
-
-        const response = await fetch(
-          `${API_URL}/api/breaches/latest?limit=3`,
-        )
-
+        const response = await fetch(`${API_URL}/api/breaches/latest?limit=3`)
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(
-            data.error ||
-              'Unable to load breach information',
-          )
+          throw new Error(data.error || 'Unable to load breach information')
         }
 
-        setLatestBreaches(
-          data.breaches || [],
-        )
+        if (active) {
+          setBreaches(data.breaches || [])
+        }
       } catch (err) {
         console.log(err)
 
-        setBreachesError(
-          'Latest breach information is temporarily unavailable.',
-        )
+        if (active) {
+          setError('We can’t show the latest breaches right now. Please try again later.')
+        }
       } finally {
-        setBreachesLoading(false)
+        if (active) {
+          setLoading(false)
+        }
       }
     }
 
-    loadLatestBreaches()
+    load()
+
+    return () => {
+      active = false
+    }
   }, [])
 
-  function formatDate(date) {
-    if (!date) {
-      return 'Not available'
-    }
-
-    return new Date(
-      date,
-    ).toLocaleDateString('en-AU', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
-  }
-
-  function formatAccounts(value) {
-    const number = Number(value || 0)
-
-    if (number >= 1000000) {
-      const millions =
-        number / 1000000
-
-      return `${millions.toFixed(
-        millions >= 10 ? 0 : 1,
-      )} million accounts affected`
-    }
-
-    if (number >= 1000) {
-      return `${Math.round(
-        number / 1000,
-      )}K accounts affected`
-    }
-
-    return `${number.toLocaleString(
-      'en-AU',
-    )} accounts affected`
-  }
-
-  function openHIBP() {
-    window.open(
-      'https://haveibeenpwned.com/',
-      '_blank',
-      'noopener,noreferrer',
-    )
-  }
-
-  function continueLearning() {
-    navigate(
-      nextTopic
-        ? `/privacy-learning/learn/${nextTopic.id}`
-        : '/privacy-learning/learn',
-    )
-  }
-
-  function goBack() {
-    navigate('/')
-  }
-
   return (
-    <div className="privacy-dashboard-page">
-      <PageHeader />
-
-      <div className="dashboard-back-row">
-        <button
-          type="button"
-          className="dashboard-page-back"
-          onClick={goBack}
-        >
-          ← Back
-        </button>
-      </div>
-
-      <main className="dashboard-main">
-        <section className="dashboard-heading">
-          <p className="dashboard-eyebrow">
-            YOUR DASHBOARD
-          </p>
-
-          <h1>Privacy at a glance</h1>
-
-          <p className="dashboard-subtitle">
-            Stay informed, continue learning
-            and check organisations in one
-            place.
-          </p>
-        </section>
-
-        <section className="dashboard-top-grid">
-          <div className="dashboard-main-card breach-summary-card">
-            <div className="dashboard-card-heading">
-              <p className="dashboard-card-label">
-                LATEST DATA BREACHES
-              </p>
-
-              <h2>
-                Recent breach updates
-              </h2>
-
-              <p>
-                Recently reported data
-                breaches that may affect
-                consumers.
-              </p>
-            </div>
-
-            <div className="dashboard-card-divider"></div>
-
-            {breachesLoading && (
-              <div className="dashboard-loading">
-                Loading latest breaches...
-              </div>
-            )}
-
-            {breachesError && (
-              <div className="dashboard-error">
-                {breachesError}
-              </div>
-            )}
-
-            {!breachesLoading &&
-              !breachesError &&
-              latestBreaches.length >
-                0 && (
-                <div className="breach-preview-layout">
-                  <div className="breach-featured">
-                    <p className="breach-latest-label">
-                      LATEST
-                    </p>
-
-                    <h3>
-                      {
-                        latestBreaches[0]
-                          .title
-                      }
-                    </h3>
-
-                    <p className="breach-domain">
-                      {latestBreaches[0]
-                        .domain ||
-                        'Domain not available'}
-                    </p>
-
-                    <strong>
-                      {formatAccounts(
-                        latestBreaches[0]
-                          .affectedAccounts,
-                      )}
-                    </strong>
-
-                    <p className="breach-date">
-                      Breach date:{' '}
-                      {formatDate(
-                        latestBreaches[0]
-                          .breachDate,
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="breach-small-list">
-                    {latestBreaches
-                      .slice(1, 3)
-                      .map((breach) => (
-                        <div
-                          className="breach-small-card"
-                          key={
-                            breach.name
-                          }
-                        >
-                          <h3>
-                            {
-                              breach.title
-                            }
-                          </h3>
-
-                          <p>
-                            {breach.domain ||
-                              'Domain not available'}
-                          </p>
-
-                          <span>
-                            {formatAccounts(
-                              breach.affectedAccounts,
-                            )}
-                          </span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-            {!breachesLoading &&
-              !breachesError &&
-              latestBreaches.length ===
-                0 && (
-                <div className="dashboard-loading">
-                  No breach records are
-                  available.
-                </div>
-              )}
-
-            <div className="breach-card-footer">
-              <span>
-                Source: Have I Been Pwned
-              </span>
-
-              <button
-                type="button"
-                onClick={() =>
-                  navigate(
-                    '/risk-dashboard/breaches',
-                  )
-                }
-              >
-                View all breaches
-
-                <span>→</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="dashboard-main-card learning-summary-card">
-            <div className="learning-card-top">
-              <div>
-                <p className="dashboard-card-label learning-label">
-                  YOUR LEARNING
-                </p>
-
-                <h2>
-                  Learning progress
-                </h2>
-
-                <p>
-                  Keep building your privacy
-                  knowledge.
-                </p>
-              </div>
-
-              <div className="learning-count">
-                {completedTopics} /{' '}
-                {LEARNING_TOPICS.length}
-              </div>
-            </div>
-
-            <div className="dashboard-card-divider"></div>
-
-            <div className="learning-progress-bar">
-              <div
-                className="learning-progress-fill"
-                style={{
-                  width: `${learningPercent}%`,
-                }}
-              ></div>
-            </div>
-
-            <p className="learning-progress-text">
-              {learningPercent}% complete
-            </p>
-
-            <div className="learning-complete-row">
-              {completedLearningTopics.length >
-              0 ? (
-                completedLearningTopics.map(
-                  (topic) => (
-                    <div key={topic.id}>
-                      <span>✓</span>
-
-                      {topic.title}
-                    </div>
-                  ),
-                )
-              ) : (
-                <div>
-                  No topics explored yet
-                </div>
-              )}
-            </div>
-
-            <div className="learning-next-row">
-              <div>
-                <p>
-                  {nextTopic
-                    ? 'NEXT TOPIC'
-                    : 'LEARNING STATUS'}
-                </p>
-
-                <strong>
-                  {nextTopic
-                    ? nextTopic.title
-                    : 'All topics explored'}
-                </strong>
-              </div>
-
-              <button
-                type="button"
-                onClick={continueLearning}
-              >
-                {nextTopic
-                  ? 'Continue learning'
-                  : 'Review learning'}
-
-                <span>→</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="personal-breach-section">
-          <div className="dashboard-main-card personal-breach-card">
-            <div className="personal-breach-content">
-              <p className="dashboard-card-label">
-                PERSONAL BREACH CHECK
-              </p>
-
-              <h2>
-                Check if your email has been
-                exposed
-              </h2>
-
-              <p className="personal-breach-description">
-                Use Have I Been Pwned to check
-                whether your email appears in a
-                known data breach.
-              </p>
-
-              <p className="personal-breach-source">
-                External service: Have I Been
-                Pwned
-              </p>
-            </div>
-
-            <div className="personal-breach-actions">
-              <div className="hibp-official-label">
-                <span>✓</span>
-
-                Opens official website
-              </div>
-
-              <button
-                type="button"
-                className="hibp-check-button"
-                onClick={openHIBP}
-              >
-                Check on HIBP
-
-                <span>↗</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <p className="dashboard-footer-text">
-          Consent Assistant provides information
-          to support your review. It does not
-          provide legal advice.
+    <Layout>
+      <header className="page-head breach-page-head">
+        <p className="eyebrow">Data breaches</p>
+        <h1>Has your information been leaked?</h1>
+        <p className="lead">
+          A data breach is when a company loses its customers&apos; personal
+          details, often to criminals. Here are the latest reported breaches,
+          and how to check whether you were affected.
         </p>
-      </main>
+      </header>
 
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="dashboard-watermark"
-      />
-    </div>
+      <div className="breach-layout">
+        <div className="breach-main">
+          <section className="hibp card" aria-labelledby="hibp-title">
+            <span className="icon-tile icon-tile--large">
+              <Icon name="mail" />
+            </span>
+            <div className="hibp__text">
+              <h2 id="hibp-title">Check your email address</h2>
+              <p>
+                <strong>Have I Been Pwned</strong> is a free, widely trusted
+                website that tells you if your email address appears in a
+                known breach.
+              </p>
+              <p className="muted small">It opens in a new tab. We don&apos;t see what you type there.</p>
+            </div>
+            <a
+              href={HIBP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn--primary btn--large"
+            >
+              Check my email
+              <Icon name="external" />
+              <span className="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </section>
+
+          <section className="latest" aria-labelledby="latest-title">
+            <div className="latest__head">
+              <h2 id="latest-title">Latest reported breaches</h2>
+              <p className="muted small">Source: Have I Been Pwned</p>
+            </div>
+
+            {loading && (
+              <div className="breach-list" aria-busy="true" aria-label="Loading breaches">
+                {[0, 1, 2].map((item) => (
+                  <div key={item} className="breach breach--skeleton" />
+                ))}
+              </div>
+            )}
+
+            {!loading && error && (
+              <p className="notice notice--warn">
+                <Icon name="alert-circle" />
+                {error}
+              </p>
+            )}
+
+            {!loading && !error && breaches.length === 0 && (
+              <p className="panel">No breaches have been reported recently.</p>
+            )}
+
+            {!loading && !error && breaches.length > 0 && (
+              <div className="breach-list">
+                {breaches.map((breach, index) => (
+                  <div key={breach.name} data-reveal style={{ '--i': index }}>
+                    <BreachCard breach={breach} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Link to="/risk-dashboard/breaches" className="btn btn--large latest__all">
+              See all breaches, or search for a company
+              <Icon name="arrow-right" />
+            </Link>
+          </section>
+        </div>
+
+        <aside className="breach-side">
+          <section className="affected card" aria-labelledby="affected-title">
+            <h2 id="affected-title">If you were affected</h2>
+            <ul>
+              {IF_AFFECTED.map((item) => (
+                <li key={item.title}>
+                  <span className="icon-tile">
+                    <Icon name={item.icon} />
+                  </span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p className="muted">{item.text}</p>
+                    {item.link && (
+                      <a href={item.link.href} target="_blank" rel="noopener noreferrer">
+                        {item.link.label}
+                        <span className="visually-hidden"> (opens in a new tab)</span>
+                      </a>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <CardLink
+            to={nextTopic ? `/privacy-learning/learn/${nextTopic.id}` : '/privacy-learning'}
+            cta={nextTopic ? `Next lesson: ${nextTopic.title}` : 'Review the lessons'}
+          >
+            <h2 className="side-learn__title">Your lessons</h2>
+            <p className="muted">
+              {lessonsDone === 0
+                ? 'Short lessons help you spot risky privacy policies.'
+                : `You’ve finished ${lessonsDone} of ${LEARNING_TOPICS.length} lessons.`}
+            </p>
+            <div className="meter side-learn__meter" aria-hidden="true">
+              <div
+                className="meter__fill"
+                style={{ width: `${(lessonsDone / LEARNING_TOPICS.length) * 100}%` }}
+              />
+            </div>
+          </CardLink>
+        </aside>
+      </div>
+    </Layout>
   )
 }
 

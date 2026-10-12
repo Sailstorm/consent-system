@@ -6,27 +6,27 @@ export const practiceTopics = [
   {
     key: 'dataCollection',
     slug: 'data-collection',
-    title: 'Data Collection',
+    title: 'Data collection',
   },
   {
     key: 'purposeOfUse',
     slug: 'purpose-of-use',
-    title: 'Purpose of Use',
+    title: 'Purpose of use',
   },
   {
     key: 'dataSharing',
     slug: 'data-sharing',
-    title: 'Data Sharing',
+    title: 'Data sharing',
   },
   {
     key: 'dataRetention',
     slug: 'data-retention',
-    title: 'Data Retention',
+    title: 'Data retention',
   },
   {
     key: 'userControl',
     slug: 'user-control',
-    title: 'User Control',
+    title: 'Your choices',
   },
 ]
 

@@ -1,271 +1,143 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import PageHeader from '../components/PageHeader'
-import {
-  clearAnalysisState,
-  loadAnalysisState,
-} from '../utils/analysisState'
-import '../styles/consentSummary.css'
+import { useNavigate } from 'react-router-dom'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import Disclosure from '../components/Disclosure'
+import NoAnalysis from '../components/NoAnalysis'
+import { BackLink, Disclaimer, StatusBadge, Stepper } from '../components/ui'
+import { clearAnalysisState } from '../utils/analysisState'
+import { CATEGORIES, describeCategory } from '../utils/categories'
+import { useAnalysis, useMarkSeen } from '../utils/useAnalysis'
+import '../styles/pages/results.css'
+
+const ASK_YOURSELF = [
+  'Am I comfortable with the information they collect?',
+  'Am I happy for it to go to the other companies they name?',
+  'Is the time they keep it reasonable for what I’m using?',
+  'Do I know how to change my mind later?',
+]
 
 function ConsentSummary() {
   const navigate = useNavigate()
-  const location = useLocation()
+  const { policyText, analysisResult, hasResult } = useAnalysis()
+  useMarkSeen(hasResult)
 
-  const savedAnalysis = loadAnalysisState()
-
-  const policyText =
-    location.state?.policyText ||
-    savedAnalysis.policyText ||
-    ''
-
-  const analysisResult =
-    location.state?.analysisResult ||
-    savedAnalysis.analysisResult ||
-    {}
-
-  const dataCollection =
-    analysisResult.data_collection?.data_collection ||
-    analysisResult.data_collection ||
-    {}
-
-  const summaryItems = [
-    {
-      title: 'What data is collected',
-      value:
-        dataCollection.summary ||
-        'No information is available for this category.',
-    },
-    {
-      title: 'Why it is used',
-      value:
-        analysisResult.purpose_of_use?.summary ||
-        'No information is available for this category.',
-    },
-    {
-      title: 'Who it may be shared with',
-      value:
-        analysisResult.data_sharing?.summary ||
-        'No information is available for this category.',
-    },
-    {
-      title: 'How long it is kept',
-      value:
-        analysisResult.data_retention?.summary ||
-        'No information is available for this category.',
-    },
-    {
-      title: 'Your choices',
-      value:
-        analysisResult.user_control?.summary ||
-        'No information is available for this category.',
-    },
-  ]
-
-  function goToExplanation() {
-    navigate('/explanation', {
-      state: {
-        policyText,
-        analysisResult,
-      },
-    })
+  if (!hasResult) {
+    return (
+      <Layout narrow>
+        <NoAnalysis />
+      </Layout>
+    )
   }
 
-  function editInput() {
-    navigate('/privacy-assistant', {
-      state: {
-        policyText,
-      },
-    })
-  }
+  const answers = CATEGORIES.map((category) => describeCategory(category, analysisResult))
+  const today = new Date().toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
 
-  function startNewAnalysis() {
+  function checkAnother() {
     clearAnalysisState()
     navigate('/privacy-assistant')
   }
 
-  function clearAnalysis() {
+  // Security plan F-07: lets someone on a shared computer remove the policy
+  // and its explanation from this tab straight away.
+  function removePolicy() {
     clearAnalysisState()
     navigate('/privacy-assistant', { replace: true })
   }
 
-  function goToLearning() {
-    navigate('/privacy-learning/learn')
-  }
-
-  function goToDashboard() {
-    navigate('/risk-dashboard')
-  }
-
   return (
-    <div className="i3-summary-page">
-      <PageHeader />
+    <Layout narrow>
+      <BackLink to="/explanation" state={{ policyText, analysisResult }}>
+        Back to all five answers
+      </BackLink>
 
-      <div className="i3-summary-back-row">
-        <button
-          type="button"
-          className="i3-summary-page-back"
-          onClick={goToExplanation}
-        >
-          ← Back
+      <Stepper current={3} />
+
+      <header className="page-head summary-head">
+        <div>
+          <p className="eyebrow">Your summary</p>
+          <h1>This policy on one page</h1>
+          <p className="lead">
+            Print it, or keep it open while you decide.
+          </p>
+        </div>
+
+        <button type="button" className="btn no-print" onClick={() => window.print()}>
+          <Icon name="print" />
+          Print this summary
         </button>
-      </div>
+      </header>
 
-      <main className="i3-summary-content">
-        <div className="i3-summary-top">
-          <section className="i3-summary-heading">
-            <p className="i3-summary-label">
-              YOUR PRIVACY SUMMARY
-            </p>
+      <article className="sheet" aria-label="Policy summary">
+        <p className="sheet__meta">
+          <Icon name="calendar" />
+          Checked on {today} with Consent Assistant
+        </p>
 
-            <h1>Consent summary</h1>
+        <ol className="sheet__rows">
+          {answers.map((answer, index) => (
+            <li key={answer.key} className="sheet__row" data-reveal style={{ '--i': index }}>
+              <div className="sheet__label">
+                <span className="icon-tile">
+                  <Icon name={answer.icon} />
+                </span>
+                <h2>{answer.summaryTitle}</h2>
+              </div>
+              <div className="sheet__body">
+                <StatusBadge status={answer.status} />
+                <p>{answer.summary || 'The policy doesn’t give a clear answer.'}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </article>
 
-            <p>
-              A plain-language summary based only on the
-              privacy text you submitted.
-            </p>
-          </section>
+      <section className="decision-box" data-reveal>
+        <h2>Only you can decide</h2>
+        <p>
+          This summary helps you understand the policy. It doesn&apos;t tell
+          you whether to agree. Some questions you might ask yourself:
+        </p>
+        <ul>
+          {ASK_YOURSELF.map((question) => (
+            <li key={question}>{question}</li>
+          ))}
+        </ul>
+      </section>
 
-          <aside className="i3-summary-learning">
-            <img
-              src={`${import.meta.env.BASE_URL}status-bg-book.jpg`}
-              alt=""
-              className="i3-summary-learning-background"
-            />
+      <section className="detail-section no-print" aria-labelledby="original-title">
+        <h2 id="original-title">The policy you gave us</h2>
+        <p className="muted detail-section__intro">
+          Compare the summary with the policy&apos;s own words at any time.
+        </p>
+        <Disclosure openLabel="Show the full policy" closeLabel="Hide the full policy">
+          <div className="policy-quote policy-quote--long">{policyText}</div>
+        </Disclosure>
+      </section>
 
-            <img
-              src={`${import.meta.env.BASE_URL}icon-question.jpg`}
-              alt=""
-              className="i3-summary-question-icon"
-            />
-
-            <div className="i3-summary-learning-copy">
-              <span>PRIVACY LEARNING</span>
-
-              <h3>Learn more about privacy</h3>
-
-              <p>
-                Explore short lessons about key privacy
-                concepts.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={goToLearning}
-            >
-              Explore learning →
-            </button>
-          </aside>
-        </div>
-
-        <div className="i3-summary-main">
-          <section className="i3-summary-meaning">
-            <h2>What this policy means</h2>
-
-            <div className="i3-summary-items">
-              {summaryItems.map((item) => (
-                <article
-                  className="i3-summary-item"
-                  key={item.title}
-                >
-                  <h3>{item.title}</h3>
-
-                  <p>{item.value}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <aside className="i3-summary-original">
-            <h2>Original policy excerpt</h2>
-
-            <p className="i3-summary-original-description">
-              Compare the explanation with the source text
-              whenever you want.
-            </p>
-
-            <div className="i3-summary-policy-text">
-              {policyText ||
-                'No original policy text available.'}
-            </div>
-
-            <p className="i3-summary-source">
-              Source: text submitted by you
-            </p>
-
-            <button
-              type="button"
-              className="i3-summary-edit-original"
-              onClick={editInput}
-            >
-              Edit original input
-            </button>
-          </aside>
-        </div>
-
-        <div className="i3-summary-actions">
-          <div className="i3-summary-actions-left">
-            <button
-              type="button"
-              className="i3-summary-secondary"
-              onClick={editInput}
-            >
-              Edit input
-            </button>
-
-            <button
-              type="button"
-              className="i3-summary-primary"
-              onClick={startNewAnalysis}
-            >
-              Start new analysis
-            </button>
-
-            <button
-              type="button"
-              className="i3-summary-secondary"
-              onClick={clearAnalysis}
-              title="Remove this policy and its summary from this browser tab"
-            >
-              Clear my analysis
-            </button>
-
-            <button
-              type="button"
-              className="i3-summary-primary"
-              onClick={goToExplanation}
-            >
-              ← Back to explanation
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className="i3-summary-dashboard"
-            onClick={goToDashboard}
-          >
-            Go to dashboard →
+      <section className="finish no-print" aria-labelledby="finish-title">
+        <h2 id="finish-title">When you&apos;ve finished</h2>
+        <div className="btn-row">
+          <button type="button" className="btn btn--primary btn--large" onClick={checkAnother}>
+            Check another policy
+            <Icon name="arrow-right" />
+          </button>
+          <button type="button" className="btn btn--large" onClick={removePolicy}>
+            <Icon name="trash" />
+            Remove this policy from this browser
           </button>
         </div>
-
-        <p className="i3-summary-decision-note">
-          This summary supports understanding; it does not
-          tell you whether to accept or reject.
+        <p className="muted small finish__note">
+          Using a shared or library computer? Remove the policy when
+          you&apos;re done. It is also removed when you close this tab.
         </p>
+      </section>
 
-        <div className="i3-summary-footer-line"></div>
-
-        <p className="i3-summary-disclaimer">
-          Consent Assistant provides information to support
-          your review. It does not provide legal advice.
-        </p>
-      </main>
-
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="i3-summary-watermark"
-      />
-    </div>
+      <Disclaimer />
+    </Layout>
   )
 }
 

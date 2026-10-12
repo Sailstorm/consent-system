@@ -43,23 +43,46 @@ export function startAnalysis(policyText) {
     status: 'analysing',
     policyText: policyText,
     analysisResult: null,
+    startedAt: Date.now(),
   })
 }
 
+// `seen` stays false until the explanation page has been opened, so the
+// progress bar can keep pointing people to a result they haven't read yet.
 export function saveAnalysisResult(policyText, analysisResult) {
   return saveAnalysisState({
+    ...loadAnalysisState(),
     status: 'ready',
     policyText: policyText,
     analysisResult: analysisResult,
+    seen: false,
   })
 }
 
 export function saveAnalysisFailure(policyText) {
   return saveAnalysisState({
+    ...loadAnalysisState(),
     status: 'failed',
     policyText: policyText,
     analysisResult: null,
   })
+}
+
+export function markAnalysisSeen() {
+  const state = loadAnalysisState()
+
+  if (state.status === 'ready' && !state.seen) {
+    saveAnalysisState({ ...state, seen: true })
+  }
+}
+
+// Hide a failed check's message without clearing the person's draft text.
+export function dismissAnalysisFailure() {
+  const state = loadAnalysisState()
+
+  if (state.status === 'failed') {
+    saveAnalysisState({ ...emptyAnalysisState })
+  }
 }
 
 // Remove the stored policy text, results and any unsent draft from this tab

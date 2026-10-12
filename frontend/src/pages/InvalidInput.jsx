@@ -1,83 +1,66 @@
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/PageHeader'
-import '../styles/invalidInput.css'
+import Layout from '../components/Layout'
+import Icon from '../components/Icon'
+import { Disclaimer, Stepper } from '../components/ui'
+import { loadDraftPolicy } from '../utils/settings'
+import '../styles/pages/check.css'
 
 function InvalidInput() {
   const navigate = useNavigate()
 
-  function goBack() {
-    navigate('/privacy-assistant')
-  }
-
   return (
-    <div className="i3-invalid-page">
-      <PageHeader />
+    <Layout narrow>
+      <Stepper current={1} />
 
-      <div className="i3-invalid-back-row">
+      <section className="result-hero result-hero--warn">
+        <span className="result-hero__icon">
+          <Icon name="question" />
+        </span>
+        <h1>That&apos;s too short to be a privacy policy</h1>
+        <p className="lead">
+          We need the full policy to explain it. A privacy policy is usually
+          several paragraphs long.
+        </p>
+      </section>
+
+      <div className="notice">
+        <Icon name="info" />
+        <div>
+          <strong>Where to find the full policy</strong>
+          <p>
+            Look for a link called &ldquo;Privacy&rdquo; or &ldquo;Privacy
+            policy&rdquo;, usually at the very bottom of the company&apos;s
+            website. You can also paste that link instead of the words.
+          </p>
+        </div>
+      </div>
+
+      <div className="btn-row" style={{ marginTop: '2rem' }}>
         <button
           type="button"
-          className="i3-invalid-page-back"
-          onClick={goBack}
+          className="btn btn--primary btn--large"
+          onClick={() =>
+            navigate('/privacy-assistant', {
+              state: { inputType: 'text', policyText: loadDraftPolicy() },
+            })
+          }
         >
-          ← Back
+          <Icon name="edit" />
+          Add more text
+        </button>
+
+        <button
+          type="button"
+          className="btn btn--large"
+          onClick={() => navigate('/privacy-assistant', { state: { inputType: 'url' } })}
+        >
+          <Icon name="link" />
+          Paste a link instead
         </button>
       </div>
 
-      <main className="i3-invalid-content">
-        <section className="i3-invalid-heading">
-          <p>POLICY ANALYSIS</p>
-
-          <h1>This text cannot be analysed</h1>
-
-          <span>
-            We could not find enough privacy policy
-            information in the text you submitted.
-          </span>
-        </section>
-
-        <section className="i3-invalid-card">
-          <img
-            src={`${import.meta.env.BASE_URL}error-icon.jpg`}
-            alt=""
-            className="i3-invalid-icon"
-          />
-
-          <h2>Not enough privacy information</h2>
-
-          <p>
-            The content you entered does not appear to
-            contain enough privacy policy information for
-            analysis.
-          </p>
-
-          <div className="i3-invalid-note">
-            Please try again with a privacy policy,
-            privacy notice, or information about how
-            personal data is collected, used, shared or
-            stored.
-          </div>
-
-          <button
-            type="button"
-            className="i3-invalid-button"
-            onClick={goBack}
-          >
-            Back to input
-          </button>
-        </section>
-
-        <p className="i3-invalid-disclaimer">
-          Consent Assistant provides information to support
-          your review. It does not provide legal advice.
-        </p>
-      </main>
-
-      <img
-        src={`${import.meta.env.BASE_URL}ca-watermark.png`}
-        alt=""
-        className="i3-invalid-watermark"
-      />
-    </div>
+      <Disclaimer />
+    </Layout>
   )
 }
 
