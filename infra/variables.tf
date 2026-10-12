@@ -24,7 +24,7 @@ variable "repo_url" {
 variable "stable_ref" {
   description = "Git ref (tag/branch) for the last complete iteration, served at the live root. See docs/url-versioning-pipeline.md."
   type        = string
-  default     = "iteration-3"
+  default     = "iteration-3.1"
 }
 
 variable "archive_ref" {

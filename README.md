@@ -9,7 +9,7 @@ its own URL path:
 
 | URL | Role | What it serves |
 |-----|------|----------------|
-| https://52-64-225-116.sslip.io/ | **Live root** | The last *complete* iteration, currently git tag `iteration-3`. |
+| https://52-64-225-116.sslip.io/ | **Live root** | The last *complete* iteration, currently git tag `iteration-3.1` (iteration 3 with the older-adults redesign). |
 | https://52-64-225-116.sslip.io/underdevelopment/ | **Active development** | `main` HEAD, the iteration currently in progress. |
 | https://52-64-225-116.sslip.io/version1/ | **Archive** | Iteration 1, frozen (git tag `iteration-1-archived`). |
 | https://52-64-225-116.sslip.io/version2/ | **Archive** | Iteration 2, frozen (git tag `iteration-2.1`). |
