@@ -40,7 +40,7 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - name: Dependency audit
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --audit-level=high
       - name: Create schema and the API's read-only role
         run: |
           psql "$OWNER_URL" -v ON_ERROR_STOP=1 -f ../database/init.sql
@@ -64,7 +64,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - name: Dependency audit
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --audit-level=high
       - run: npm run build
 
   developed-ai:
