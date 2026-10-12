@@ -1,4 +1,4 @@
-# Sailstorm — Consent Assistant
+# Consent Assistant
 
 A full-stack application for exploring and reasoning about consent/privacy data, combining a Postgres-backed API, an AI policy-analysis service, and a React frontend.
 
