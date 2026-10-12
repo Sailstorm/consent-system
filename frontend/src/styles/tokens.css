@@ -48,6 +48,11 @@
   --miss: #8c1d15;
   --miss-bg: #fbe7e5;
 
+  /* Alert: "look out for this" warnings in lessons (brick red, 7.4:1) */
+  --alert: #a61f15;
+  --on-alert: #ffffff;
+  --alert-soft: #fdecea;
+
   --shadow-1: 0 1px 2px rgb(43 47 51 / 0.06), 0 2px 6px rgb(43 47 51 / 0.05);
   --shadow-2: 0 2px 4px rgb(43 47 51 / 0.06), 0 12px 28px rgb(43 47 51 / 0.1);
 
@@ -118,6 +123,10 @@
   --part-bg: #3a2c14;
   --miss: #ffaba3;
   --miss-bg: #3d1c19;
+
+  --alert: #ffab9f;
+  --on-alert: #1f2225;
+  --alert-soft: #3d1c19;
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-2: 0 2px 4px rgb(0 0 0 / 0.3), 0 12px 28px rgb(0 0 0 / 0.35);

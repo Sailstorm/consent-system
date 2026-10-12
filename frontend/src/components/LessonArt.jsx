@@ -213,7 +213,13 @@ function Step({ item }) {
       </span>
       <span className="how__text">
         <strong>{item.label}</strong>
-        {item.note && <span className={item.flag ? 'how__flag' : 'how__note'}>{item.note}</span>}
+        {item.note && !item.flag && <span className="how__note">{item.note}</span>}
+        {item.note && item.flag && (
+          <span className="how__flag">
+            <Icon name="alert-circle" />
+            {item.note}
+          </span>
+        )}
       </span>
     </>
   )

@@ -599,9 +599,14 @@
 }
 
 .art-card--flag {
-  stroke: var(--logo);
+  stroke: var(--alert);
   stroke-width: 4;
-  fill: var(--marker-soft);
+  fill: var(--alert-soft);
+}
+
+.art-card--flag + .art-glyph,
+.art-chip .art-card--flag ~ .art-glyph {
+  color: var(--alert);
 }
 
 .art-logo {
@@ -1018,8 +1023,8 @@
 }
 
 .how__item--flag {
-  background: var(--marker-soft);
-  box-shadow: inset 0 0 0 2px var(--logo);
+  background: var(--alert-soft);
+  box-shadow: inset 0 0 0 2px var(--alert);
 }
 
 .how__icon {
@@ -1039,8 +1044,8 @@
 }
 
 .how__icon--flag {
-  background: var(--logo);
-  color: var(--logo-ink);
+  background: var(--alert);
+  color: var(--on-alert);
 }
 
 .how__text strong {
@@ -1057,10 +1062,10 @@
 .how__flag {
   display: inline-block;
   margin-top: 0.25rem;
-  padding: 0.125rem 0.625rem;
+  padding: 0.125rem 0.625rem 0.125rem 0.375rem;
   border-radius: 0.625rem;
-  background: var(--logo);
-  color: var(--logo-ink);
+  background: var(--alert);
+  color: var(--on-alert);
   font-size: var(--fs-small);
   font-weight: 750;
   line-height: 1.4;
@@ -1132,8 +1137,9 @@
 }
 
 .how__stop--flag .how__icon {
-  background: var(--logo);
-  color: var(--logo-ink);
+  border-color: var(--alert);
+  background: var(--alert);
+  color: var(--on-alert);
 }
 
 /* Choices: each with a switch that turns on as it appears */
@@ -1453,4 +1459,17 @@
 .matters h2 {
   margin-bottom: 0.75rem;
   font-size: var(--fs-h2);
+}
+
+.how__flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.how__flag svg {
+  width: 1.05em;
+  height: 1.05em;
+  flex-shrink: 0;
+  stroke-width: 2.4;
 }
