@@ -37,12 +37,17 @@ export const emptyPracticeState = {
   choices: {},
   completedQuestionIds: [],
   completedTopics: [],
+  topicSessions: {},
 }
 
 function shuffle(items) {
   const next = [...items]
 
-  for (let index = next.length - 1; index > 0; index -= 1) {
+  for (
+    let index = next.length - 1;
+    index > 0;
+    index -= 1
+  ) {
     const swapIndex = Math.floor(
       Math.random() * (index + 1),
     )
@@ -74,7 +79,10 @@ export function getTopicBySlug(slug) {
 export function getTopicQuestions(topicKey) {
   const topic = questionBank.topics?.[topicKey]
 
-  if (!topic || !Array.isArray(topic.questions)) {
+  if (
+    !topic ||
+    !Array.isArray(topic.questions)
+  ) {
     return []
   }
 
@@ -99,18 +107,32 @@ export function getQuestionById(id) {
   return null
 }
 
+function getSessionFromState(state) {
+  return {
+    selectedTopic: state.selectedTopic,
+    questionIds: state.questionIds,
+    currentIndex: state.currentIndex,
+    choices: state.choices,
+    completedQuestionIds:
+      state.completedQuestionIds,
+  }
+}
+
 export function loadPracticeState() {
   try {
     const stored =
       localStorage.getItem(PRACTICE_KEY)
 
     if (!stored) {
-      return { ...emptyPracticeState }
+      return {
+        ...emptyPracticeState,
+        topicSessions: {},
+      }
     }
 
     const parsed = JSON.parse(stored)
 
-    return {
+    const state = {
       ...emptyPracticeState,
       ...parsed,
       choices: parsed.choices || {},
@@ -129,23 +151,71 @@ export function loadPracticeState() {
       )
         ? parsed.completedTopics
         : [],
+      topicSessions:
+        parsed.topicSessions &&
+        typeof parsed.topicSessions ===
+          'object'
+          ? parsed.topicSessions
+          : {},
     }
+
+    // Keep progress created by the older
+    // single-topic storage format.
+    if (
+      state.selectedTopic &&
+      state.questionIds.length &&
+      !state.topicSessions[
+        state.selectedTopic
+      ]
+    ) {
+      state.topicSessions = {
+        ...state.topicSessions,
+        [state.selectedTopic]:
+          getSessionFromState(state),
+      }
+    }
+
+    return state
   } catch {
-    return { ...emptyPracticeState }
+    return {
+      ...emptyPracticeState,
+      topicSessions: {},
+    }
   }
 }
 
 export function savePracticeState(state) {
   try {
+    let nextState = {
+      ...state,
+      topicSessions:
+        state.topicSessions || {},
+    }
+
+    // Save the current session under its topic.
+    if (
+      nextState.selectedTopic &&
+      nextState.questionIds.length
+    ) {
+      nextState = {
+        ...nextState,
+        topicSessions: {
+          ...nextState.topicSessions,
+          [nextState.selectedTopic]:
+            getSessionFromState(nextState),
+        },
+      }
+    }
+
     localStorage.setItem(
       PRACTICE_KEY,
-      JSON.stringify(state),
+      JSON.stringify(nextState),
     )
-  } catch {
-    // Ignore storage errors.
-  }
 
-  return state
+    return nextState
+  } catch {
+    return state
+  }
 }
 
 export function startTopicPractice(topicKey) {
@@ -176,14 +246,35 @@ export function startTopicPractice(topicKey) {
 export function resumeTopicPractice(topicKey) {
   const state = loadPracticeState()
 
+  const savedSession =
+    state.topicSessions?.[topicKey]
+
   if (
-    state.selectedTopic !== topicKey ||
-    !state.questionIds.length
+    !savedSession ||
+    !Array.isArray(
+      savedSession.questionIds,
+    ) ||
+    !savedSession.questionIds.length
   ) {
     return null
   }
 
-  return state
+  return savePracticeState({
+    ...state,
+    selectedTopic: topicKey,
+    questionIds:
+      savedSession.questionIds,
+    currentIndex:
+      savedSession.currentIndex || 0,
+    choices:
+      savedSession.choices || {},
+    completedQuestionIds:
+      Array.isArray(
+        savedSession.completedQuestionIds,
+      )
+        ? savedSession.completedQuestionIds
+        : [],
+  })
 }
 
 export function getSessionQuestions(
@@ -327,13 +418,20 @@ export function getTopicPracticeStatus(
   topicKey,
   state = loadPracticeState(),
 ) {
+  const session =
+    state.topicSessions?.[topicKey]
+
   if (
-    state.selectedTopic === topicKey &&
-    state.questionIds.length
+    session &&
+    Array.isArray(session.questionIds) &&
+    session.questionIds.length
   ) {
     if (
-      state.completedQuestionIds.length >=
-      state.questionIds.length
+      Array.isArray(
+        session.completedQuestionIds,
+      ) &&
+      session.completedQuestionIds.length >=
+        session.questionIds.length
     ) {
       return 'completed'
     }
@@ -348,6 +446,35 @@ export function getTopicPracticeStatus(
   }
 
   return 'not_started'
+}
+
+export function getTopicPracticeProgress(
+  topicKey,
+  state = loadPracticeState(),
+) {
+  const session =
+    state.topicSessions?.[topicKey]
+
+  if (
+    !session ||
+    !Array.isArray(session.questionIds) ||
+    !session.questionIds.length
+  ) {
+    return {
+      answered: 0,
+      total:
+        getTopicQuestions(topicKey).length,
+    }
+  }
+
+  return {
+    answered: Array.isArray(
+      session.completedQuestionIds,
+    )
+      ? session.completedQuestionIds.length
+      : 0,
+    total: session.questionIds.length,
+  }
 }
 
 export function getResumeIndex(
@@ -370,6 +497,16 @@ export function getExploredTopics(
 export function resetCurrentPractice() {
   const state = loadPracticeState()
 
+  const topicSessions = {
+    ...state.topicSessions,
+  }
+
+  if (state.selectedTopic) {
+    delete topicSessions[
+      state.selectedTopic
+    ]
+  }
+
   return savePracticeState({
     ...state,
     selectedTopic: null,
@@ -377,12 +514,14 @@ export function resetCurrentPractice() {
     currentIndex: 0,
     choices: {},
     completedQuestionIds: [],
+    topicSessions,
   })
 }
 
 export function resetAllPracticeProgress() {
   return savePracticeState({
     ...emptyPracticeState,
+    topicSessions: {},
   })
 }
 
