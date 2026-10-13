@@ -6,7 +6,11 @@ import { BackLink } from '../components/ui'
 import { HowItWorks, LessonScene } from '../components/LessonArt'
 import { LESSONS } from '../data/lessons'
 import { isTopicCompleted, markTopicCompleted } from '../utils/learningProgress'
-import { getTopicBySlug, startTopicPractice } from '../utils/practice'
+import {
+  getTopicBySlug,
+  resumeTopicPractice,
+  startTopicPractice,
+} from '../utils/practice'
 
 function Lesson({ lesson }) {
   const navigate = useNavigate()
@@ -25,7 +29,18 @@ function Lesson({ lesson }) {
   function practise() {
     const topic = getTopicBySlug(lesson.slug)
 
-    if (topic && startTopicPractice(topic.key)) {
+    if (!topic) {
+      return
+    }
+
+    const existingSession = resumeTopicPractice(topic.key)
+
+    if (existingSession) {
+      navigate(`/privacy-learning/practice/${topic.slug}/question`)
+      return
+    }
+
+    if (startTopicPractice(topic.key)) {
       navigate(`/privacy-learning/practice/${topic.slug}/question`)
     }
   }
