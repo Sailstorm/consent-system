@@ -737,7 +737,7 @@ def _request_and_parse_category_summary(
     ]
 
     completion = client.chat.completions.create(
-    model="openai/gpt-oss-20b",
+    model="meta/muse-glimmer-30b",
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
