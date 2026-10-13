@@ -737,7 +737,12 @@ def _request_and_parse_category_summary(
     ]
 
     completion = client.chat.completions.create(
-    model="openai/gpt-oss-20b",
+    # Switched from openai/gpt-oss-20b on 2026-10-13: on NVIDIA's free
+    # endpoint it queued for 8s-200s+ on identical requests and timed
+    # out outright in a side-by-side test, while glm-5.3-flash answered
+    # the same prompt in ~10s with valid JSON. deepseek-v4.1-flash
+    # (~20-30s) is the tested fallback if this one degrades.
+    model="z-ai/glm-5.3-flash",
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
