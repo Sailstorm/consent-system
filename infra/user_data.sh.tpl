@@ -19,9 +19,15 @@ curl -SL https://github.com/docker/compose/releases/latest/download/docker-compo
   -o /usr/libexec/docker/cli-plugins/docker-compose
 chmod +x /usr/libexec/docker/cli-plugins/docker-compose
 
+# Not /usr/libexec/docker/cli-plugins: the docker rpm ships its own (too
+# old) buildx there, and dnf-automatic's docker upgrade on 2026-10-13
+# overwrote this one, so the next deploy failed with "compose build
+# requires buildx 0.17.0 or later". The docker CLI checks
+# /usr/local/lib/docker/cli-plugins first, and no package writes to it.
+mkdir -p /usr/local/lib/docker/cli-plugins
 curl -SL https://github.com/docker/buildx/releases/download/v0.36.1/buildx-v0.36.1.linux-amd64 \
-  -o /usr/libexec/docker/cli-plugins/docker-buildx
-chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
+  -o /usr/local/lib/docker/cli-plugins/docker-buildx
+chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
 
 curl -SL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
 unzip -q /tmp/awscliv2.zip -d /tmp
