@@ -105,6 +105,16 @@ resource "aws_ssm_parameter" "nvidia_api_key" {
   value = var.nvidia_api_key
 }
 
+# Only created when a second key is set (SSM rejects empty values). Whether
+# it is set isn't secret, hence nonsensitive() so count can use it.
+resource "aws_ssm_parameter" "nvidia_api_key_2" {
+  count = nonsensitive(var.nvidia_api_key_2 != "") ? 1 : 0
+
+  name  = "/sailstorm/nvidia_api_key_2"
+  type  = "SecureString"
+  value = var.nvidia_api_key_2
+}
+
 resource "aws_ssm_parameter" "db_password" {
   name  = "/sailstorm/db_password"
   type  = "SecureString"
@@ -146,11 +156,11 @@ resource "aws_iam_role_policy" "read_app_parameters" {
     Statement = [{
       Effect = "Allow"
       Action = ["ssm:GetParameter"]
-      Resource = [
+      Resource = concat([
         aws_ssm_parameter.nvidia_api_key.arn,
         aws_ssm_parameter.db_password.arn,
         aws_ssm_parameter.site_password.arn,
-      ]
+      ], aws_ssm_parameter.nvidia_api_key_2[*].arn)
     }]
   })
 }
@@ -201,6 +211,7 @@ resource "aws_instance" "app" {
     archive2_ref           = var.archive2_ref
     region                 = var.aws_region
     nvidia_param_name      = aws_ssm_parameter.nvidia_api_key.name
+    nvidia2_param_name     = one(aws_ssm_parameter.nvidia_api_key_2[*].name)
     db_password_param_name = aws_ssm_parameter.db_password.name
     site_password_param    = aws_ssm_parameter.site_password.name
     cors_origin            = local.cors_origin

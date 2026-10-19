@@ -102,6 +102,25 @@ def _proper_nouns(text):
     }
 
 
+# A pluralised acronym such as "IDs", "TVs" or "URLs".
+_PLURAL_ACRONYM = re.compile(r"[A-Z]{2,}s")
+
+
+def _name_in_evidence(name, evidence_lower):
+    if name.lower() in evidence_lower:
+        return True
+
+    # The model pluralises acronyms the policy uses in the singular
+    # ("device ID" -> "IDs"), which failed live summaries and cost a retry
+    # each. Match the singular as a whole word: a short acronym like "id"
+    # would otherwise match inside words such as "provide".
+    if _PLURAL_ACRONYM.fullmatch(name):
+        singular = re.escape(name[:-1].lower())
+        return re.search(rf"\b{singular}\b", evidence_lower) is not None
+
+    return False
+
+
 def unsupported_reason(value, evidence_text, score_words=True):
     """Return why value isn't supported by evidence_text, or None if it is."""
 
@@ -113,7 +132,7 @@ def unsupported_reason(value, evidence_text, score_words=True):
 
     missing_names = {
         name for name in _proper_nouns(value)
-        if name.lower() not in evidence_lower
+        if not _name_in_evidence(name, evidence_lower)
     }
     if missing_names:
         return f"names not in evidence: {sorted(missing_names)}"

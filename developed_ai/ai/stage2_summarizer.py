@@ -1,9 +1,10 @@
 import json
 import logging
 import os
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from concurrent.futures import TimeoutError as FutureTimeoutError
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 
 from .grounding import enforce_grounding
 
@@ -20,23 +21,111 @@ class Stage2OutputError(RuntimeError):
         # HARD_DEADLINE_SECONDS budget.
         self.retryable = retryable
 
+# Primary model first, then the fallback. Switched from openai/gpt-oss-20b
+# on 2026-10-13: on NVIDIA's free endpoint it queued for 8s-200s+ on
+# identical requests and timed out outright in a side-by-side test, while
+# glm-5.3-flash answered the same prompt in ~10s with valid JSON.
+# deepseek-v4.1-flash (~20-30s, also valid JSON) is the tested fallback.
+STAGE2_MODELS = (
+    "z-ai/glm-5.3-flash",
+    "deepseek-ai/deepseek-v4.1-flash",
+)
+
+
+class Stage2Client:
+    """Spreads Stage 2 requests over every configured key and model.
+
+    NVIDIA's free tier rate-limits each key, and one analysis sends five
+    concurrent category requests, so a few analyses close together were
+    exhausting it (live logs, 2026-10-13 to 10-19: 18 analyses failed with
+    503 "rate limit or quota reached"). Routes are tried in order - the
+    primary model on every key, then the fallback model on every key - and
+    a rate-limited request moves on to the next route instead of failing
+    the whole analysis. Any other error is raised as before.
+    """
+
+    def __init__(self, clients, models=STAGE2_MODELS):
+        self.routes = [
+            (client, model)
+            for model in models
+            for client in clients
+        ]
+
+    def create_completion(self, category, abandoned=None, **kwargs):
+        last = len(self.routes) - 1
+
+        for index, (client, model) in enumerate(self.routes):
+            # When another route is left, skip the SDK's own backoff-and-
+            # retry on a 429: it waits, and spends more of the same key's
+            # quota, when the next route can answer straight away.
+            if index < last:
+                client = client.with_options(max_retries=0)
+
+            try:
+                completion = client.chat.completions.create(
+                    model=model,
+                    **kwargs,
+                )
+            except RateLimitError:
+                # Once the analysis has ended there is no one to answer,
+                # so don't spend another route's quota on it.
+                if index == last or _is_set(abandoned):
+                    raise
+
+                logger.warning(
+                    "%s: rate-limited on route %d of %d (%s), "
+                    "trying the next one",
+                    category,
+                    index + 1,
+                    len(self.routes),
+                    model,
+                )
+                continue
+
+            if index:
+                logger.info(
+                    "%s: served by fallback route %d (%s)",
+                    category,
+                    index + 1,
+                    model,
+                )
+
+            return completion
+
+
+def _is_set(event):
+    return event is not None and event.is_set()
+
+
 def create_stage2_client():
     api_key = os.environ.get("NVIDIA_API_KEY")
 
     if not api_key:
         raise RuntimeError("NVIDIA_API_KEY is not configured.")
 
-    return OpenAI(
-        base_url="https://integrate.api.nvidia.com/v1",
-        api_key=api_key,
-        # NVIDIA's latency is variable enough that a single category call
-        # can occasionally exceed 120s on its own (independent of the 5
-        # categories running concurrently) - confirmed via a live
-        # openai.APITimeoutError. Widened for headroom; keep this and the
-        # router's response_header_timeout (infra/router/Caddyfile) equal.
-        timeout=600.0,
-        max_retries=1,
-    )
+    # Optional second key, ideally from a different NVIDIA account so it
+    # has its own rate limit.
+    api_keys = [api_key]
+    extra_key = os.environ.get("NVIDIA_API_KEY_2")
+
+    if extra_key:
+        api_keys.append(extra_key)
+
+    return Stage2Client([
+        OpenAI(
+            base_url="https://integrate.api.nvidia.com/v1",
+            api_key=key,
+            # NVIDIA's latency is variable enough that a single category
+            # call can occasionally exceed 120s on its own (independent of
+            # the 5 categories running concurrently) - confirmed via a live
+            # openai.APITimeoutError. Widened for headroom; keep this and
+            # the router's response_header_timeout
+            # (infra/router/Caddyfile) equal.
+            timeout=600.0,
+            max_retries=1,
+        )
+        for key in api_keys
+    ])
 
 CATEGORY_FIELDS = {
     "data_collection": [
@@ -647,6 +736,8 @@ def generate_category_summary(
     # fail the same way again) - this is the real fix for that class of
     # failure, not the retry.
     max_new_tokens=1200,
+    # Set by generate_all_summaries once the analysis has ended.
+    abandoned=None,
 ):
     if not evidence:
         return {
@@ -675,11 +766,16 @@ def generate_category_summary(
                 evidence=evidence,
                 client=client,
                 max_new_tokens=max_new_tokens,
+                abandoned=abandoned,
             )
         except Stage2OutputError as exc:
             last_error = exc
 
-            will_retry = attempt == 0 and exc.retryable
+            will_retry = (
+                attempt == 0
+                and exc.retryable
+                and not _is_set(abandoned)
+            )
 
             logger.warning(
                 "%s: attempt %d produced malformed output (%s)%s",
@@ -700,6 +796,7 @@ def _request_and_parse_category_summary(
     evidence,
     client,
     max_new_tokens,
+    abandoned=None,
 ):
     prompt = build_stage2_prompt(
         category=category,
@@ -736,13 +833,10 @@ def _request_and_parse_category_summary(
         },
     ]
 
-    completion = client.chat.completions.create(
-    # Switched from openai/gpt-oss-20b on 2026-10-13: on NVIDIA's free
-    # endpoint it queued for 8s-200s+ on identical requests and timed
-    # out outright in a side-by-side test, while glm-5.3-flash answered
-    # the same prompt in ~10s with valid JSON. deepseek-v4.1-flash
-    # (~20-30s) is the tested fallback if this one degrades.
-    model="z-ai/glm-5.3-flash",
+    # The model is picked by client's routes (STAGE2_MODELS).
+    completion = client.create_completion(
+    category=category,
+    abandoned=abandoned,
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
@@ -824,6 +918,13 @@ def generate_all_summaries(ir, client):
     # response-header timeout on longer policies. Running them
     # concurrently instead cuts that to roughly the slowest single call.
     executor = ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS))
+    # When one category fails (e.g. rate-limited on every route) or the
+    # hard deadline passes, the analysis returns an error but the other
+    # threads keep going, and live logs showed them still retrying long
+    # after the user got a 503 - spending the same rate limit the user's
+    # next attempt needs. Their in-flight request can't be cancelled, but
+    # this stops them starting another one.
+    abandoned = threading.Event()
 
     try:
         # Keyed by future -> category (not the other way around) so
@@ -835,6 +936,7 @@ def generate_all_summaries(ir, client):
                 category=category,
                 evidence=ir["categories"][category]["evidence"],
                 client=client,
+                abandoned=abandoned,
             ): category
             for category in CATEGORY_FIELDS
         }
@@ -863,6 +965,7 @@ def generate_all_summaries(ir, client):
 
         return results
     finally:
+        abandoned.set()
         # wait=False: if one category already hit the hard deadline above,
         # don't also block here waiting for other still-running (possibly
         # equally stuck) threads - they finish or fail in the background

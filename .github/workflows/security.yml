@@ -81,7 +81,8 @@ jobs:
       - name: Security control tests (no torch needed)
         run: |
           pip install -r developed_ai/requirements-dev.txt \
-            "pypdf>=6,<7" "fastapi>=0.100,<1" "pydantic>=2,<3" starlette
+            "pypdf>=6,<7" "fastapi>=0.100,<1" "pydantic>=2,<3" starlette \
+            "openai>=3,<4"
           python -m pytest developed_ai/tests -q
 
   secrets:

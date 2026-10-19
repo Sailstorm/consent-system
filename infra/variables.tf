@@ -75,6 +75,13 @@ variable "nvidia_api_key" {
   sensitive   = true
 }
 
+variable "nvidia_api_key_2" {
+  description = "Optional second NVIDIA API key (ideally another account) that Stage 2 moves to when the first is rate-limited"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "db_password" {
   description = "Password for the Postgres consent_app user"
   type        = string
