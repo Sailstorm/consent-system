@@ -53,6 +53,11 @@ git worktree add /opt/app-archive-2 ${archive2_ref}
 # /var/log/cloud-init-output.log.
 set +x
 NVIDIA_API_KEY=$(aws ssm get-parameter --name "${nvidia_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
+# Optional; empty when terraform has no second key.
+NVIDIA_API_KEY_2=""
+%{ if nvidia2_param_name != null ~}
+NVIDIA_API_KEY_2=$(aws ssm get-parameter --name "${nvidia2_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
+%{ endif ~}
 POSTGRES_PASSWORD=$(aws ssm get-parameter --name "${db_password_param_name}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
 GATE_PASSWORD=$(aws ssm get-parameter --name "${site_password_param}" --with-decryption --region ${region} --query 'Parameter.Value' --output text)
 # Generated per instance: the gate's cookie-signing key and the read-only
@@ -66,6 +71,7 @@ cat > /opt/app/.env <<EOF
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 DB_READER_PASSWORD=$DB_READER_PASSWORD
 NVIDIA_API_KEY=$NVIDIA_API_KEY
+NVIDIA_API_KEY_2=$NVIDIA_API_KEY_2
 GATE_PASSWORD=$GATE_PASSWORD
 GATE_SECRET=$GATE_SECRET
 CORS_ORIGIN=${cors_origin}
