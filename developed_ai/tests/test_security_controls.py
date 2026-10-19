@@ -206,7 +206,12 @@ def test_isolated_parser_returns_text_from_a_real_pdf():
 def test_isolated_parser_passes_errors_through():
     with pytest.raises(PdfExtractionError) as error:
         extract_policy_from_pdf_isolated(_blank_pdf())
-    assert "page 1" in str(error.value)
+    # Which error a blank page hits depends on the pypdf version: up to
+    # 6.20 extract_text() raised on it ("Text could not be extracted from
+    # page 1"), from 6.21 it returns "" and the low-text check reports
+    # "page(s): 1". Either way the worker's error must reach the caller.
+    message = str(error.value)
+    assert "page 1" in message or "page(s): 1" in message
 
 
 def test_isolated_parser_enforces_page_limit():
