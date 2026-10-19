@@ -63,6 +63,7 @@ services:
     restart: unless-stopped
     environment:
       NVIDIA_API_KEY: ${NVIDIA_API_KEY}
+      NVIDIA_API_KEY_2: ${NVIDIA_API_KEY_2:-}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
     networks:
       default:
