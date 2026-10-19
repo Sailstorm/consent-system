@@ -103,6 +103,20 @@ def test_null_summary_is_left_alone():
     assert enforce_grounding(result, EVIDENCE, "user_control", Rejected) is result
 
 
+@pytest.mark.parametrize("claim, evidence", [
+    ("Device IDs are collected.", "We collect your device ID and IP address."),
+    ("Data is gathered from smart TVs.", "Viewing data is gathered from your smart TV."),
+])
+def test_pluralised_acronym_matches_singular_in_evidence(claim, evidence):
+    assert unsupported_reason(claim, evidence) is None
+
+
+def test_pluralised_acronym_must_match_a_whole_word():
+    # "id" occurs inside "provide" but the evidence never mentions an ID.
+    evidence = "We provide the service and collect your email address."
+    assert unsupported_reason("Device IDs are collected.", evidence) is not None
+
+
 # --- A-01 / A-06: rate limits ------------------------------------------
 
 def test_limiter_enforces_minute_and_hour_windows():

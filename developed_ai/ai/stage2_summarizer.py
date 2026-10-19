@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from openai import OpenAI, RateLimitError
@@ -50,7 +51,7 @@ class Stage2Client:
             for client in clients
         ]
 
-    def create_completion(self, category, **kwargs):
+    def create_completion(self, category, abandoned=None, **kwargs):
         last = len(self.routes) - 1
 
         for index, (client, model) in enumerate(self.routes):
@@ -66,7 +67,9 @@ class Stage2Client:
                     **kwargs,
                 )
             except RateLimitError:
-                if index == last:
+                # Once the analysis has ended there is no one to answer,
+                # so don't spend another route's quota on it.
+                if index == last or _is_set(abandoned):
                     raise
 
                 logger.warning(
@@ -88,6 +91,10 @@ class Stage2Client:
                 )
 
             return completion
+
+
+def _is_set(event):
+    return event is not None and event.is_set()
 
 
 def create_stage2_client():
@@ -729,6 +736,8 @@ def generate_category_summary(
     # fail the same way again) - this is the real fix for that class of
     # failure, not the retry.
     max_new_tokens=1200,
+    # Set by generate_all_summaries once the analysis has ended.
+    abandoned=None,
 ):
     if not evidence:
         return {
@@ -757,11 +766,16 @@ def generate_category_summary(
                 evidence=evidence,
                 client=client,
                 max_new_tokens=max_new_tokens,
+                abandoned=abandoned,
             )
         except Stage2OutputError as exc:
             last_error = exc
 
-            will_retry = attempt == 0 and exc.retryable
+            will_retry = (
+                attempt == 0
+                and exc.retryable
+                and not _is_set(abandoned)
+            )
 
             logger.warning(
                 "%s: attempt %d produced malformed output (%s)%s",
@@ -782,6 +796,7 @@ def _request_and_parse_category_summary(
     evidence,
     client,
     max_new_tokens,
+    abandoned=None,
 ):
     prompt = build_stage2_prompt(
         category=category,
@@ -821,6 +836,7 @@ def _request_and_parse_category_summary(
     # The model is picked by client's routes (STAGE2_MODELS).
     completion = client.create_completion(
     category=category,
+    abandoned=abandoned,
     messages=messages,
     temperature=0,
     max_tokens=max_new_tokens,
@@ -902,6 +918,13 @@ def generate_all_summaries(ir, client):
     # response-header timeout on longer policies. Running them
     # concurrently instead cuts that to roughly the slowest single call.
     executor = ThreadPoolExecutor(max_workers=len(CATEGORY_FIELDS))
+    # When one category fails (e.g. rate-limited on every route) or the
+    # hard deadline passes, the analysis returns an error but the other
+    # threads keep going, and live logs showed them still retrying long
+    # after the user got a 503 - spending the same rate limit the user's
+    # next attempt needs. Their in-flight request can't be cancelled, but
+    # this stops them starting another one.
+    abandoned = threading.Event()
 
     try:
         # Keyed by future -> category (not the other way around) so
@@ -913,6 +936,7 @@ def generate_all_summaries(ir, client):
                 category=category,
                 evidence=ir["categories"][category]["evidence"],
                 client=client,
+                abandoned=abandoned,
             ): category
             for category in CATEGORY_FIELDS
         }
@@ -941,6 +965,7 @@ def generate_all_summaries(ir, client):
 
         return results
     finally:
+        abandoned.set()
         # wait=False: if one category already hit the hard deadline above,
         # don't also block here waiting for other still-running (possibly
         # equally stuck) threads - they finish or fail in the background

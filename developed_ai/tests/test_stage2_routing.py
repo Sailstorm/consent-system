@@ -1,18 +1,25 @@
 """
-Tests for Stage 2's key/model fallback on NVIDIA rate limits.
+Tests for Stage 2's key/model fallback on NVIDIA rate limits, and for
+not spending more requests once an analysis has already failed.
 
 Run from the repository root (no network or torch needed):
     python -m pytest developed_ai/tests
 """
+
+import threading
+import time
+from types import SimpleNamespace
 
 import httpx2  # what openai 3.x builds its errors from
 import pytest
 from openai import APITimeoutError, RateLimitError
 
 from developed_ai.ai.stage2_summarizer import (
+    CATEGORY_FIELDS,
     STAGE2_MODELS,
     Stage2Client,
     create_stage2_client,
+    generate_all_summaries,
 )
 
 
@@ -160,3 +167,66 @@ def test_first_key_is_required(monkeypatch):
 
     with pytest.raises(RuntimeError):
         create_stage2_client()
+
+
+def test_abandoned_analysis_does_not_try_another_route():
+    calls = []
+    abandoned = threading.Event()
+    abandoned.set()
+    client = Stage2Client([
+        FakeClient("key1", calls, rate_limited_models=STAGE2_MODELS),
+        FakeClient("key2", calls),
+    ])
+
+    with pytest.raises(RateLimitError):
+        client.create_completion("data_sharing", abandoned=abandoned)
+
+    assert calls == [("key1", PRIMARY, 0)]
+
+
+class ScriptedStage2Client:
+    """Fails one category at once with a rate limit; the others answer
+    slowly with malformed output, which would normally be retried."""
+
+    def __init__(self, failing_category):
+        self.failing_category = failing_category
+        self.calls = []
+        self.lock = threading.Lock()
+
+    def create_completion(self, category, abandoned=None, **kwargs):
+        with self.lock:
+            self.calls.append(category)
+
+        if category == self.failing_category:
+            raise rate_limit_error()
+
+        time.sleep(0.2)
+        message = SimpleNamespace(content="not json")
+        return SimpleNamespace(
+            choices=[SimpleNamespace(finish_reason="stop", message=message)]
+        )
+
+
+def test_failed_analysis_stops_the_other_categories_retrying():
+    evidence = [{
+        "segment_id": "1",
+        "heading": "Sharing",
+        "text": "We share payment data with Stripe.",
+    }]
+    ir = {
+        "categories": {
+            category: {"evidence": evidence}
+            for category in CATEGORY_FIELDS
+        }
+    }
+    failing = next(iter(CATEGORY_FIELDS))
+    client = ScriptedStage2Client(failing_category=failing)
+
+    with pytest.raises(RateLimitError):
+        generate_all_summaries(ir, client)
+
+    # Let the slow categories finish their first (malformed) attempt.
+    time.sleep(0.6)
+
+    # One attempt each: none retried after the analysis had failed.
+    assert sorted(client.calls) == sorted(CATEGORY_FIELDS)
