@@ -23,6 +23,13 @@ RUN npm ci
 
 COPY . .
 
+# The site is public now, so the archived builds' old client-side
+# PasswordGate is replaced with a pass-through before building. No-op for
+# refs that don't have it (the live root and /underdevelopment/).
+RUN if [ -f src/components/PasswordGate.jsx ]; then \
+      printf 'export default function PasswordGate({ children }) {\n  return children\n}\n' > src/components/PasswordGate.jsx; \
+    fi
+
 RUN npx vite build --base=/version1/
 
 # Unprivileged nginx, same as frontend/Dockerfile (security plan N-02).

@@ -7,6 +7,13 @@ RUN npm ci
 
 COPY . .
 
+# The site is public now, so the archived builds' old client-side
+# PasswordGate is replaced with a pass-through before building. No-op for
+# refs that don't have it (the live root and /underdevelopment/).
+RUN if [ -f src/components/PasswordGate.jsx ]; then \
+      printf 'export default function PasswordGate({ children }) {\n  return children\n}\n' > src/components/PasswordGate.jsx; \
+    fi
+
 ARG VITE_API_URL=
 ARG VITE_AI_URL=
 ARG VITE_BASE_PATH=/

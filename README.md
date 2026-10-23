@@ -19,17 +19,11 @@ database. Only the frontend differs between them.
 
 ### Site access
 
-Every URL above, and the APIs behind them, sits behind one **server-side**
-password. Caddy asks the backend (`/api/gate/check`) before serving any
-request; without a valid signed, HttpOnly session cookie it returns the
-login page instead. The password lives in SSM (`/sailstorm/site_password`,
-set from `site_password` in `infra/terraform.tfvars`) and is never sent to
-the browser. This replaced the old client-side `PasswordGate`, whose
-password was readable in the public JavaScript bundle.
-
-The frozen `iteration-2.1` build (the `/version2/` archive) still contains
-that old client-side gate, so that archive asks for its old password once
-more after the server-side login. The live root no longer does.
+The site is public: no password. The server-side gate (`/api/gate/*`,
+`backend/src/routes/gate.js`) is still in the backend but Caddy no longer
+calls it; restoring the commented `forward_auth` block in
+`infra/router/Caddyfile` turns it back on. The archive builds swap their
+old client-side `PasswordGate` for a pass-through at build time.
 
 ### Versioning logic
 

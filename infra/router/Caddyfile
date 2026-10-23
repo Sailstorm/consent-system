@@ -39,14 +39,14 @@
 		max_size 1MB
 	}
 
-	# Server-side site gate (security plan F-06). Every request except the
-	# gate's own endpoints and login assets must carry a valid signed
-	# cookie; the backend answers 204 or returns its login page (401),
-	# which Caddy passes straight back to the browser.
-	@gated not path /api/gate/*
-	forward_auth @gated backend:3000 {
-		uri /api/gate/check
-	}
+	# The server-side site gate (security plan F-06, backend
+	# src/routes/gate.js) is switched off: the site is public. To turn it
+	# back on, restore this forward_auth block in front of the handles:
+	#
+	#   @gated not path /api/gate/*
+	#   forward_auth @gated backend:3000 {
+	#   	uri /api/gate/check
+	#   }
 
 	# Shared backend/developed_ai, same for every version (paths kept as-is,
 	# matching how the frontend builds call them: /api/..., /analyze).
